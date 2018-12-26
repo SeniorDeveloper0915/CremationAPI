@@ -54,7 +54,7 @@ router.route('/add')
 
 
 router.route('/upload_image')
-    .post((req, res) => {
+    .post(validate(schema.CheckId), (req, res) => {
         bannerCtrl.UploadBannerImage(req, res);
     });
 
@@ -136,12 +136,6 @@ router.route('/modify')
         bannerCtrl.SaveBanner(req, res);
     });
 
-router.route('/modify_banner_image/:id')
-    .put((req, res) => {
-        bannerCtrl.ModifyBannerImage(req, res);
-    });
-
-
 router.route('/change_status/:id')
 
     /**
@@ -182,7 +176,7 @@ router.route('/get')
     
     /**
      * @swagger
-     * /banner/get_banners:
+     * /banner/get:
      *   get:
      *     tags:
      *       - banner

@@ -1,5 +1,5 @@
 import express                          from 'express';
-import * as hospitalCtrl                from '../controllers/hospital.controller';
+import * as categoryCtrl                from '../controllers/raider_category.controller';
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: third level project
- *     description: Third Level Project operations
+ *   - name: raider category
+ *     description: Raider Category operations
  */
 
 
@@ -18,14 +18,14 @@ router.route('/add')
 
     /**
      * @swagger
-     * /hospital/add:
+     * /raider_category/add:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: "Create a new hospital"
+     *       - raider_category
+     *     summary: "Create a new Raider Category"
      *     security:
      *        - Bearer: []
-     *     operationId: addDoctor
+     *     operationId: addRaiderCategory
      *     consumes:
      *       - application/json
      *     produces:
@@ -33,44 +33,35 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created hospital object
+     *         description: Created raider category object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/hospital"
+     *           $ref: "#/definitions/raider_category"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hospital"
+     *           $ref: "#/definitions/RaiderCategory"
      *       403:
-     *          description: Hospital not found
+     *          description: Raider Category not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .put(validate(schema.Hospital), (req, res) => {
-        hospitalCtrl.SaveHospital(req, res);
+    .post(validate(schema.RaiderCategory), (req, res) => {
+        categoryCtrl.AddCategory(req, res);
     });
 
-router.route('/upload_logo/:id')
-    .post(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.UploadLogo(req, res);
-    });
-
-router.route('/upload_publicity/:id')
-    .post(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.UploadPublicity(req, res);
-    });
 
 router.route('/get_by_id/:id')
 
     /**
      * @swagger
-     * /hospital/get_by_id/{id}:
+     * /raider_category/get_by_id/{id}:
      *   get:
      *     tags:
-     *       - hospital
-     *     summary: Get Hispital by ID
+     *       - raider category
+     *     summary: Get Raider Category by ID
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -79,22 +70,22 @@ router.route('/get_by_id/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be fetched
+     *         description: id of raider category that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/RaiderCategory"
      *       404:
-     *          description: Hispital not found
+     *          description: RaiderCategory not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.GetHospitalById(req, res);
+        categoryCtrl.GetCategoryById(req, res);
     });
 
 
@@ -102,11 +93,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /hospital/modify:
+     * /raider_category/modify:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: Modify Hispital By Id
+     *       - raider category
+     *     summary: "Modify Raider Category By Id"
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -122,21 +113,21 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Hispital object
+     *         description: Updated Raider Category object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/RaiderCategory"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/RaiderCategory"
      *       400:
-     *         description: Invalid Hispital
+     *         description: Invalid RaiderCategory
      */
 
-    .put(validate(schema.Hispital), (req, res) => {
-        hospitalCtrl.SaveHispital(req, res);
+    .put(validate(schema.ModifyRaiderCategory), (req, res) => {
+        categoryCtrl.ModifyCategory(req, res);
     });
 
 
@@ -144,11 +135,11 @@ router.route('/change_status/:id')
 
     /**
      * @swagger
-     * /hospital/change_status/{id}:
+     * /raider_category/change_status/{id}:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: Change Hispital Status
+     *       - raider category
+     *     summary: Change Raider Category Status
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -157,32 +148,32 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be fetched
+     *         description: id of raider category that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/RaiderCategory"
      *       404:
-     *          description: Hispital not found
+     *          description: RaiderCategory not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
     .put(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.ChangeStatus(req, res);
+        categoryCtrl.ChangeStatus(req, res);
     });
 
 
 router.route('/get')
     /**
      * @swagger
-     * /hospital/get:
+     * /raider_category/get:
      *   get:
      *     tags:
-     *       - doctor
-     *     summary: "List all hospitals"
+     *       - raider category
+     *     summary: "List all Raider Categories"
      *     operationId: findAll
      *     consumes:
      *       - application/json
@@ -196,18 +187,18 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        hospitalCtrl.GetHospitals(req, res);
+        categoryCtrl.GetCategories(req, res);
     });
 
 
 router.route('/delete/:id')
     /**
      * @swagger
-     * /hospital/delete/{id}:
+     * /raider_category/delete/{id}:
      *   delete:
      *     tags:
-     *       - hospital
-     *     summary: Delete the hospital by ID
+     *       - raider_category
+     *     summary: Delete the raider category by ID
      *     security:
      *       - Bearer: []
      *     operationId: destroy
@@ -216,7 +207,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be deleted
+     *         description: id of raider category that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -225,8 +216,8 @@ router.route('/delete/:id')
      *       400:
      *          description: "Invalid ID"
      */
-    .delete((req, res) => {
-        hospitalCtrl.DeleteHospital(req, res);
+    .delete(validate(schema.CheckId), (req, res) => {
+        categoryCtrl.DeleteCategory(req, res);
     });
 
 export default router;

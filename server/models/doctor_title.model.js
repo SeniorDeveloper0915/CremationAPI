@@ -1,4 +1,5 @@
-import bookshelf from '../config/bookshelf';
+import bookshelf 		from '../config/bookshelf';
+import Doctor 			from './doctor.model';
 
 /**
  * Doctor Title model.
@@ -10,6 +11,10 @@ class DoctorTitle extends bookshelf.Model {
 
     get hasTimestamps() {
         return true;
+    }
+
+    Doctors() {
+    	return this.hasMany(Doctor, "Title_Id");
     }
 }
 

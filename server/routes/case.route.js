@@ -1,16 +1,16 @@
-import express                          from 'express';
-import * as hospitalCtrl                from '../controllers/hospital.controller';
-import isAuthenticated                  from '../middlewares/authenticate';
-import validate                         from '../config/joi.validate';
-import schema                           from '../utils/validator';
+import express              from 'express';
+import * as caseCtrl        from '../controllers/case.controller';
+import isAuthenticated      from '../middlewares/authenticate';
+import validate             from '../config/joi.validate';
+import schema               from '../utils/validator';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   - name: third level project
- *     description: Third Level Project operations
+ *   - name: case
+ *     description: Case operations
  */
 
 
@@ -18,14 +18,14 @@ router.route('/add')
 
     /**
      * @swagger
-     * /hospital/add:
+     * /case/add:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: "Create a new hospital"
+     *       - case
+     *     summary: "Create a new Case"
      *     security:
      *        - Bearer: []
-     *     operationId: addDoctor
+     *     operationId: addCase
      *     consumes:
      *       - application/json
      *     produces:
@@ -33,68 +33,65 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created hospital object
+     *         description: Created case object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/hospital"
+     *           $ref: "#/definitions/case"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hospital"
+     *           $ref: "#/definitions/Case"
      *       403:
-     *          description: Hospital not found
+     *          description: Case not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .put(validate(schema.Hospital), (req, res) => {
-        hospitalCtrl.SaveHospital(req, res);
+    .put(validate(schema.Case), (req, res) => {
+        caseCtrl.SaveCase(req, res);
     });
 
-router.route('/upload_logo/:id')
+
+router.route('/upload_image')
     .post(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.UploadLogo(req, res);
+        caseCtrl.UploadCaseImage(req, res);
     });
 
-router.route('/upload_publicity/:id')
-    .post(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.UploadPublicity(req, res);
-    });
 
 router.route('/get_by_id/:id')
 
-    /**
-     * @swagger
-     * /hospital/get_by_id/{id}:
-     *   get:
-     *     tags:
-     *       - hospital
-     *     summary: Get Hispital by ID
-     *     operationId: findById
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id of hospital that needs to be fetched
-     *         required: true
-     *         type: integer
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *           $ref: "#/definitions/Hispital"
-     *       404:
-     *          description: Hispital not found
-     *          schema:
-     *             $ref: '#/definitions/Error'
-     */
+/**
+ * @swagger
+ * /case/get_by_id/{id}:
+ *   get:
+ *     tags:
+ *       - case
+ *     summary: Get the case by ID
+ *     operationId: findById
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: id of case that needs to be fetched
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: OK
+ *         schema:
+ *           $ref: "#/definitions/Case"
+ *       404:
+ *          description: Case not found
+ *          schema:
+ *             $ref: '#/definitions/Error'
+ */
 
     .get(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.GetHospitalById(req, res);
+        caseCtrl.GetCaseById(req, res);
     });
 
 
@@ -102,11 +99,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /hospital/modify:
+     * /case/modify:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: Modify Hispital By Id
+     *       - case
+     *     summary: Modify Case By Id
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -122,33 +119,32 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Hispital object
+     *         description: Updated case object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Case"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Case"
      *       400:
-     *         description: Invalid Hispital
+     *         description: Invalid Case
      */
 
-    .put(validate(schema.Hispital), (req, res) => {
-        hospitalCtrl.SaveHispital(req, res);
+    .put(validate(schema.Case), (req, res) => {
+        caseCtrl.SaveCase(req, res);
     });
-
 
 router.route('/change_status/:id')
 
     /**
      * @swagger
-     * /hospital/change_status/{id}:
+     * /case/change_status/{id}:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: Change Hispital Status
+     *       - case
+     *     summary: Change Case Status
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -157,32 +153,34 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be fetched
+     *         description: id of case that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Case"
      *       404:
-     *          description: Hispital not found
+     *          description: Case not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
+
     .put(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.ChangeStatus(req, res);
+        caseCtrl.ChangeStatus(req, res);
     });
 
 
 router.route('/get')
+    
     /**
      * @swagger
-     * /hospital/get:
+     * /case/get:
      *   get:
      *     tags:
-     *       - doctor
-     *     summary: "List all hospitals"
+     *       - case
+     *     summary: "List all cases"
      *     operationId: findAll
      *     consumes:
      *       - application/json
@@ -196,18 +194,19 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        hospitalCtrl.GetHospitals(req, res);
+        caseCtrl.GetCases(req, res);
     });
 
 
 router.route('/delete/:id')
+
     /**
      * @swagger
-     * /hospital/delete/{id}:
+     * /case/delete/{id}:
      *   delete:
      *     tags:
-     *       - hospital
-     *     summary: Delete the hospital by ID
+     *       - case
+     *     summary: Delete the case by ID
      *     security:
      *       - Bearer: []
      *     operationId: destroy
@@ -216,7 +215,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be deleted
+     *         description: id of case that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -225,8 +224,7 @@ router.route('/delete/:id')
      *       400:
      *          description: "Invalid ID"
      */
-    .delete((req, res) => {
-        hospitalCtrl.DeleteHospital(req, res);
+    .delete(validate(schema.CheckId), (req, res) => {
+        caseCtrl.DeleteCase(req, res);
     });
-
 export default router;

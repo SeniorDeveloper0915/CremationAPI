@@ -117,9 +117,76 @@ export default {
             length              : Joi.number().required(),
             number              : Joi.string().required(),
             address             : Joi.number().required(),
-            first_project_id    : Joi.number().required(),
-            second_project_id   : Joi.number().required(),
-            third_project_id    : Joi.number().required(),
+            skills              : Joi.array().required(),
+            profile             : Joi.string().required(),
+            sort                : Joi.number().required()
+        }
+    },
+
+    Hospital : {
+        body : {
+            id                  : Joi.number().required(),
+            hospital_name       : Joi.string().required(),
+            slogan              : Joi.string().required(),
+            qualification       : Joi.string().required(),
+            level               : Joi.number().required(),
+            license             : Joi.string().required(),
+            Address             : Joi.number().required(),
+            introduction        : Joi.string().required(),
+            sort                : Joi.number().required()
+        }
+    },
+
+    Case : {
+        body : {
+            id                  : Joi.number().required(),
+            hospital_id         : Joi.number().required(),
+            title               : Joi.string().required(),
+            time                : Joi.date().required(),
+            doctor_id           : Joi.number().required(),
+            introduction        : Joi.string().required(),
+            sort                : Joi.number().required()
+        }
+    },
+
+    RaiderCategory : {
+        body : {
+            category_name         : Joi.string().required(),
+            sort                : Joi.number().required()
+        }
+    },
+
+    ModifyRaiderCategory : {
+        body : {
+            id                  : Joi.number().required(),
+            category_name       : Joi.string().required(),
+            sort                : Joi.number().required
+        }
+    },
+
+    Raider : {
+        body : {
+            id                  : Joi.number().required(),
+            category_id         : Joi.number().required(),
+            raider_title        : Joi.string().required(),
+            raider_sec_title    : Joi.string().required(),
+            content             : Joi.string().required(),
+            sort                : Joi.string().required()
+        }
+    },
+
+    KoreanMedicine : {
+        body : {
+            title               : Joi.string().required(),
+            content             : Joi.string().required()
+        }
+    },
+    
+    Member : {
+        body : {
+            id                  : Joi.number().required(),
+            member_name         : Joi.string().required(),
+            position            : Joi.string().required(),
             profile             : Joi.string().required(),
             sort                : Joi.number().required()
         }

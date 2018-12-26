@@ -1,16 +1,16 @@
-import express                          from 'express';
-import * as hospitalCtrl                from '../controllers/hospital.controller';
-import isAuthenticated                  from '../middlewares/authenticate';
-import validate                         from '../config/joi.validate';
-import schema                           from '../utils/validator';
+import express              from 'express';
+import * as memberCtrl      from '../controllers/member.controller';
+import isAuthenticated      from '../middlewares/authenticate';
+import validate             from '../config/joi.validate';
+import schema               from '../utils/validator';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   - name: third level project
- *     description: Third Level Project operations
+ *   - name: member
+ *     description: Member operations
  */
 
 
@@ -18,14 +18,14 @@ router.route('/add')
 
     /**
      * @swagger
-     * /hospital/add:
+     * /member/add:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: "Create a new hospital"
+     *       - member
+     *     summary: "Create a new Member"
      *     security:
      *        - Bearer: []
-     *     operationId: addDoctor
+     *     operationId: addMember
      *     consumes:
      *       - application/json
      *     produces:
@@ -33,44 +33,41 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created hospital object
+     *         description: Created member object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/hospital"
+     *           $ref: "#/definitions/member"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hospital"
+     *           $ref: "#/definitions/Member"
      *       403:
-     *          description: Hospital not found
+     *          description: Member not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .put(validate(schema.Hospital), (req, res) => {
-        hospitalCtrl.SaveHospital(req, res);
+    .put(validate(schema.Member), (req, res) => {
+        memberCtrl.SaveMember(req, res);
     });
 
-router.route('/upload_logo/:id')
+
+router.route('/upload_image')
     .post(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.UploadLogo(req, res);
+        memberCtrl.UploadMemberImage(req, res);
     });
 
-router.route('/upload_publicity/:id')
-    .post(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.UploadPublicity(req, res);
-    });
 
 router.route('/get_by_id/:id')
 
     /**
      * @swagger
-     * /hospital/get_by_id/{id}:
+     * /member/get_by_id/{id}:
      *   get:
      *     tags:
-     *       - hospital
-     *     summary: Get Hispital by ID
+     *       - member
+     *     summary: Get the member by ID
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -79,22 +76,22 @@ router.route('/get_by_id/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be fetched
+     *         description: id of member that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Member"
      *       404:
-     *          description: Hispital not found
+     *          description: Member not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.GetHospitalById(req, res);
+        memberCtrl.GetMemberById(req, res);
     });
 
 
@@ -102,11 +99,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /hospital/modify:
+     * /member/modify:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: Modify Hispital By Id
+     *       - member
+     *     summary: Modify Member By Id
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -122,33 +119,32 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Hispital object
+     *         description: Updated member object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Member"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Member"
      *       400:
-     *         description: Invalid Hispital
+     *         description: Invalid Member
      */
 
-    .put(validate(schema.Hispital), (req, res) => {
-        hospitalCtrl.SaveHispital(req, res);
+    .put(validate(schema.Member), (req, res) => {
+        memberCtrl.SaveMember(req, res);
     });
-
 
 router.route('/change_status/:id')
 
     /**
      * @swagger
-     * /hospital/change_status/{id}:
+     * /member/change_status/{id}:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: Change Hispital Status
+     *       - member
+     *     summary: Change Member Status
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -157,32 +153,34 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be fetched
+     *         description: id of member that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Member"
      *       404:
-     *          description: Hispital not found
+     *          description: Member not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
+
     .put(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.ChangeStatus(req, res);
+        memberCtrl.ChangeStatus(req, res);
     });
 
 
 router.route('/get')
+    
     /**
      * @swagger
-     * /hospital/get:
+     * /member/get:
      *   get:
      *     tags:
-     *       - doctor
-     *     summary: "List all hospitals"
+     *       - member
+     *     summary: "List all banners"
      *     operationId: findAll
      *     consumes:
      *       - application/json
@@ -196,18 +194,19 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        hospitalCtrl.GetHospitals(req, res);
+        memberCtrl.GetMembers(req, res);
     });
 
 
 router.route('/delete/:id')
+
     /**
      * @swagger
-     * /hospital/delete/{id}:
+     * /member/delete/{id}:
      *   delete:
      *     tags:
-     *       - hospital
-     *     summary: Delete the hospital by ID
+     *       - member
+     *     summary: Delete the member by ID
      *     security:
      *       - Bearer: []
      *     operationId: destroy
@@ -216,7 +215,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be deleted
+     *         description: id of member that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -225,8 +224,7 @@ router.route('/delete/:id')
      *       400:
      *          description: "Invalid ID"
      */
-    .delete((req, res) => {
-        hospitalCtrl.DeleteHospital(req, res);
+    .delete(validate(schema.CheckId), (req, res) => {
+        memberCtrl.DeleteMember(req, res);
     });
-
 export default router;

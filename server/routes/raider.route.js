@@ -1,5 +1,5 @@
 import express                          from 'express';
-import * as hospitalCtrl                from '../controllers/hospital.controller';
+import * as raiderCtrl                  from '../controllers/raider.controller';
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: third level project
- *     description: Third Level Project operations
+ *   - name: raider
+ *     description: Raider operations
  */
 
 
@@ -18,14 +18,14 @@ router.route('/add')
 
     /**
      * @swagger
-     * /hospital/add:
+     * /raider/add:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: "Create a new hospital"
+     *       - raider
+     *     summary: "Create a new Raider"
      *     security:
      *        - Bearer: []
-     *     operationId: addDoctor
+     *     operationId: addRaider
      *     consumes:
      *       - application/json
      *     produces:
@@ -33,44 +33,39 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created hospital object
+     *         description: Created raider object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/hospital"
+     *           $ref: "#/definitions/raider"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hospital"
+     *           $ref: "#/definitions/Raider"
      *       403:
-     *          description: Hospital not found
+     *          description: Third Level Project not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .put(validate(schema.Hospital), (req, res) => {
-        hospitalCtrl.SaveHospital(req, res);
+    .put(validate(schema.Raider), (req, res) => {
+        raiderCtrl.SaveRaider(req, res);
     });
 
-router.route('/upload_logo/:id')
+router.route('/upload_image/:id')
     .post(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.UploadLogo(req, res);
-    });
-
-router.route('/upload_publicity/:id')
-    .post(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.UploadPublicity(req, res);
+        raiderCtrl.UploadRaiderImage(req, res);
     });
 
 router.route('/get_by_id/:id')
 
     /**
      * @swagger
-     * /hospital/get_by_id/{id}:
+     * /raider/get_by_id/{id}:
      *   get:
      *     tags:
-     *       - hospital
-     *     summary: Get Hispital by ID
+     *       - raider
+     *     summary: Get Raider by ID
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -79,22 +74,22 @@ router.route('/get_by_id/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be fetched
+     *         description: id of raider that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Raider"
      *       404:
-     *          description: Hispital not found
+     *          description: Raider not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.GetHospitalById(req, res);
+        raiderCtrl.GetRaiderById(req, res);
     });
 
 
@@ -102,11 +97,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /hospital/modify:
+     * /raider/modify:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: Modify Hispital By Id
+     *       - raider
+     *     summary: "Modify Raider By Id"
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -122,21 +117,21 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Hispital object
+     *         description: Updated Raider object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Raider"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Raider"
      *       400:
-     *         description: Invalid Hispital
+     *         description: Invalid Raider
      */
 
-    .put(validate(schema.Hispital), (req, res) => {
-        hospitalCtrl.SaveHispital(req, res);
+    .put(validate(schema.Raider), (req, res) => {
+        raiderCtrl.SaveRaider(req, res);
     });
 
 
@@ -144,11 +139,11 @@ router.route('/change_status/:id')
 
     /**
      * @swagger
-     * /hospital/change_status/{id}:
+     * /raider/change_status/{id}:
      *   put:
      *     tags:
-     *       - hospital
-     *     summary: Change Hispital Status
+     *       - raider
+     *     summary: Change Raider Status
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -157,32 +152,32 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be fetched
+     *         description: id of raider that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Hispital"
+     *           $ref: "#/definitions/Raider"
      *       404:
-     *          description: Hispital not found
+     *          description: Raider not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
     .put(validate(schema.CheckId), (req, res) => {
-        hospitalCtrl.ChangeStatus(req, res);
+        raiderCtrl.ChangeStatus(req, res);
     });
 
 
 router.route('/get')
     /**
      * @swagger
-     * /hospital/get:
+     * /raider/get:
      *   get:
      *     tags:
-     *       - doctor
-     *     summary: "List all hospitals"
+     *       - raider
+     *     summary: "List all raiders"
      *     operationId: findAll
      *     consumes:
      *       - application/json
@@ -196,18 +191,18 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        hospitalCtrl.GetHospitals(req, res);
+        raiderCtrl.GetRaiders(req, res);
     });
 
 
 router.route('/delete/:id')
     /**
      * @swagger
-     * /hospital/delete/{id}:
+     * /raider/delete/{id}:
      *   delete:
      *     tags:
-     *       - hospital
-     *     summary: Delete the hospital by ID
+     *       - raider
+     *     summary: Delete the raider by ID
      *     security:
      *       - Bearer: []
      *     operationId: destroy
@@ -216,7 +211,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of hospital that needs to be deleted
+     *         description: id of raider that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -226,7 +221,7 @@ router.route('/delete/:id')
      *          description: "Invalid ID"
      */
     .delete((req, res) => {
-        hospitalCtrl.DeleteHospital(req, res);
+        raiderCtrl.DeleteRaider(req, res);
     });
 
 export default router;

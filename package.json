@@ -37,6 +37,7 @@
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "bookshelf": "^0.13.3",
+    "bookshelf-eloquent": "^0.1.15",
     "classnames": "^2.2.6",
     "compression": "^1.7.3",
     "cors": "^2.8.4",

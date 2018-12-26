@@ -9,6 +9,12 @@ import doctorTitleRoutes		from './doctor_title.route';
 import doctorRoutes 			from './doctor.route';
 import nationRoutes 			from './nation.route';
 import hospitalRoutes 			from './hospital.route';
+import caseRoutes 				from './case.route';
+import raiderCategoryRoutes		from './raider_category.route';
+import raiderRoutes 			from './raider.route';
+import koreanRoutes 			from './korean.route';
+import memberRoutes 			from './member.route';
+import contactRoutes 			from './contact.route';
 
 const router = express.Router();
 
@@ -41,4 +47,23 @@ router.use('/nation', nationRoutes);
 
 //mount Hospital at /hospital
 router.use('/hospital', hospitalRoutes);
+
+//mount Case at /case
+router.use('/case', caseRoutes);
+
+//mount Raider_Category at /raider_category
+router.use('/raider_category', raiderCategoryRoutes);
+
+//mount Raider at /raider
+router.use('/raider', raiderRoutes);
+
+//mount Korean Medicine at /korean
+router.use('/korean', koreanRoutes);
+
+//mount Core Team /member
+router.use('/member', memberRoutes);
+
+//mount Contact Us /contact
+router.use('/contact', contactRoutes);
+
 export default router;

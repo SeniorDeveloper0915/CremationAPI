@@ -1,7 +1,7 @@
 import bookshelf from '../config/bookshelf';
 
 /**
- * User model.
+ * Banner model.
  */
 class Banner extends bookshelf.Model {
     get tableName() {

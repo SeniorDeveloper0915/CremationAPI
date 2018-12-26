@@ -185,4 +185,37 @@ router.route('/delete/:id')
         doctorTitleCtrl.DeleteDoctorTitle(req, res);
     });
 
+router.route('/doctors/:id')
+    /**
+     * @swagger
+     * /doctor_title/doctors/{id}:
+     *   get:
+     *     tags:
+     *       - doctor title
+     *     summary: Get Doctors by doctor title id
+     *     operationId: findById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of doctor title that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Doctors"
+     *       404:
+     *          description: Doctors not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        doctorTitleCtrl.GetDoctors(req, res);
+    });
 export default router;

@@ -1,10 +1,10 @@
-import bcrypt           from 'bcrypt';
-import HttpStatus       from 'http-status-codes';
-import SecondProject    from '../models/second_level_project.model';
-import formidable       from 'formidable';
-import fs               from 'fs';
-import date             from 'date-and-time';
-
+import bcrypt                   from 'bcrypt';
+import HttpStatus               from 'http-status-codes';
+import SecondProject            from '../models/second_level_project.model';
+import formidable               from 'formidable';
+import fs                       from 'fs';
+import date                     from 'date-and-time';
+import ThirdProjectController   from './third_level_project.controller';
 
 /**
  * Add New Second Level Project
@@ -190,17 +190,10 @@ export function GetProjects(req, res) {
 export function DeleteProject(req, res) {
     SecondProject.forge({id: req.params.id})
         .fetch({require: true})
-        .then(project => project.destroy()
-            .then(() => res.json({
-                    error: false,
-                    data: {message: 'Delete Second Level Project Succed.'}
-                })
-            )
-            .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                    error: true,
-                    data: {message: err.message}
-                })
-            )
+        .then(function(project) {
+                project.destory();
+                ThirdProjectController.DeleteProject(req, res);
+            }
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err

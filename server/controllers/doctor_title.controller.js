@@ -147,3 +147,22 @@ export function DeleteDoctorTitle(req, res) {
             })
         );
 }
+
+/**
+ * Delete Doctors by title 
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetDoctors(req, res) {
+    DoctorTitle.forge({id: req.params.id})
+        .fetch({withRelated: ['Doctors']})  
+        .then(function(doctor_title) {
+            res.json({
+                error: false,
+                doctors: doctor_title.related('Doctors').toJSON()
+            })
+        });
+}

@@ -83,6 +83,32 @@ function ChangeImage(req, res, oldpath, newpath, id) {
 }
 
 /**
+ *  Save Skills
+ *
+ * @param {objectarray} skills
+ * @param {integer} doctorId
+ * @returns {*}
+ */
+
+function SaveSkills(skills, doctorId) {
+    Skill.forge({Doctor_Id :  doctorId})
+        .fetch()
+        .then(function(skill) {
+            if (skill != null)
+                skill.destroy()
+            var i;
+            for (i = 0; i < skills.length; i ++) {
+                console.log(skills[i].first_project_id);
+                Skill.forge({
+                    Doctor_Id           : doctorId, 
+                    First_Project_Id    : skills[i].first_project_id,
+                    Second_Project_Id   : skills[i].second_project_id,
+                    Third_Project_Id    : skills[i].third_project_id
+                }, {hasTimestamps: true}).save();
+            }
+        })
+}
+/**
  *  Save New Doctor
  *
  * @param {object} req
@@ -109,48 +135,16 @@ export function SaveDoctor(req, res) {
                 Release_Time        : Release_Time
             })
             .then(function() {
-                Skill.forge({Doctor_Id: req.body.id})
-                .fetch()
-                .then( function(skill) {
-                    console.log("skill testing");
-                    if (!skill) {
-                        Skill.forge({
-                            Doctor_Id           : req.body.id, 
-                            First_Project_Id    : req.body.first_project_id,
-                            Second_Project_Id   : req.body.second_project_id,
-                            Third_Project_Id    : req.body.third_project_id
-                        }, {hasTimestamps: true}).save()
-                            .then(skill => res.json({
-                                    success: true
-                                })
-                            )
-                            .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                                    error: err
-                                })
-                            );
-                    }
-                    else {
-                        skill.save({
-                            First_Project_Id            : req.body.first_project_id             || skill.get('First_Project_Id'),
-                            Second_Project_Id           : req.body.second_project_id            || skill.get('Second_Project_Id'),
-                            Third_Project_Id            : req.body.third_project_id             || skill.get('Third_Project_Id')
-                        })
-                        .then(() => res.json({
-                                success : true
-                            })
-                        )
-                        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                                error: true,
-                                data: {message: err.message}
-                            })
-                        )
-                    }
-                })
-                .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                        error: err
+                SaveSkills(req.body.skills, req.body.id);
+                res.json({
+                        success   : true
                     })
-                );
-            });
+            })
+            .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                    error: true,
+                    data: {message: err.message}
+                })
+            )
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
@@ -269,10 +263,10 @@ export function ChangeStatus(req, res) {
  */
 export function GetDoctors(req, res) {
     Doctor.forge()
-        .fetchAll()
+        .fetchAll({withRelated : ['DoctorTitle', 'Skills']})
         .then(doctors => res.json({
                 error: false,
-                doctors: doctors.toJSON()
+                doctors: doctors.toJSON(),
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -293,8 +287,9 @@ export function DeleteDoctor(req, res) {
     Doctor.forge({id: req.params.id})
         .fetch({require: true})
         .then(function(doctor) {
+            Ski
             Skill.forge({Doctor_Id : doctor.get('id')})
-                .fetch({require : true})
+                .fetch()
                 .then(function(skill) {
                     skill.destroy()
                         .then(function() {

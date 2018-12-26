@@ -1,6 +1,6 @@
 import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
-import Banner           from '../models/banner.model';
+import CoreTeam         from '../models/core_team.model';
 import formidable       from 'formidable';
 import fs               from 'fs';
 import date             from 'date-and-time';
@@ -20,13 +20,13 @@ function UploadImage(req, res, oldpath, newpath) {
     fs.rename(oldpath, newpath, function(err) {
         if (err)
             throw err;
-        Banner.forge({
-            Banner_Img : newpath
+        CoreTeam.forge({
+            Member_Img : newpath
         }, {hasTimestamps: true}).save()
-            .then(banner => res.json({
+            .then(member => res.json({
                     success : true,
                     message : "Image Uploading Succed!",
-                    id      : banner.id
+                    id      : member.id
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -37,7 +37,7 @@ function UploadImage(req, res, oldpath, newpath) {
 }
 
 /**
- *  Change Before Image
+ *  Change Image
  *
  * @param {object} req
  * @param {object} res
@@ -48,18 +48,18 @@ function UploadImage(req, res, oldpath, newpath) {
  */
 
 function ChangeImage(req, res, oldpath, newpath, id) {
-    Banner.forge({id: id})
+    CoreTeam.forge({id: id})
     .fetch({require: true})
-    .then(function(banner) {
-        if (banner.get('Banner_Img') != "")
-            fs.unlinkSync(banner.get('Banner_Img'));
+    .then(function(member) {
+        if (member.get('Member_Img') != "")
+            fs.unlinkSync(member.get('Member_Img'));
         fs.rename(oldpath, newpath, function(err) {
             if (err)
                 throw err;
             Canner.forge({id: id})
                 .fetch()
-                .then(banner => banner.save({
-                        Banner_Img : newpath
+                .then(member => member.save({
+                        Member_Img : newpath
                     })
                     .then(() => res.json({
                             error   : false,
@@ -82,28 +82,29 @@ function ChangeImage(req, res, oldpath, newpath, id) {
 
 
 /**
- * Store new banner
+ * Store new member
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function SaveBanner(req, res) {
+export function SaveMember(req, res) {
     let Release_Time = new Date();
     date.format(Release_Time, 'YYYY-MM-DD HH:mm:ss');
 
-    Banner.forge({id: req.body.id})
+    CoreTeam.forge({id: req.body.id})
         .fetch({require: true})
-        .then(banner => banner.save({
-                Banner_Title: req.body.banner_title || banner.get('Banner_Title'),
-                URL         : req.body.url          || banner.get('URL'),
-                Sort        : req.body.sort         || banner.get('Sort'),
-                Release_Time: Release_Time
+        .then(member => member.save({
+                Member_Name     : req.body.member_name      || member.get('Banner_Title'),
+                Position        : req.body.position         || member.get('URL'),
+                Profile         : req.body.profile          || member.get('Profile'),
+                Sort            : req.body.sort             || member.get('Sort'),
+                Release_Time    : Release_Time
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New Banner Succed"
+                        message : "New Member Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -120,14 +121,14 @@ export function SaveBanner(req, res) {
 }
 
 /**
- * Upload Banner Image
+ * Upload Member Image
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function UploadBannerImage(req, res) {
+export function UploadMemberImage(req, res) {
     var form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files) {
@@ -151,25 +152,25 @@ export function UploadBannerImage(req, res) {
 
 
 /**
- *  Find banner by id
+ *  Find member by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetBannerById(req, res) {
-    Banner.forge({id: req.params.id})
+export function GetMemberById(req, res) {
+    CoreTeam.forge({id: req.params.id})
         .fetch()
-        .then(banner => {
-            if (!banner) {
+        .then(member => {
+            if (!member) {
                 res.status(HttpStatus.NOT_FOUND).json({
-                    error: true, Banner: {}
+                    error: true, Member: {}
                 });
             }
             else {
                 res.json({
                     error: false,
-                    Banner: banner.toJSON()
+                    Member: member.toJSON()
                 });
             }
         })
@@ -181,7 +182,7 @@ export function GetBannerById(req, res) {
 
 
 /**
- *  Change Banner Status
+ *  Change Member Status
  *
  * @param {object} req
  * @param {object} res
@@ -189,10 +190,10 @@ export function GetBannerById(req, res) {
  */
 export function ChangeStatus(req, res) {
 
-    Banner.forge({id: req.params.id})
+    CoreTeam.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => banner.save({
-                Status : !banner.get('Status')
+        .then(member => member.save({
+                Status : !member.get('Status')
             })
                 .then(() => res.json({
                         error   : false,
@@ -212,18 +213,18 @@ export function ChangeStatus(req, res) {
 }
 
 /**
- * Get All Banners
+ * Get All Members
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetBanners(req, res) {
-    Banner.forge()
+export function GetMembers(req, res) {
+    CoreTeam.forge()
         .fetchAll()
-        .then(banner => res.json({
+        .then(member => res.json({
                 error: false,
-                banners: banner.toJSON()
+                banners: member.toJSON()
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -234,19 +235,19 @@ export function GetBanners(req, res) {
 
 
 /**
- * Delete banner by id
+ * Delete member by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function DeleteBanner(req, res) {
-    Banner.forge({id: req.params.id})
+export function DeleteMember(req, res) {
+    CoreTeam.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => banner.destroy()
+        .then(member => member.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Banner Succed.'}
+                    data: {message: 'Delete Member Succed.'}
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -260,8 +261,8 @@ export function DeleteBanner(req, res) {
             })
         );
 
-    Banner.forge({id: req.params.id})
+    CoreTeam.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => fs.unlinkSync(banner.get('Banner_Img')));
+        .then(member => fs.unlinkSync(member.get('Banner_Img')));
 }
 
