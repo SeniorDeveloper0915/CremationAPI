@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: third level project
- *     description: Third Level Project operations
+ *   - name: hospital
+ *     description: Hospital operations
  */
 
 
@@ -229,4 +229,27 @@ router.route('/delete/:id')
         hospitalCtrl.DeleteHospital(req, res);
     });
 
+router.route('/count')
+    /**
+     * @swagger
+     * /hospital/count:
+     *   get:
+     *     tags:
+     *       - hospital count
+     *     summary: "Hospital Project"
+     *     operationId: findAll
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters: []
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *            type: object
+     */
+    .get((req, res) => {
+        hospitalCtrl.Count(req, res);
+    });
 export default router;

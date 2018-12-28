@@ -9,7 +9,7 @@ exports.up = function(knex) {
     return knex.schema.createTable('contact', table => {
         table.increments('id').primary().unsigned();
         table.string('Information').notNullable();
-        table.string('Picture').notNullable();
+        table.string('Contact_Img').notNullable();
         table.timestamp('created_at');
         table.timestamp('updated_at');
     });

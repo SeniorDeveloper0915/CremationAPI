@@ -1,11 +1,11 @@
 import bookshelf 			from '../config/bookshelf';
 
 /**
- * Korean Medicine model.
+ * Recruitment model.
  */
-class ContactUs extends bookshelf.Model {
+class Recruitment extends bookshelf.Model {
     get tableName() {
-        return 'contact';
+        return 'recruitment';
     }
 
     get hasTimestamps() {
@@ -14,4 +14,4 @@ class ContactUs extends bookshelf.Model {
 
 }
 
-export default ContactUs;
+export default Recruitment;

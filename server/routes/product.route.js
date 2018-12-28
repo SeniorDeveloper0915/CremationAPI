@@ -1,5 +1,5 @@
 import express                          from 'express';
-import * as doctorCtrl                  from '../controllers/doctor.controller';
+import * as productCtrl                 from '../controllers/product.controller';
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: third level project
- *     description: Third Level Project operations
+ *   - name: product
+ *     description: Product operations
  */
 
 
@@ -18,11 +18,11 @@ router.route('/add')
 
     /**
      * @swagger
-     * /doctor/add:
+     * /product/add:
      *   put:
      *     tags:
-     *       - doctor
-     *     summary: "Create a new Doctor"
+     *       - product
+     *     summary: "Create a new product"
      *     security:
      *        - Bearer: []
      *     operationId: addDoctor
@@ -33,39 +33,44 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created doctor object
+     *         description: Created product object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/doctor"
+     *           $ref: "#/definitions/product"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/ThirdLeveLProject"
+     *           $ref: "#/definitions/Product"
      *       403:
-     *          description: Third Level Project not found
+     *          description: Product not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .put(validate(schema.Doctor), (req, res) => {
-        doctorCtrl.SaveDoctor(req, res);
+    .put(validate(schema.Product), (req, res) => {
+        productCtrl.SaveProduct(req, res);
     });
 
-router.route('/upload_photo/:id')
+router.route('/upload_cover/:id')
     .post(validate(schema.CheckId), (req, res) => {
-        doctorCtrl.UploadPhoto(req, res);
+        productCtrl.UploadCover(req, res);
+    });
+
+router.route('/upload_promotion/:id')
+    .post(validate(schema.CheckId), (req, res) => {
+        productCtrl.UploadPromotion(req, res);
     });
 
 router.route('/get_by_id/:id')
 
     /**
      * @swagger
-     * /doctor/get_by_id/{id}:
+     * /product/get_by_id/{id}:
      *   get:
      *     tags:
-     *       - doctor
-     *     summary: Get Doctor by ID
+     *       - product
+     *     summary: Get Product by ID
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -74,22 +79,22 @@ router.route('/get_by_id/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of doctor that needs to be fetched
+     *         description: id of product that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Doctor"
+     *           $ref: "#/definitions/Product"
      *       404:
-     *          description: Doctor not found
+     *          description: Product not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        doctorCtrl.GetDoctorById(req, res);
+        productCtrl.GetProductById(req, res);
     });
 
 
@@ -97,11 +102,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /doctor/modify:
+     * /product/modify:
      *   put:
      *     tags:
-     *       - doctor
-     *     summary: Modify Doctor By Id
+     *       - product
+     *     summary: Modify Product By Id
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -117,21 +122,21 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Doctor object
+     *         description: Updated Product object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/Doctor"
+     *           $ref: "#/definitions/Product"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Doctor"
+     *           $ref: "#/definitions/Product"
      *       400:
-     *         description: Invalid Doctor
+     *         description: Invalid Product
      */
 
-    .put(validate(schema.Doctor), (req, res) => {
-        doctorCtrl.SaveProject(req, res);
+    .put(validate(schema.Product), (req, res) => {
+        productCtrl.SaveProduct(req, res);
     });
 
 
@@ -139,11 +144,11 @@ router.route('/change_status/:id')
 
     /**
      * @swagger
-     * /doctor/change_status/{id}:
+     * /product/change_status/{id}:
      *   put:
      *     tags:
-     *       - doctor
-     *     summary: Change Doctor Status
+     *       - product
+     *     summary: Change Product Status
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -152,32 +157,32 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of doctor that needs to be fetched
+     *         description: id of product that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Doctor"
+     *           $ref: "#/definitions/Product"
      *       404:
-     *          description: Doctor not found
+     *          description: Product not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
     .put(validate(schema.CheckId), (req, res) => {
-        doctorCtrl.ChangeStatus(req, res);
+        productCtrl.ChangeStatus(req, res);
     });
 
 
 router.route('/get')
     /**
      * @swagger
-     * /doctor/get:
+     * /product/get:
      *   get:
      *     tags:
      *       - doctor
-     *     summary: "List all doctors"
+     *     summary: "List all products"
      *     operationId: findAll
      *     consumes:
      *       - application/json
@@ -191,18 +196,18 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        doctorCtrl.GetDoctors(req, res);
+        productCtrl.GetProducts(req, res);
     });
 
 
 router.route('/delete/:id')
     /**
      * @swagger
-     * /doctor/delete/{id}:
+     * /product/delete/{id}:
      *   delete:
      *     tags:
-     *       - doctor
-     *     summary: Delete the doctor by ID
+     *       - product
+     *     summary: Delete the product by ID
      *     security:
      *       - Bearer: []
      *     operationId: destroy
@@ -211,7 +216,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of doctor that needs to be deleted
+     *         description: id of product that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -221,31 +226,6 @@ router.route('/delete/:id')
      *          description: "Invalid ID"
      */
     .delete((req, res) => {
-        doctorCtrl.DeleteDoctor(req, res);
+        productCtrl.Deleteproduct(req, res);
     });
-
-router.route('/count')
-    /**
-     * @swagger
-     * /doctor/count:
-     *   get:
-     *     tags:
-     *       - doctor count
-     *     summary: "Doctor Project"
-     *     operationId: findAll
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters: []
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *            type: object
-     */
-    .get((req, res) => {
-        doctorCtrl.Count(req, res);
-    });
-
 export default router;

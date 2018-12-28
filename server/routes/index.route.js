@@ -15,6 +15,13 @@ import raiderRoutes 			from './raider.route';
 import koreanRoutes 			from './korean.route';
 import memberRoutes 			from './member.route';
 import contactRoutes 			from './contact.route';
+import copyrightRoutes 			from './copyright.route';
+import helpcenterRoutes 		from './helpcenter.route';
+import dynamicRoutes 			from './dynamic.route';
+import industryRoutes 			from './industry.route';
+import recruitmentRoutes 		from './recruitment.route';
+import guideRoutes 				from './guide.route';
+import productRoutes 			from './product.route';
 
 const router = express.Router();
 
@@ -65,5 +72,26 @@ router.use('/member', memberRoutes);
 
 //mount Contact Us /contact
 router.use('/contact', contactRoutes);
+
+//mount CopyRight /copyright
+router.use('/copyright', copyrightRoutes);
+
+//mount HelpCenter /helpcenter
+router.use('/helpcenter', helpcenterRoutes);
+
+//mount Dynamic /dynamic
+router.use('/dynamic', dynamicRoutes);
+
+//mount Industry Information /industry
+router.use('/industry', industryRoutes);
+
+//mount Recruitment /recruitment
+router.use('/recruitment', recruitmentRoutes);
+
+//mount Guide /guide
+router.use('/guide', guideRoutes);
+
+//mount Product /product
+router.use('/product', productRoutes);
 
 export default router;

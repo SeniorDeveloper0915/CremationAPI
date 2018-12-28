@@ -1,6 +1,6 @@
 import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
-import Banner           from '../models/banner.model';
+import Industry         from '../models/industry.model';
 import formidable       from 'formidable';
 import fs               from 'fs';
 import date             from 'date-and-time';
@@ -20,13 +20,13 @@ function UploadImage(req, res, oldpath, newpath) {
     fs.rename(oldpath, newpath, function(err) {
         if (err)
             throw err;
-        Banner.forge({
-            Banner_Img : newpath
+        Industry.forge({
+            Industry_Img : newpath
         }, {hasTimestamps: true}).save()
-            .then(banner => res.json({
+            .then(industry => res.json({
                     success : true,
                     message : "Image Uploading Succed!",
-                    id      : banner.id
+                    id      : industry.id
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -48,18 +48,18 @@ function UploadImage(req, res, oldpath, newpath) {
  */
 
 function ChangeImage(req, res, oldpath, newpath, id) {
-    Banner.forge({id: id})
+    Industry.forge({id: id})
     .fetch({require: true})
-    .then(function(banner) {
-        if (banner.get('Banner_Img') != "")
-            fs.unlinkSync(banner.get('Banner_Img'));
+    .then(function(industry) {
+        if (industry.get('Industry_Img') != "")
+            fs.unlinkSync(industry.get('Industry_Img'));
         fs.rename(oldpath, newpath, function(err) {
             if (err)
                 throw err;
-            Banner.forge({id: id})
+            Industry.forge({id: id})
                 .fetch()
-                .then(banner => banner.save({
-                        Banner_Img : newpath
+                .then(industry => industry.save({
+                        Industry_Img : newpath
                     })
                     .then(() => res.json({
                             error   : false,
@@ -82,28 +82,28 @@ function ChangeImage(req, res, oldpath, newpath, id) {
 
 
 /**
- * Store new banner
+ * Store new industry
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function SaveBanner(req, res) {
+export function SaveDynamic(req, res) {
     let Release_Time = new Date();
     date.format(Release_Time, 'YYYY-MM-DD HH:mm:ss');
 
-    Banner.forge({id: req.body.id})
+    Industry.forge({id: req.body.id})
         .fetch({require: true})
-        .then(banner => banner.save({
-                Banner_Title: req.body.banner_title || banner.get('Banner_Title'),
-                URL         : req.body.url          || banner.get('URL'),
-                Sort        : req.body.sort         || banner.get('Sort'),
+        .then(industry => industry.save({
+                Banner_Title: req.body.banner_title || industry.get('Banner_Title'),
+                URL         : req.body.url          || industry.get('URL'),
+                Sort        : req.body.sort         || industry.get('Sort'),
                 Release_Time: Release_Time
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New Banner Succed"
+                        message : "New industry Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -120,25 +120,25 @@ export function SaveBanner(req, res) {
 }
 
 /**
- * Upload Banner Image
+ * Upload Industry Image
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function UploadBannerImage(req, res) {
+export function UploadIndustryImage(req, res) {
     var form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files) {
-        if (files.banner_image == null) {
+        if (files.industry_image == null) {
             res.send({
                 error : true,
                 message : "Select File Correctly!"
             });
         } else {
-            var oldpath = files.banner_image.path;
-            var newpath = 'C:/Users/royal/' + files.banner_image.name;
+            var oldpath = files.industry_image.path;
+            var newpath = 'C:/Users/royal/' + files.industry_image.name;
 
             if (req.params.id == 0) {
                 UploadImage(req, res, oldpath, newpath);
@@ -151,25 +151,25 @@ export function UploadBannerImage(req, res) {
 
 
 /**
- *  Find banner by id
+ *  Find industry by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetBannerById(req, res) {
-    Banner.forge({id: req.params.id})
+export function GetIndustryById(req, res) {
+    Industry.forge({id: req.params.id})
         .fetch()
-        .then(banner => {
-            if (!banner) {
+        .then(industry => {
+            if (!industry) {
                 res.status(HttpStatus.NOT_FOUND).json({
-                    error: true, Banner: {}
+                    error: true, Industry: {}
                 });
             }
             else {
                 res.json({
                     error: false,
-                    Banner: banner.toJSON()
+                    Industry: industry.toJSON()
                 });
             }
         })
@@ -181,7 +181,7 @@ export function GetBannerById(req, res) {
 
 
 /**
- *  Change Banner Status
+ *  Change Industry Status
  *
  * @param {object} req
  * @param {object} res
@@ -189,10 +189,10 @@ export function GetBannerById(req, res) {
  */
 export function ChangeStatus(req, res) {
 
-    Banner.forge({id: req.params.id})
+    Industry.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => banner.save({
-                Status : !banner.get('Status')
+        .then(industry => industry.save({
+                Status : !industry.get('Status')
             })
                 .then(() => res.json({
                         error   : false,
@@ -212,18 +212,18 @@ export function ChangeStatus(req, res) {
 }
 
 /**
- * Get All Banners
+ * Get All Industries
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetBanners(req, res) {
-    Banner.forge()
+export function GetIndustries(req, res) {
+    Industry.forge()
         .fetchAll()
-        .then(banner => res.json({
+        .then(industry => res.json({
                 error: false,
-                banners: banner.toJSON()
+                banners: industry.toJSON()
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -234,19 +234,19 @@ export function GetBanners(req, res) {
 
 
 /**
- * Delete banner by id
+ * Delete industry by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 export function DeleteBanner(req, res) {
-    Banner.forge({id: req.params.id})
+    Industry.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => banner.destroy()
+        .then(industry => industry.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Banner Succed.'}
+                    data: {message: 'Delete Industry Succed.'}
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -260,8 +260,8 @@ export function DeleteBanner(req, res) {
             })
         );
 
-    Banner.forge({id: req.params.id})
+    Industry.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => fs.unlinkSync(banner.get('Banner_Img')));
+        .then(industry => fs.unlinkSync(industry.get('Industry_Img')));
 }
 

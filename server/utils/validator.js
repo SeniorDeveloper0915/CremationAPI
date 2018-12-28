@@ -151,7 +151,7 @@ export default {
 
     RaiderCategory : {
         body : {
-            category_name         : Joi.string().required(),
+            category_name       : Joi.string().required(),
             sort                : Joi.number().required()
         }
     },
@@ -189,6 +189,77 @@ export default {
             position            : Joi.string().required(),
             profile             : Joi.string().required(),
             sort                : Joi.number().required()
+        }
+    },
+
+    ContactUs : {
+        body : {
+            id                  : Joi.number().required(),
+            information         : Joi.string().required()
+        }
+    },
+    
+    CopyRight : {
+        body : {
+            title               : Joi.string().required(),
+            content             : Joi.string().required()
+        }
+    },
+    
+    HelpCenter : {
+        body : {
+            title               : Joi.string().required(),
+            content             : Joi.string().required()
+        }
+    },
+
+    Dynamic : {
+        body : {
+            id                  : Joi.number().required(),
+            dynamic_title       : Joi.string().required(),
+            dynamic_subtitle    : Joi.string().required(),
+            dynamic_content     : Joi.string().required(),
+            sort                : Joi.string().required()
+        }
+    },
+
+    Industry : {
+        body : {
+            id                  : Joi.number().required(),
+            industry_title      : Joi.string().required(),
+            industry_subtitle   : Joi.string().required(),
+            industry_content    : Joi.string().required(),
+            sort                : Joi.string().required()
+        }
+    },
+
+    Recruitment : {
+        body : {
+            id                  : Joi.number().required(),
+            link                : Joi.string().required()
+        }
+    },
+
+    Guide : {
+        body : {
+            id                  : Joi.number().required(),
+            page_title          : Joi.string().required(),
+            url                 : Joi.string().required            
+        }
+    },
+
+    Product : {
+        body : {
+            id                  : Joi.number().required(),
+            product_title       : Joi.string().required(),
+            origin_price        : Joi.number().required(),
+            start_price         : Joi.number().required(),
+            booking             : Joi.number().required(),
+            first_project_id    : Joi.number().required(),
+            second_project_id   : Joi.number().required(),
+            third_project_id    : Joi.number().required(),
+            proice_description  : Joi.string().required(),
+            details             : Joi.string().required()
         }
     },
 

@@ -353,6 +353,26 @@ export function GetProjects(req, res) {
         );
 }
 
+/**
+ * Get Project Count
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function Count(req, res) {
+    ThirdProject.count()
+        .then(count => res.json({
+                error: false,
+                count: count
+            })
+        )
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
 
 /**
  * Delete Second Level Project by id

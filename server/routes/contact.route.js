@@ -1,5 +1,5 @@
 import express                          from 'express';
-import * as koreanCtrl                  from '../controllers/korean_medicine.controller';
+import * as contactCtrl                 from '../controllers/contact.controller';
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: korean medicine
- *     description: Korean Medicine operations
+ *   - name: contact us
+ *     description: Cotact US operations
  */
 
 
@@ -18,11 +18,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /korean/modify:
+     * /contact/modify:
      *   put:
      *     tags:
-     *       - korean medicine
-     *     summary: "Modify Korean Medicine By Id"
+     *       - contact us
+     *     summary: "Modify Contact Us By Id"
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -38,33 +38,37 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Korean Medicine object
+     *         description: Updated Contact Us object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/KoreanMedicine"
+     *           $ref: "#/definitions/ContactUs"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/KoreanMedicine"
+     *           $ref: "#/definitions/ContactUs"
      *       400:
-     *         description: Invalid KoreanMedicine
+     *         description: Invalid ContactUs
      */
 
-    .put(validate(schema.KoreanMedicine), (req, res) => {
-        koreanCtrl.ModifyKorean(req, res);
+    .put(validate(schema.ContactUs), (req, res) => {
+        contactCtrl.ModifyContact(req, res);
     });
 
+    router.route('/upload_image')
+        .post(validate(schema.CheckId), (req, res) => {
+            contactCtrl.UploadContactImage(req, res);
+        });
 
 router.route('/get')
 
     /**
      * @swagger
-     * /korean/get:
+     * /contact/get:
      *   get:
      *     tags:
-     *       - korean medicine
-     *     summary: Get Korean Medicine
+     *       - contact us
+     *     summary: Get Contact Us
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -73,22 +77,22 @@ router.route('/get')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of korean medicine that needs to be fetched
+     *         description: id of contact us that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/KoreanMedicine"
+     *           $ref: "#/definitions/ContactUs"
      *       404:
-     *          description: KoreanMedicine not found
+     *          description: ContactUs not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        projectCtrl.GetKoreanById(req, res);
+        contactCtrl.GetContactById(req, res);
     });
 
 export default router;

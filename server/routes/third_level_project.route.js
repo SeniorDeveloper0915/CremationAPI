@@ -230,37 +230,27 @@ router.route('/delete/:id')
         projectCtrl.DeleteProject(req, res);
     });
 
-// router.route('/get_project_id_name/:name')
-    
+router.route('/count')
     /**
      * @swagger
-     * /second_level_project/get_project_id_name/{name}:
+     * /third_level_project/count:
      *   get:
      *     tags:
-     *       - second level project
-     *     summary: Get First Level Project Id by name
-     *     operationId: findById
+     *       - project count
+     *     summary: "Count Project"
+     *     operationId: findAll
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id of second level project that needs to be fetched
-     *         required: true
-     *         type: integer
+     *     parameters: []
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/SecondLevelProject"
-     *       404:
-     *          description: SecondLevelProject not found
-     *          schema:
-     *             $ref: '#/definitions/Error'
+     *            type: object
      */
-    // .get((req, res) => {
-    //     projectCtrl.GetProjectIdByName(req, res);
-    // })
+    .get((req, res) => {
+        projectCtrl.Count(req, res);
+    });
 export default router;

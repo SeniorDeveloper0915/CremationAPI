@@ -1,6 +1,6 @@
 import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
-import Banner           from '../models/banner.model';
+import Guide            from '../models/guide.model';
 import formidable       from 'formidable';
 import fs               from 'fs';
 import date             from 'date-and-time';
@@ -20,13 +20,13 @@ function UploadImage(req, res, oldpath, newpath) {
     fs.rename(oldpath, newpath, function(err) {
         if (err)
             throw err;
-        Banner.forge({
-            Banner_Img : newpath
+        Guide.forge({
+            Guide_Img : newpath
         }, {hasTimestamps: true}).save()
-            .then(banner => res.json({
+            .then(guide => res.json({
                     success : true,
                     message : "Image Uploading Succed!",
-                    id      : banner.id
+                    id      : guide.id
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -48,18 +48,18 @@ function UploadImage(req, res, oldpath, newpath) {
  */
 
 function ChangeImage(req, res, oldpath, newpath, id) {
-    Banner.forge({id: id})
+    Guide.forge({id: id})
     .fetch({require: true})
-    .then(function(banner) {
-        if (banner.get('Banner_Img') != "")
-            fs.unlinkSync(banner.get('Banner_Img'));
+    .then(function(guide) {
+        if (guide.get('Guide_Img') != "")
+            fs.unlinkSync(guide.get('Guide_Img'));
         fs.rename(oldpath, newpath, function(err) {
             if (err)
                 throw err;
-            Banner.forge({id: id})
+            Guide.forge({id: id})
                 .fetch()
-                .then(banner => banner.save({
-                        Banner_Img : newpath
+                .then(guide => guide.save({
+                        Guide_Img : newpath
                     })
                     .then(() => res.json({
                             error   : false,
@@ -82,28 +82,27 @@ function ChangeImage(req, res, oldpath, newpath, id) {
 
 
 /**
- * Store new banner
+ * Store new guide
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function SaveBanner(req, res) {
+export function SaveGuide(req, res) {
     let Release_Time = new Date();
     date.format(Release_Time, 'YYYY-MM-DD HH:mm:ss');
 
-    Banner.forge({id: req.body.id})
+    Guide.forge({id: req.body.id})
         .fetch({require: true})
-        .then(banner => banner.save({
-                Banner_Title: req.body.banner_title || banner.get('Banner_Title'),
-                URL         : req.body.url          || banner.get('URL'),
-                Sort        : req.body.sort         || banner.get('Sort'),
-                Release_Time: Release_Time
+        .then(guide => guide.save({
+                BootPage_Title  : req.body.page_title       || guide.get('BootPage_Title'),
+                URL             : req.body.url              || guide.get('URL'),
+                Release_Time    : Release_Time
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New Banner Succed"
+                        message : "New Guide Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -120,25 +119,25 @@ export function SaveBanner(req, res) {
 }
 
 /**
- * Upload Banner Image
+ * Upload Guide Image
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function UploadBannerImage(req, res) {
+export function UploadGuideImage(req, res) {
     var form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files) {
-        if (files.banner_image == null) {
+        if (files.guide_image == null) {
             res.send({
                 error : true,
                 message : "Select File Correctly!"
             });
         } else {
-            var oldpath = files.banner_image.path;
-            var newpath = 'C:/Users/royal/' + files.banner_image.name;
+            var oldpath = files.guide_image.path;
+            var newpath = 'C:/Users/royal/' + files.guide_image.name;
 
             if (req.params.id == 0) {
                 UploadImage(req, res, oldpath, newpath);
@@ -151,25 +150,25 @@ export function UploadBannerImage(req, res) {
 
 
 /**
- *  Find banner by id
+ *  Find guide by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetBannerById(req, res) {
-    Banner.forge({id: req.params.id})
+export function GetGuideById(req, res) {
+    Guide.forge({id: req.params.id})
         .fetch()
-        .then(banner => {
-            if (!banner) {
+        .then(guide => {
+            if (!guide) {
                 res.status(HttpStatus.NOT_FOUND).json({
-                    error: true, Banner: {}
+                    error: true, Guide: {}
                 });
             }
             else {
                 res.json({
                     error: false,
-                    Banner: banner.toJSON()
+                    Guide: guide.toJSON()
                 });
             }
         })
@@ -181,7 +180,7 @@ export function GetBannerById(req, res) {
 
 
 /**
- *  Change Banner Status
+ *  Change Guide Status
  *
  * @param {object} req
  * @param {object} res
@@ -189,10 +188,10 @@ export function GetBannerById(req, res) {
  */
 export function ChangeStatus(req, res) {
 
-    Banner.forge({id: req.params.id})
+    Guide.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => banner.save({
-                Status : !banner.get('Status')
+        .then(guide => guide.save({
+                Status : !guide.get('Status')
             })
                 .then(() => res.json({
                         error   : false,
@@ -212,18 +211,18 @@ export function ChangeStatus(req, res) {
 }
 
 /**
- * Get All Banners
+ * Get All Guides
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetBanners(req, res) {
-    Banner.forge()
+export function GetGuides(req, res) {
+    Guide.forge()
         .fetchAll()
-        .then(banner => res.json({
+        .then(guide => res.json({
                 error: false,
-                banners: banner.toJSON()
+                guides: guide.toJSON()
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -234,19 +233,19 @@ export function GetBanners(req, res) {
 
 
 /**
- * Delete banner by id
+ * Delete guide by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function DeleteBanner(req, res) {
-    Banner.forge({id: req.params.id})
+export function DeleteGuide(req, res) {
+    Guide.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => banner.destroy()
+        .then(guide => guide.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Banner Succed.'}
+                    data: {message: 'Delete Guide Succed.'}
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -260,8 +259,8 @@ export function DeleteBanner(req, res) {
             })
         );
 
-    Banner.forge({id: req.params.id})
+    Guide.forge({id: req.params.id})
         .fetch({require: true})
-        .then(banner => fs.unlinkSync(banner.get('Banner_Img')));
+        .then(guide => fs.unlinkSync(guide.get('Guide_Img')));
 }
 

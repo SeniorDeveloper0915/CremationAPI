@@ -1,16 +1,16 @@
-import express                          from 'express';
-import * as doctorCtrl                  from '../controllers/doctor.controller';
-import isAuthenticated                  from '../middlewares/authenticate';
-import validate                         from '../config/joi.validate';
-import schema                           from '../utils/validator';
+import express              from 'express';
+import * as dynamicCtrl     from '../controllers/dynamic.controller';
+import isAuthenticated      from '../middlewares/authenticate';
+import validate             from '../config/joi.validate';
+import schema               from '../utils/validator';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   - name: third level project
- *     description: Third Level Project operations
+ *   - name: dynamic
+ *     description: Dynamic operations
  */
 
 
@@ -18,14 +18,14 @@ router.route('/add')
 
     /**
      * @swagger
-     * /doctor/add:
+     * /dynamic/add:
      *   put:
      *     tags:
-     *       - doctor
-     *     summary: "Create a new Doctor"
+     *       - dynamic
+     *     summary: "Create a new Dynamic"
      *     security:
      *        - Bearer: []
-     *     operationId: addDoctor
+     *     operationId: addBanner
      *     consumes:
      *       - application/json
      *     produces:
@@ -33,39 +33,41 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created doctor object
+     *         description: Created dynamic object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/doctor"
+     *           $ref: "#/definitions/dynamic"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/ThirdLeveLProject"
+     *           $ref: "#/definitions/Dynamic"
      *       403:
-     *          description: Third Level Project not found
+     *          description: Dynamic not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .put(validate(schema.Doctor), (req, res) => {
-        doctorCtrl.SaveDoctor(req, res);
+    .put(validate(schema.Dynamic), (req, res) => {
+        dynamicCtrl.SaveDynamic(req, res);
     });
 
-router.route('/upload_photo/:id')
+
+router.route('/upload_image')
     .post(validate(schema.CheckId), (req, res) => {
-        doctorCtrl.UploadPhoto(req, res);
+        dynamicCtrl.UploadDynamicImage(req, res);
     });
+
 
 router.route('/get_by_id/:id')
 
     /**
      * @swagger
-     * /doctor/get_by_id/{id}:
+     * /dynamic/get_by_id/{id}:
      *   get:
      *     tags:
-     *       - doctor
-     *     summary: Get Doctor by ID
+     *       - dynamic
+     *     summary: Get the dynamic by ID
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -74,22 +76,22 @@ router.route('/get_by_id/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of doctor that needs to be fetched
+     *         description: id of dynamic that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Doctor"
+     *           $ref: "#/definitions/Dynamic"
      *       404:
-     *          description: Doctor not found
+     *          description: Dynamic not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        doctorCtrl.GetDoctorById(req, res);
+        dynamicCtrl.GetDynamicById(req, res);
     });
 
 
@@ -97,11 +99,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /doctor/modify:
+     * /dynamic/modify:
      *   put:
      *     tags:
-     *       - doctor
-     *     summary: Modify Doctor By Id
+     *       - dynamic
+     *     summary: Modify Dynamic By Id
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -117,33 +119,32 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Doctor object
+     *         description: Updated dynamic object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/Doctor"
+     *           $ref: "#/definitions/Dynamic"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Doctor"
+     *           $ref: "#/definitions/Dynamic"
      *       400:
-     *         description: Invalid Doctor
+     *         description: Invalid Dynamic
      */
 
-    .put(validate(schema.Doctor), (req, res) => {
-        doctorCtrl.SaveProject(req, res);
+    .put(validate(schema.Dynamic), (req, res) => {
+        dynamicCtrl.SaveDynamic(req, res);
     });
-
 
 router.route('/change_status/:id')
 
     /**
      * @swagger
-     * /doctor/change_status/{id}:
+     * /dynamic/change_status/{id}:
      *   put:
      *     tags:
-     *       - doctor
-     *     summary: Change Doctor Status
+     *       - dynamic
+     *     summary: Change Dynamic Status
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -152,32 +153,34 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of doctor that needs to be fetched
+     *         description: id of dynamic that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Doctor"
+     *           $ref: "#/definitions/Dynamic"
      *       404:
-     *          description: Doctor not found
+     *          description: Dynamic not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
+
     .put(validate(schema.CheckId), (req, res) => {
-        doctorCtrl.ChangeStatus(req, res);
+        dynamicCtrl.ChangeStatus(req, res);
     });
 
 
 router.route('/get')
+    
     /**
      * @swagger
-     * /doctor/get:
+     * /dynamic/get:
      *   get:
      *     tags:
-     *       - doctor
-     *     summary: "List all doctors"
+     *       - dynamic
+     *     summary: "List all dynamics"
      *     operationId: findAll
      *     consumes:
      *       - application/json
@@ -191,18 +194,19 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        doctorCtrl.GetDoctors(req, res);
+        dynamicCtrl.GetDynamics(req, res);
     });
 
 
 router.route('/delete/:id')
+
     /**
      * @swagger
-     * /doctor/delete/{id}:
+     * /dynamic/delete/{id}:
      *   delete:
      *     tags:
-     *       - doctor
-     *     summary: Delete the doctor by ID
+     *       - dynamic
+     *     summary: Delete the dynamic by ID
      *     security:
      *       - Bearer: []
      *     operationId: destroy
@@ -211,7 +215,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of doctor that needs to be deleted
+     *         description: id of dynamic that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -220,32 +224,7 @@ router.route('/delete/:id')
      *       400:
      *          description: "Invalid ID"
      */
-    .delete((req, res) => {
-        doctorCtrl.DeleteDoctor(req, res);
+    .delete(validate(schema.CheckId), (req, res) => {
+        dynamicCtrl.DeleteDynamic(req, res);
     });
-
-router.route('/count')
-    /**
-     * @swagger
-     * /doctor/count:
-     *   get:
-     *     tags:
-     *       - doctor count
-     *     summary: "Doctor Project"
-     *     operationId: findAll
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters: []
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *            type: object
-     */
-    .get((req, res) => {
-        doctorCtrl.Count(req, res);
-    });
-
 export default router;

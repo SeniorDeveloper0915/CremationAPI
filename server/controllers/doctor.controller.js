@@ -311,3 +311,23 @@ export function DeleteDoctor(req, res) {
             })
         );
 }
+
+/**
+ * Get Doctor Count
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function Count(req, res) {
+    Doctor.count()
+        .then(count => res.json({
+                error: false,
+                count: count
+            })
+        )
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}

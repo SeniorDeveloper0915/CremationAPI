@@ -1,5 +1,5 @@
 import express                          from 'express';
-import * as koreanCtrl                  from '../controllers/korean_medicine.controller';
+import * as copyrightCtrl               from '../controllers/copyright.controller';
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: korean medicine
- *     description: Korean Medicine operations
+ *   - name: copy right
+ *     description: Copy Right operations
  */
 
 
@@ -18,11 +18,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /korean/modify:
+     * /copyright/modify:
      *   put:
      *     tags:
-     *       - korean medicine
-     *     summary: "Modify Korean Medicine By Id"
+     *       - copy right
+     *     summary: "Modify Copy Right By Id"
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -38,21 +38,21 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Korean Medicine object
+     *         description: Updated Copy Right object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/KoreanMedicine"
+     *           $ref: "#/definitions/CopyRight"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/KoreanMedicine"
+     *           $ref: "#/definitions/CopyRight"
      *       400:
-     *         description: Invalid KoreanMedicine
+     *         description: Invalid CopyRight
      */
 
-    .put(validate(schema.KoreanMedicine), (req, res) => {
-        koreanCtrl.ModifyKorean(req, res);
+    .put(validate(schema.CopyRight), (req, res) => {
+        copyrightCtrl.ModifyCopyRight(req, res);
     });
 
 
@@ -60,11 +60,11 @@ router.route('/get')
 
     /**
      * @swagger
-     * /korean/get:
+     * /copyright/get:
      *   get:
      *     tags:
-     *       - korean medicine
-     *     summary: Get Korean Medicine
+     *       - copy right
+     *     summary: Get Copy Right
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -73,22 +73,22 @@ router.route('/get')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of korean medicine that needs to be fetched
+     *         description: id of copy right that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/KoreanMedicine"
+     *           $ref: "#/definitions/CopyRight"
      *       404:
-     *          description: KoreanMedicine not found
+     *          description: CopyRight not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        koreanCtrl.GetKoreanById(req, res);
+        copyrightCtrl.GetCopyRightById(req, res);
     });
 
 export default router;
