@@ -1,5 +1,8 @@
-import bookshelf 	from '../config/bookshelf';
-import Doctor 		from './doctor.model';
+import bookshelf 		from '../config/bookshelf';
+import Doctor 			from './doctor.model';
+import FirstProject 	from './first_level_project.model';
+import SecondProject 	from './second_level_project.model';
+import ThirdProject 	from './third_level_project.model';
 
 /**
  * Skill model.

@@ -1,6 +1,7 @@
 import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import SecondProject            from '../models/second_level_project.model';
+import ThirdProject             from '../models/third_level_project.model';
 import formidable               from 'formidable';
 import fs                       from 'fs';
 import date                     from 'date-and-time';
@@ -42,7 +43,7 @@ export function AddProject(req, res) {
  */
 export function GetProjectById(req, res) {
     SecondProject.forge({id: req.params.id})
-        .fetch()
+        .fetch({withRelated : ['ThirdProjects']})
         .then(project => {
             if (!project) {
                 res.status(HttpStatus.NOT_FOUND).json({
@@ -53,35 +54,6 @@ export function GetProjectById(req, res) {
                 res.json({
                     error: false,
                     project: project.toJSON()
-                });
-            }
-        })
-        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: err
-            })
-        );
-}
-
-/**
- *  Get second level project id by Name
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-export function GetProjectIdByName(req, res) {
-    SecondProject.forge({Project_Name: req.params.name})
-        .fetch()
-        .then(project => {
-            if (!project) {
-                res.status(HttpStatus.NOT_FOUND).json({
-                    error: true, id: {}
-                });
-            }
-            else {
-                res.json({
-                    error: false,
-                    id   : project.get('id')
                 });
             }
         })
@@ -167,7 +139,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetProjects(req, res) {
     SecondProject.forge()
-        .fetchAll()
+        .fetchAll({withRelated : 'ThirdProjects'})
         .then(project => res.json({
                 error: false,
                 projects: project.toJSON()
@@ -191,8 +163,30 @@ export function DeleteProject(req, res) {
     SecondProject.forge({id: req.params.id})
         .fetch({require: true})
         .then(function(project) {
-                project.destory();
-                ThirdProjectController.DeleteProject(req, res);
+                if (project != null)
+                    SecondProject.where('id', req.params.id)
+                            .destroy();
+                ThirdProject.forge({Second_Project_Id :  req.params.id})
+                        .fetch()
+                        .then(function(project) { 
+                            if (project != null) {
+                                var length = project.toJSON().length;
+                                for (var i = 0; i < length; i ++) {
+                                    Doctor.forge({id : project.toJSON()[i].id})
+                                        .fetch({require: true})
+                                        .then(doctor => fs.unlinkSync(doctor.get('Before_Img')));
+                                    Doctor.forge({id : project.toJSON()[i].id})
+                                        .fetch({require: true})
+                                        .then(doctor => fs.unlinkSync(doctor.get('Effect_Img')));
+                                }
+                                ThirdProject.where('Second_Project_Id', req.params.id)
+                                            .destroy();
+                            }
+                        })
+
+                res.json({
+                    success :  true
+                });
             }
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

@@ -1,6 +1,7 @@
 import bookshelf 			from '../config/bookshelf';
 import SecondProject 		from './second_level_project.model';
 import FirstProject 		from './first_level_project.model';
+import Qa                   from './qa.model';
 
 /**
  * Second Level Project model.
@@ -20,6 +21,10 @@ class ThirdProject extends bookshelf.Model {
 
     FirstProject() {
     	return this.belongsTo(FirstProject, "Third_Project_Id");
+    }
+
+    Questions() {
+        return this.hasMan(Qa, "Third_Project_Id");
     }
 }
 

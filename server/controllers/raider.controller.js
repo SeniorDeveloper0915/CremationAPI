@@ -1,6 +1,7 @@
 import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Raider           from '../models/raider.model';
+import RaiderCategory   from '../models/raider_category.model';
 import formidable       from 'formidable';
 import fs               from 'fs';
 import date             from 'date-and-time';
@@ -103,11 +104,17 @@ export function SaveRaider(req, res) {
                 Sort                : req.body.sort                     || raider.get('Sort'),
                 Release_Time        : Release_Time
             })
-                .then(() => res.json({
-                        error   : false,
-                        message : "Succed"
-                    })
-                )
+                .then(function() {
+                    RaiderCategory.forge({id : require.body.category_id})
+                            .fetch()
+                            .then(function(category) {
+                                category.save({Article_Cnt : category.get('Article_Cnt') + 1})
+                                    .then(res => res.json({
+                                                    error   : false,
+                                                    message : "Succed"
+                                                }))
+                            })
+                })
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                         error: true,
                         data: {message: err.message}

@@ -15,7 +15,7 @@ import date             from 'date-and-time';
  */
 export function GetNationById(req, res) {
     Nation.forge({id: req.params.id})
-        .fetch()
+        .fetch({withRelated: ['Doctors']})
         .then(nation => {
             if (!nation) {
                 res.status(HttpStatus.NOT_FOUND).json({

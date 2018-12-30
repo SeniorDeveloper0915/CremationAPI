@@ -22,7 +22,9 @@ import industryRoutes 			from './industry.route';
 import recruitmentRoutes 		from './recruitment.route';
 import guideRoutes 				from './guide.route';
 import productRoutes 			from './product.route';
-
+import skillRoutes 				from './skill.route';
+import qaRoutes 				from './qa.route';
+import notificationRoutes		from './notification.route';
 const router = express.Router();
 
 // mount auth routes at /auth
@@ -94,4 +96,12 @@ router.use('/guide', guideRoutes);
 //mount Product /product
 router.use('/product', productRoutes);
 
+//mount Skill /skill
+router.use('/skill', skillRoutes);
+
+//mount QuestionAnswer /qa
+router.use('/qa', qaRoutes);
+
+//mount Nitification /notification
+router.use('/notification', notificationRoutes);
 export default router;

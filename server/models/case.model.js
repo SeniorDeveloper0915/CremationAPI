@@ -14,12 +14,13 @@ class Case extends bookshelf.Model {
         return true;
     }
 
-    // Hospital() {
-    // 	return this.belongsTo(Hospital, "Hospital_Id");
-    // }
-    // Doctor() {
-    // 	return this.belongsTo(Doctor, "Doctor_Id");
-    // }
+    Hospital() {
+    	return this.belongsTo(Hospital, "Hospital_Id");
+    }
+    
+    Doctor() {
+    	return this.belongsTo(Doctor, "Doctor_Id");
+    }
 }
 
 export default Case;

@@ -57,6 +57,11 @@ router.route('/upload_photo/:id')
         doctorCtrl.UploadPhoto(req, res);
     });
 
+router.route('/download_photo/:id')
+    .get(validate(schema.CheckId), (req, res) => {
+        doctorCtrl.DownloadPhoto(req, res);
+    });
+
 router.route('/get_by_id/:id')
 
     /**
@@ -220,7 +225,7 @@ router.route('/delete/:id')
      *       400:
      *          description: "Invalid ID"
      */
-    .delete((req, res) => {
+    .delete(validate(schema.CheckId), (req, res) => {
         doctorCtrl.DeleteDoctor(req, res);
     });
 

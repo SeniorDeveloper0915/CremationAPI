@@ -1,4 +1,5 @@
 import bookshelf 			from '../config/bookshelf';
+import RaiderCategory 		from './raider_category.model';
 
 /**
  * Raider model.
@@ -12,6 +13,9 @@ class Raider extends bookshelf.Model {
         return true;
     }
 
+    RaiderCategory() {
+    	return this.belongsTo(RaiderCategory, "Category_Id");
+    }
 }
 
 export default Raider;

@@ -57,9 +57,19 @@ router.route('/upload_logo/:id')
         hospitalCtrl.UploadLogo(req, res);
     });
 
+router.route('/download_logo/:id')
+    .get(validate(schema.CheckId), (req, res) => {
+        hospitalCtrl.DownloadLogo(req, res);
+    });
+
 router.route('/upload_publicity/:id')
     .post(validate(schema.CheckId), (req, res) => {
         hospitalCtrl.UploadPublicity(req, res);
+    });
+
+router.route('/download_publicity/:selection/:id')
+    .get(validate(schema.CheckPublicity), (req, res) => {
+        hospitalCtrl.DownloadPublicity(req, res);
     });
 
 router.route('/get_by_id/:id')

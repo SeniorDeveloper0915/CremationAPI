@@ -1,5 +1,5 @@
 import express                          from 'express';
-import * as projectCtrl                 from '../controllers/second_level_project.controller';
+import * as qaCtrl                      from '../controllers/qa.controller';
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
@@ -9,23 +9,23 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: second level project
- *     description: Second Level Project operations
+ *   - name: question and answer
+ *     description: Question & Answer operations
  */
 
 
-router.route('/add')
+router.route('/question')
 
     /**
      * @swagger
-     * /second_level_project/add:
-     *   put:
+     * /qa/add:
+     *   post:
      *     tags:
-     *       - second_level_project
-     *     summary: "Create a new Second Level Project"
+     *       - qa
+     *     summary: "Create a new Question"
      *     security:
      *        - Bearer: []
-     *     operationId: addSecondLevelProject
+     *     operationId: addQuestion
      *     consumes:
      *       - application/json
      *     produces:
@@ -33,71 +33,34 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created second level project object
+     *         description: Created questoin object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/second_level_project"
+     *           $ref: "#/definitions/qa"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/SecondLeveLProject"
+     *           $ref: "#/definitions/Question"
      *       403:
-     *          description: Second Level Project not found
+     *          description: Question not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .post(validate(schema.AddSecondLevelProject), (req, res) => {
-        projectCtrl.AddProject(req, res);
+    .post(validate(schema.Question), (req, res) => {
+        qaCtrl.SaveQuestion(req, res);
     });
 
-
-router.route('/get_by_id/:id')
-
-/**
- * @swagger
- * /second_level_project/get_by_id/{id}:
- *   get:
- *     tags:
- *       - second level project
- *     summary: Get Second Level Project by ID
- *     operationId: findById
- *     consumes:
- *       - application/json
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: id
- *         in: path
- *         description: id of second level project that needs to be fetched
- *         required: true
- *         type: integer
- *     responses:
- *       200:
- *         description: OK
- *         schema:
- *           $ref: "#/definitions/SecondLevelProject"
- *       404:
- *          description: SecondLevelProject not found
- *          schema:
- *             $ref: '#/definitions/Error'
- */
-
-    .get(validate(schema.CheckId), (req, res) => {
-        projectCtrl.GetProjectById(req, res);
-    });
-
-
-router.route('/modify')
+router.route('/answer')
     
     /**
      * @swagger
-     * /second_level_project/modify:
+     * /qa/answer:
      *   put:
      *     tags:
-     *       - second level project
-     *     summary: "Modify Second Level Project By Id"
+     *       - qa
+     *     summary: Answer about Question
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -113,33 +76,32 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated Second Level Project object
+     *         description: Updated Question & Answer object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/SecondLevelProject"
+     *           $ref: "#/definitions/Answer"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/SecondLevelProject"
+     *           $ref: "#/definitions/Answer"
      *       400:
-     *         description: Invalid SecondLevelProject
+     *         description: Invalid Answer
      */
 
-    .put(validate(schema.ModifySecondLevelProject), (req, res) => {
-        projectCtrl.ModifyProject(req, res);
+    .put(validate(schema.Answer), (req, res) => {
+        qaCtrl.SaveAnswer(req, res);
     });
 
-
-router.route('/change_status/:id')
+router.route('/get_by_id/:id')
 
     /**
      * @swagger
-     * /second_level_project/change_status/{id}:
-     *   put:
+     * /qa/get_by_id/{id}:
+     *   get:
      *     tags:
-     *       - second level project
-     *     summary: Change Second Level Project Status
+     *       - qa
+     *     summary: Get Question by ID
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -148,32 +110,33 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of second level project that needs to be fetched
+     *         description: id of qa that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/SecondLevelProject"
+     *           $ref: "#/definitions/Question"
      *       404:
-     *          description: SecondLevelProject not found
+     *          description: Question not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
-    .put(validate(schema.CheckId), (req, res) => {
-        projectCtrl.ChangeStatus(req, res);
+
+    .get(validate(schema.CheckId), (req, res) => {
+        qaCtrl.GetQuestionById(req, res);
     });
 
 
 router.route('/get')
     /**
      * @swagger
-     * /second_level_project/get:
+     * /qa/get:
      *   get:
      *     tags:
-     *       - second level project
-     *     summary: "List all second level projects"
+     *       - qa
+     *     summary: "List all question & answers"
      *     operationId: findAll
      *     consumes:
      *       - application/json
@@ -187,18 +150,18 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        projectCtrl.GetProjects(req, res);
+        qaCtrl.GetQas(req, res);
     });
 
 
 router.route('/delete/:id')
     /**
      * @swagger
-     * /second_level_project/delete/{id}:
+     * /qa/delete/{id}:
      *   delete:
      *     tags:
-     *       - banner
-     *     summary: Delete the second level project by ID
+     *       - qa
+     *     summary: Delete the qa by ID
      *     security:
      *       - Bearer: []
      *     operationId: destroy
@@ -207,7 +170,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of second level project that needs to be deleted
+     *         description: id of qa that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -217,7 +180,31 @@ router.route('/delete/:id')
      *          description: "Invalid ID"
      */
     .delete(validate(schema.CheckId), (req, res) => {
-        projectCtrl.DeleteProject(req, res);
+        qaCtrl.DeleteQa(req, res);
+    });
+
+router.route('/count')
+    /**
+     * @swagger
+     * /qa/count:
+     *   get:
+     *     tags:
+     *       - question and answer count
+     *     summary: "Question & Answers"
+     *     operationId: findAll
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters: []
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *            type: object
+     */
+    .get((req, res) => {
+        qaCtrl.Count(req, res);
     });
 
 export default router;

@@ -1,6 +1,7 @@
 import bookshelf 		from '../config/bookshelf';
 import Service 			from './service.model';
 import PromotionImage   from './promotion_image.model';
+import FirstProject 	from './first_level_project.model';
 
 
 /**
@@ -17,6 +18,10 @@ class Product extends bookshelf.Model {
 
     Promitions() {
         return this.hasMany(PromotionImage, "Product_Id");
+    }
+
+    FirstProject() {
+    	return this.belongsTo(FirstProject, "First_Project_Id");
     }
 }
 

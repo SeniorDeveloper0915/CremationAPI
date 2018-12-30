@@ -127,7 +127,7 @@ router.route('/modify')
      */
 
     .put(validate(schema.ModifyFirstLevelProject), (req, res) => {
-        projectCtrl.ModifyProjent(req, res);
+        projectCtrl.ModifyProject(req, res);
     });
 
 
@@ -220,37 +220,4 @@ router.route('/delete/:id')
         projectCtrl.DeleteProject(req, res);
     });
 
-router.route('/get_project_id_name/:name')
-    
-    /**
-     * @swagger
-     * /first_level_project/get_project_id_name/{name}:
-     *   get:
-     *     tags:
-     *       - first level project
-     *     summary: Get First Level Project Id by name
-     *     operationId: findById
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id of first level project that needs to be fetched
-     *         required: true
-     *         type: integer
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *           $ref: "#/definitions/FirstLevelProject"
-     *       404:
-     *          description: FirstLevelProject not found
-     *          schema:
-     *             $ref: '#/definitions/Error'
-     */
-    .get(validate(schema.CheckName), (req, res) => {
-        projectCtrl.GetProjectIdByName(req, res);
-    })
 export default router;

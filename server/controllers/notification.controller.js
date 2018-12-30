@@ -1,12 +1,10 @@
 import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
-import Doctor           from '../models/doctor.model';
-import Skill            from '../models/skill.model';
+import Notification     from '../models/notification.model';
 import formidable       from 'formidable';
 import fs               from 'fs';
 import date             from 'date-and-time';
 import randomstring     from 'randomstring';
-
 
 /**
  *  Upload Image
@@ -22,13 +20,13 @@ function UploadImage(req, res, oldpath, newpath) {
     fs.rename(oldpath, newpath, function(err) {
         if (err)
             throw err;
-        Doctor.forge({
-            Photo : newpath
+        Notification.forge({
+            Image : newpath
         }, {hasTimestamps: true}).save()
-            .then(doctor => res.json({
+            .then(notification => res.json({
                     success : true,
                     message : "Image Uploading Succed!",
-                    id      : doctor.id
+                    id      : notification.id
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -39,7 +37,7 @@ function UploadImage(req, res, oldpath, newpath) {
 }
 
 /**
- *  Change Before Image
+ *  Change Image
  *
  * @param {object} req
  * @param {object} res
@@ -50,22 +48,22 @@ function UploadImage(req, res, oldpath, newpath) {
  */
 
 function ChangeImage(req, res, oldpath, newpath, id) {
-    Doctor.forge({id: id})
+    Notification.forge({id: id})
     .fetch({require: true})
-    .then(function(doctor) {
-        if (doctor.get('Photo') != "")
-            fs.unlinkSync(doctor.get('Photo'));
+    .then(function(notification) {
+        if (notification.get('Image') != "")
+            fs.unlinkSync(notification.get('Image'));
         fs.rename(oldpath, newpath, function(err) {
             if (err)
                 throw err;
-            Doctor.forge({id: id})
+            Notification.forge({id: id})
                 .fetch()
-                .then(doctor => doctor.save({
-                        Photo : newpath
+                .then(notification => notification.save({
+                        Image : newpath
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "Image Upload Succed"
+                            message : "IMage Upload Succed"
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -82,98 +80,66 @@ function ChangeImage(req, res, oldpath, newpath, id) {
     });
 }
 
-/**
- *  Save Skills
- *
- * @param {objectarray} skills
- * @param {integer} doctorId
- * @returns {*}
- */
 
-function SaveSkills(skills, doctorId) {
-    Skill.forge({Doctor_Id :  doctorId})
-        .fetch()
-        .then(function(skill) {
-            if (skill != null)
-                skill.destroy()
-            var i;
-            for (i = 0; i < skills.length; i ++) {
-                console.log(skills[i].first_project_id);
-                Skill.forge({
-                    Doctor_Id           : doctorId, 
-                    First_Project_Id    : skills[i].first_project_id,
-                    Second_Project_Id   : skills[i].second_project_id,
-                    Third_Project_Id    : skills[i].third_project_id
-                }, {hasTimestamps: true}).save();
-            }
-        })
-}
 /**
- *  Save New Doctor
+ * Store new notification
  *
  * @param {object} req
  * @param {object} res
- * @param {string} sel
  * @returns {*}
  */
 
-export function SaveDoctor(req, res) {
+export function SaveNotification(req, res) {
     let Release_Time = new Date();
     date.format(Release_Time, 'YYYY-MM-DD HH:mm:ss');
 
-    Doctor.forge({id: req.body.id})
+    Notification.forge({id: req.body.id})
         .fetch({require: true})
-        .then(function(doctor) {
-            doctor.save({
-                Doctor_Name         : req.body.doctor_name          || project.get('Doctor_Name'),
-                Title_Id            : req.body.title_id             || project.get('Title_Id'),
-                Length              : req.body.length               || project.get('Length'),
-                Number              : req.body.number               || project.get('Number'),
-                Address             : req.body.address              || project.get('Address'),
-                Profile             : req.body.profile              || project.get('Profile'),
-                Sort                : req.body.sort                 || project.get('Sort'),
-                Release_Time        : Release_Time
+        .then(notification => notification.save({
+                Title           : req.body.title        || notification.get('Banner_Title'),
+                Notice          : req.body.notice       || notification.get('URL'),
+                Release_Time    : Release_Time
             })
-            .then(function() {
-                SaveSkills(req.body.skills, req.body.id);
-                res.json({
-                        success   : true
+                .then(() => res.json({
+                        error   : false,
+                        message : "New Notification Succed"
                     })
-            })
-            .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                    error: true,
-                    data: {message: err.message}
-                })
-            )
-        })
+                )
+                .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                        error: true,
+                        data: {message: err.message}
+                    })
+                )
+        )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
             })
         );
+
 }
 
-
 /**
- * Upload Photo
+ * Upload Banner Image
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function UploadPhoto(req, res) {
+export function UploadNotificationImage(req, res) {
     var form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files) {
-        if (files.doctor_photo == null) {
+        if (files.image == null) {
             res.send({
                 error : true,
                 message : "Select File Correctly!"
             });
         } else {
-            var filename = randomstring.generate(7);
-            var oldpath = files.doctor_photo.path;
-            var newpath = 'C:/Users/royal/doctor/' + filename + "_doctor.jpg";
+            console.log(files.image);
+            var oldpath = files.image.path;
+            var fileName = randomstring.generate(7);
+            var newpath = 'C:/Users/royal/notification/' + fileName + ".jpg";
 
             if (req.params.id == 0) {
                 UploadImage(req, res, oldpath, newpath);
@@ -185,18 +151,18 @@ export function UploadPhoto(req, res) {
 }
 
 /**
- * Download Doctor Photo
+ * Download notification Image
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function DownloadPhoto(req, res) {
-    Doctor.forge({id :  req.params.id})
+export function DownloadBannerImage(req, res) {
+    Notification.forge({id :  req.params.id})
         .fetch()
-        .then(function(doctor) {
-            var path = doctor.toJSON().Photo.toString();
+        .then(function(notification) {
+            var path = notification.toJSON().Banner_Img.toString();
             var stat = fs.statSync(path);
             var total  = stat.size;
             if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
@@ -221,38 +187,27 @@ export function DownloadPhoto(req, res) {
             }
         });
 }
-
-
 /**
- *  Get Doctor by id
+ *  Find notification by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetDoctorById(req, res) {
-    Doctor.forge({id: req.params.id})
+export function GetNotificationById(req, res) {
+    Notification.forge({id: req.params.id})
         .fetch()
-        .then(doctor => {
-            if (!doctor) {
+        .then(notification => {
+            if (!notification) {
                 res.status(HttpStatus.NOT_FOUND).json({
-                    error: true, doctor: {}
+                    error: true, Notification: {}
                 });
             }
             else {
-                Skill.forge({Doctor_Id : doctor.get('id')})
-                    .fetch()
-                    .then(function(skill) {
-                        res.json({
-                            error : false,
-                            doctor: doctor.toJSON(),
-                            skill : skill.toJSON() 
-                        });
-                    }) 
-                    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                            error: err
-                        })
-                    );
+                res.json({
+                    error: false,
+                    Notification: notification.toJSON()
+                });
             }
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -263,7 +218,7 @@ export function GetDoctorById(req, res) {
 
 
 /**
- *  Change Doctor Status
+ *  Change Notification Status
  *
  * @param {object} req
  * @param {object} res
@@ -271,10 +226,10 @@ export function GetDoctorById(req, res) {
  */
 export function ChangeStatus(req, res) {
 
-    Doctor.forge({id: req.params.id})
+    Notification.forge({id: req.params.id})
         .fetch({require: true})
-        .then(doctor => doctor.save({
-                Status : !doctor.get('Status')
+        .then(notification => notification.save({
+                Status : !notification.get('Status')
             })
                 .then(() => res.json({
                         error   : false,
@@ -294,18 +249,18 @@ export function ChangeStatus(req, res) {
 }
 
 /**
- * Get All Doctors
+ * Get All Notifications
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetDoctors(req, res) {
-    Doctor.forge()
-        .fetchAll({withRelated : ['DoctorTitle', 'Skills']})
-        .then(doctors => res.json({
+export function GetNotifications(req, res) {
+    Notification.forge()
+        .fetchAll()
+        .then(notification => res.json({
                 error: false,
-                doctors: doctors.toJSON(),
+                notifications: notification.toJSON()
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -316,56 +271,34 @@ export function GetDoctors(req, res) {
 
 
 /**
- * Delete Doctor by id
+ * Delete notification by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function DeleteDoctor(req, res) {
-    Doctor.forge({id: req.params.id})
+export function DeleteNotification(req, res) {
+    Notification.forge({id: req.params.id})
         .fetch({require: true})
-        .then(function(doctor) {
-            Skill.forge({Doctor_Id : doctor.get('id')})
-                .fetch()
-                .then(function(skill) {
-                    skill.destroy()
-                        .then(function() {
-                            doctor.destroy()
-                            .then(() => res.json({
-                                    error: false,
-                                    data: {message: 'Delete Doctor Succed.'}
-                                })
-                            );
-                        });
+        .then(notification => notification.destroy()
+            .then(() => res.json({
+                    error: false,
+                    data: {message: 'Delete Notification Succed.'}
                 })
-                .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                        error: err
-                    })
-                );
-        })
-        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: err
-            })
-        );
-}
-
-/**
- * Get Doctor Count
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-export function Count(req, res) {
-    Doctor.count()
-        .then(count => res.json({
-                error: false,
-                count: count
-            })
+            )
+            .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                    error: true,
+                    data: {message: err.message}
+                })
+            )
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
             })
         );
+
+    Notification.forge({id: req.params.id})
+        .fetch({require: true})
+        .then(notification => fs.unlinkSync(notification.get('Image')));
 }
+

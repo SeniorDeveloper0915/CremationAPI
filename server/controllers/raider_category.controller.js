@@ -41,7 +41,7 @@ export function AddCategory(req, res) {
  */
 export function GetCategoryById(req, res) {
     RaiderCategory.forge({id: req.params.id})
-        .fetch()
+        .fetch({withRelated : ['Raiders']})
         .then(category => {
             if (!category) {
                 res.status(HttpStatus.NOT_FOUND).json({

@@ -1,10 +1,12 @@
 import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import FirstProject             from '../models/first_level_project.model';
+import SecondProject            from '../models/second_level_project.model';
+import ThirdProject             from '../models/third_level_project.model';
+import Product                  from '../models/product.model';
 import formidable               from 'formidable';
 import fs                       from 'fs';
 import date                     from 'date-and-time';
-import SecondProjectController  from './second_level_project.controller';
 
 
 /**
@@ -30,7 +32,6 @@ export function AddProject(req, res) {
                 error: err
             })
         );
-
 }
 
 
@@ -43,8 +44,9 @@ export function AddProject(req, res) {
  */
 export function GetProjectById(req, res) {
     FirstProject.forge({id: req.params.id})
-        .fetch()
+        .fetch({withRelated: ['SecondProjects', 'ThirdProjects', 'Products']})
         .then(project => {
+            console.log(project.toJSON());
             if (!project) {
                 res.status(HttpStatus.NOT_FOUND).json({
                     error: true, project: {}
@@ -52,8 +54,8 @@ export function GetProjectById(req, res) {
             }
             else {
                 res.json({
-                    error: false,
-                    project: project.toJSON()
+                    error           : false,
+                    project         : project.toJSON()
                 });
             }
         })
@@ -63,34 +65,6 @@ export function GetProjectById(req, res) {
         );
 }
 
-/**
- *  Get first level project id by Name
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-export function GetProjectIdByName(req, res) {
-    FirstProject.forge({Project_Name: req.params.name})
-        .fetch()
-        .then(project => {
-            if (!project) {
-                res.status(HttpStatus.NOT_FOUND).json({
-                    error: true, id: {}
-                });
-            }
-            else {
-                res.json({
-                    error: false,
-                    id   : project.get('id')
-                });
-            }
-        })
-        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: err
-            })
-        );
-}
 
 /**
  *  Modify Frist Level Project
@@ -167,7 +141,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetProjects(req, res) {
     FirstProject.forge()
-        .fetchAll()
+        .fetchAll({withRelated: ['SecondProjects', 'ThirdProjects', 'Products']})
         .then(project => res.json({
                 error: false,
                 projects: project.toJSON()
@@ -189,12 +163,50 @@ export function GetProjects(req, res) {
  */
 export function DeleteProject(req, res) {
     FirstProject.forge({id: req.params.id})
-        .fetch({require: true})
-        .then(function(project) {
-                project.destroy();
-                SecondProjectController.DeleteProject(req, res);
-            }
-        )
+        .fetch()
+        .then(project => {
+            SecondProject.forge({First_Project_Id : req.params.id})
+                    .fetch()
+                    .then(project => {
+                        if (project != null)
+                            SecondProject.where('First_Project_Id', req.params.id)
+                                            .destroy();
+                    });
+            ThirdProject.forge({First_Project_Id : req.params.id})
+                    .fetch()
+                    .then(project => {
+                        if (project != null)
+                        {
+                            if (project != null) {
+                                var length = project.toJSON().length;
+                                for (var i = 0; i < length; i ++) {
+                                    Doctor.forge({id : project.toJSON()[i].id})
+                                        .fetch({require: true})
+                                        .then(doctor => fs.unlinkSync(doctor.get('Before_Img')));
+                                    Doctor.forge({id : project.toJSON()[i].id})
+                                        .fetch({require: true})
+                                        .then(doctor => fs.unlinkSync(doctor.get('Effect_Img')));
+                                }
+                                ThirdProject.where('First_Project_Id', req.params.id)
+                                            .destroy();
+                            }
+                        }  
+                    })
+            Product.forge({First_Project_Id : req.params.id})
+                    .fetchAll()
+                    .then(product => {
+                        if (product != null) {
+                            Product.where('First_Project_Id', req.params.id)
+                                    .destroy();
+                        }
+                    })
+            if (project != null)
+               FirstProject.where('id', req.params.id)
+                            .destroy();
+            res.json({
+                success : true
+            })
+        })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
             })

@@ -55,7 +55,7 @@ export default {
 
     AddSecondLevelProject : {
         body : {
-            first_id            : Joi.string().required(),
+            first_id            : Joi.number().required(),
             project_name        : Joi.string().required(),
             sort                : Joi.number().required()
         }
@@ -64,7 +64,7 @@ export default {
     ModifySecondLevelProject : {
         body : {
             id                  : Joi.number().required(),
-            first_id            : Joi.string().required(),
+            first_id            : Joi.number().required(),
             project_name        : Joi.string().required(),
             sort                : Joi.number().required()
         }
@@ -263,6 +263,48 @@ export default {
         }
     },
 
+    User : {
+        body : {
+            id                  : Joi.number().required(),
+            userid              : Joi.string().required(),
+            account             : Joi.string().required(),
+            nickname            : Joi.string().required(),
+            email               : Joi.string().required(),
+            password            : Joi.string().required(),
+            gender              : Joi.number().required(),
+            birthday            : Joi.number().required(),
+            area                : Joi.number().required()    
+        }
+    },
+
+    Question : {
+        body : {
+            question_title      : Joi.string().required(),
+            question_content    : Joi.string().required(),
+            first_project_id    : Joi.number().required(),
+            second_project_id   : Joi.number().required(),
+            third_project_id    : Joi.number().required(),
+            phonenumber         : Joi.string().required(),
+            verification_code   : Joi.string().required()
+        }
+    },
+    
+    Answer : {
+        body : {
+            id                  : Joi.number().required(),
+            doctor_id           : Joi.number().required(),
+            answer_content      : Joi.string().required(),
+        }
+    },
+
+    Notification : {
+        body : {
+            id                  : Joi.number().required(),
+            title               : Joi.string().required(),
+            notice              : Joi.string().required()
+        }
+    },
+
     CheckId : {
         params : {
             id                  : Joi.number().required()
@@ -272,6 +314,20 @@ export default {
     CheckName : {
         params : {
             name                : Joi.string().required()
+        }
+    }, 
+
+    CheckSkill : {
+        body : {
+            selection           : Joi.number().required(),
+            id                  : Joi.number().required(),
+        }
+    },
+
+    CheckPublicity : {
+        params : {
+            selection           : Joi.number().required(),
+            id                  : Joi.number().required()
         }
     }
 };

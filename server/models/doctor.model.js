@@ -2,6 +2,7 @@ import bookshelf 		from '../config/bookshelf';
 import DoctorTitle 		from './doctor_title.model';
 import Skill 			from './skill.model';
 import Case             from './case.model';
+import Nation           from './nation.model';
 
 /**
  * Doctor Title model.
@@ -25,6 +26,10 @@ class Doctor extends bookshelf.Model {
 
     Cases() {
         return this.hasMany(Case, "Doctor_Id");
+    }
+
+    Nation() {
+        return this.belongsTo(Nation, "Address");
     }
 }
 

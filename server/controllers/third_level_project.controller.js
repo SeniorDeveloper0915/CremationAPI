@@ -4,6 +4,7 @@ import ThirdProject     from '../models/third_level_project.model';
 import formidable       from 'formidable';
 import fs               from 'fs';
 import date             from 'date-and-time';
+import randomstring     from 'randomstring';
 
 
 
@@ -151,9 +152,10 @@ export function SaveProject(req, res) {
                 Project_Name        : req.body.project_name         || project.get('Project_Name'),
                 Project_Alias       : req.body.project_alias        || project.get('Project_Alias'),
                 Description         : req.body.description          || project.get('Description'),
-                Features            : req.body.featuers             || project.get('Features'),
+                Features            : req.body.features             || project.get('Features'),
                 Efficiency          : req.body.efficiency           || project.get('Efficiency'),
                 Proposed_Price      : req.body.proposed_price       || project.get('Proposed_Price'),
+                Time_Period         : req.body.time_period          || project.get('Time_Period'),
                 Aesthetic_standard  : req.body.aesthetic_standard   || project.get('Aesthetic_standard'),                                
                 Advantages          : req.body.advantages           || project.get('Advantages'),
                 Shortcoming         : req.body.shortcoming          || project.get('Shortcoming'),
@@ -201,8 +203,10 @@ export function UploadBeforeImage(req, res) {
                 message : "Select File Correctly!"
             });
         } else {
+
+            var fileName = randomstring.generate(7);
             var oldpath = files.before_image.path;
-            var newpath = 'C:/Users/royal/' + files.before_image.name;
+            var newpath = 'C:/Users/royal/project/' + fileName + "_before.jpg";
 
             if (req.params.id == 0) {
                 UploadImage(req, res, oldpath, newpath, 0);
@@ -231,8 +235,9 @@ export function UploadEffectImage(req, res) {
                 message : "Select File Correctly!"
             });
         } else {
+            var fileName = randomstring.generate(7);
             var oldpath = files.effect_image.path;
-            var newpath = 'C:/Users/royal/' + files.effect_image.name;
+            var newpath = 'C:/Users/royal/project/' + fileName + "_effect.jpg";
 
             if (req.params.id == 0) {
                 UploadImage(req, res, oldpath, newpath, 1);
@@ -272,34 +277,6 @@ export function GetProjectById(req, res) {
         );
 }
 
-/**
- *  Get second level project id by Name
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-export function GetProjectIdByName(req, res) {
-    SecondProject.forge({Project_Name: req.params.name})
-        .fetch()
-        .then(project => {
-            if (!project) {
-                res.status(HttpStatus.NOT_FOUND).json({
-                    error: true, id: {}
-                });
-            }
-            else {
-                res.json({
-                    error: false,
-                    id   : project.get('id')
-                });
-            }
-        })
-        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: err
-            })
-        );
-}
 
 /**
  *  Change Third Level Project Status

@@ -4,7 +4,6 @@ import Team 			from './team.model';
 import Case             from './case.model';
 import PublicityPhoto	from './publicity_photo.model';
 
-
 /**
  * Hospital model.
  */
@@ -32,6 +31,7 @@ class Hospital extends bookshelf.Model {
     Cases() {
         return this.hasMany(Case, "Hospital_Id");
     }
+
 }
 
 export default Hospital;

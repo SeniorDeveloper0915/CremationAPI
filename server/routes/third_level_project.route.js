@@ -3,6 +3,7 @@ import * as projectCtrl                 from '../controllers/third_level_project
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
+import randomstring                     from 'randomstring';
 
 const router = express.Router();
 

@@ -1,16 +1,16 @@
-import express              from 'express';
-import * as bannerCtrl      from '../controllers/banner.controller';
-import isAuthenticated      from '../middlewares/authenticate';
-import validate             from '../config/joi.validate';
-import schema               from '../utils/validator';
+import express                      from 'express';
+import * as notificationCtrl        from '../controllers/notification.controller';
+import isAuthenticated              from '../middlewares/authenticate';
+import validate                     from '../config/joi.validate';
+import schema                       from '../utils/validator';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   - name: banner
- *     description: Banner operations
+ *   - name: notification
+ *     description: Notification operations
  */
 
 
@@ -18,11 +18,11 @@ router.route('/add')
 
     /**
      * @swagger
-     * /banner/add:
+     * /notification/add:
      *   put:
      *     tags:
-     *       - banner
-     *     summary: "Create a new Banner"
+     *       - notification
+     *     summary: "Create a new Notification"
      *     security:
      *        - Bearer: []
      *     operationId: addBanner
@@ -33,44 +33,44 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created banner object
+     *         description: Created notification object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/banner"
+     *           $ref: "#/definitions/notification"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Banner"
+     *           $ref: "#/definitions/Notification"
      *       403:
-     *          description: Banner not found
+     *          description: Notification not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .put(validate(schema.Banner), (req, res) => {
-        bannerCtrl.SaveBanner(req, res);
+    .put(validate(schema.Notification), (req, res) => {
+        notificationCtrl.SaveNotification(req, res);
     });
 
 
 router.route('/upload_image/:id')
     .post(validate(schema.CheckId), (req, res) => {
-        bannerCtrl.UploadBannerImage(req, res);
+        notificationCtrl.UploadNotificationImage(req, res);
     });
 
 router.route('/download_image/:id')
     .get(validate(schema.CheckId), (req, res) => {
-        bannerCtrl.DownloadBannerImage(req, res);
+        notificationCtrl.DownloadNotificationImage(req, res);
     });
 router.route('/get_by_id/:id')
 
 /**
  * @swagger
- * /banner/get_by_id/{id}:
+ * /notification/get_by_id/{id}:
  *   get:
  *     tags:
- *       - banner
- *     summary: Get the banner by ID
+ *       - notification
+ *     summary: Get the notification by ID
  *     operationId: findById
  *     consumes:
  *       - application/json
@@ -79,22 +79,22 @@ router.route('/get_by_id/:id')
  *     parameters:
  *       - name: id
  *         in: path
- *         description: id of banner that needs to be fetched
+ *         description: id of notification that needs to be fetched
  *         required: true
  *         type: integer
  *     responses:
  *       200:
  *         description: OK
  *         schema:
- *           $ref: "#/definitions/Banner"
+ *           $ref: "#/definitions/Notification"
  *       404:
- *          description: Banner not found
+ *          description: Notification not found
  *          schema:
  *             $ref: '#/definitions/Error'
  */
 
     .get(validate(schema.CheckId), (req, res) => {
-        bannerCtrl.GetBannerById(req, res);
+        notificationCtrl.GetNotificationById(req, res);
     });
 
 
@@ -102,11 +102,11 @@ router.route('/modify')
     
     /**
      * @swagger
-     * /banner/modify:
+     * /notification/modify:
      *   put:
      *     tags:
-     *       - banner
-     *     summary: Modify Banner By Id
+     *       - notification
+     *     summary: Modify Notification By Id
      *     security:
      *       - Bearer: []
      *     operationId: update
@@ -122,32 +122,32 @@ router.route('/modify')
      *         type: integer
      *       - name: body
      *         in: body
-     *         description: Updated banner object
+     *         description: Updated notification object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/Banner"
+     *           $ref: "#/definitions/Notification"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Banner"
+     *           $ref: "#/definitions/Notification"
      *       400:
-     *         description: Invalid Banner
+     *         description: Invalid Notification
      */
 
-    .put(validate(schema.Banner), (req, res) => {
-        bannerCtrl.SaveBanner(req, res);
+    .put(validate(schema.Notification), (req, res) => {
+        notificationCtrl.SaveNotification(req, res);
     });
 
 router.route('/change_status/:id')
 
     /**
      * @swagger
-     * /banner/change_status/{id}:
+     * /notification/change_status/{id}:
      *   put:
      *     tags:
-     *       - banner
-     *     summary: Change Banner Status
+     *       - notification
+     *     summary: Change Notification Status
      *     operationId: findById
      *     consumes:
      *       - application/json
@@ -156,22 +156,22 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of banner that needs to be fetched
+     *         description: id of notification that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Banner"
+     *           $ref: "#/definitions/Notification"
      *       404:
-     *          description: Banner not found
+     *          description: Notification not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .put(validate(schema.CheckId), (req, res) => {
-        bannerCtrl.ChangeStatus(req, res);
+        notificationCtrl.ChangeStatus(req, res);
     });
 
 
@@ -179,10 +179,10 @@ router.route('/get')
     
     /**
      * @swagger
-     * /banner/get:
+     * /notification/get:
      *   get:
      *     tags:
-     *       - banner
+     *       - notification
      *     summary: "List all banners"
      *     operationId: findAll
      *     consumes:
@@ -197,7 +197,7 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        bannerCtrl.GetBanners(req, res);
+        notificationCtrl.GetNotifications(req, res);
     });
 
 
@@ -205,11 +205,11 @@ router.route('/delete/:id')
 
     /**
      * @swagger
-     * /banner/delete/{id}:
+     * /notification/delete/{id}:
      *   delete:
      *     tags:
-     *       - banner
-     *     summary: Delete the banner by ID
+     *       - notification
+     *     summary: Delete the notification by ID
      *     security:
      *       - Bearer: []
      *     operationId: destroy
@@ -218,7 +218,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of banner that needs to be deleted
+     *         description: id of notification that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -228,6 +228,6 @@ router.route('/delete/:id')
      *          description: "Invalid ID"
      */
     .delete(validate(schema.CheckId), (req, res) => {
-        bannerCtrl.DeleteBanner(req, res);
+        notificationCtrl.DeleteNotification(req, res);
     });
 export default router;
