@@ -44,7 +44,7 @@ export function AddProject(req, res) {
  */
 export function GetProjectById(req, res) {
     FirstProject.forge({id: req.params.id})
-        .fetch({withRelated: ['SecondProjects', 'ThirdProjects', 'Products']})
+        .fetch()
         .then(project => {
             console.log(project.toJSON());
             if (!project) {
@@ -65,6 +65,140 @@ export function GetProjectById(req, res) {
         );
 }
 
+/**
+ *  Get second level project by first project id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetSecondProject(req, res) {
+    FirstProject.forge({id: req.params.id})
+        .fetch({withRelated: ['SecondProjects']})
+        .then(project => {
+
+            project.SecondProjects().fetch().then(function(projects) {
+                console.log(projects);
+                if (!projects) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, project: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error           : false,
+                        project         : projects.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get third level project by first project id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetThirdProject(req, res) {
+    FirstProject.forge({id: req.params.id})
+        .fetch({withRelated: ['ThirdProjects']})
+        .then(project => {
+
+            project.ThirdProjects().fetch().then(function(projects) {
+                console.log(projects);
+                if (!projects) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, project: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error           : false,
+                        project         : projects.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get questions by first project id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetQuestions(req, res) {
+    FirstProject.forge({id: req.params.id})
+        .fetch({withRelated: ['Questions']})
+        .then(project => {
+
+            project.Questions().fetch().then(function(questions) {
+                console.log(questions);
+                if (!questions) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, questions: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error               : false,
+                        questions           : questions.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get products by first project id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetProduct(req, res) {
+    FirstProject.forge({id: req.params.id})
+        .fetch({withRelated: ['Products']})
+        .then(project => {
+
+            project.Products().fetch().then(function(products) {
+                if (!products) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, products: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error               : false,
+                        products            : products.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
 
 /**
  *  Modify Frist Level Project

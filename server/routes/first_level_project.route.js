@@ -21,11 +21,11 @@ router.route('/add')
      * /first_level_project/add:
      *   put:
      *     tags:
-     *       - first_level_project
+     *       - first level project
      *     summary: "Create a new First Level Project"
      *     security:
      *        - Bearer: []
-     *     operationId: addFirstLevelProject
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -61,8 +61,8 @@ router.route('/get_by_id/:id')
      *   get:
      *     tags:
      *       - first level project
-     *     summary: Get First Level Project by ID
-     *     operationId: findById
+     *     summary: Get First Level Project by Id
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -89,6 +89,142 @@ router.route('/get_by_id/:id')
     });
 
 
+router.route('/get/second/:id')
+    /**
+     * @swagger
+     * /first_level_project/get/second/{id}:
+     *   get:
+     *     tags:
+     *       - first level project
+     *     summary: Get Second Level Project by Id
+     *     operationId: getSecondById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of first level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/FirstLevelProject"
+     *       404:
+     *          description: FirstLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetSecondProject(req, res);
+    });
+
+router.route('/get/third/:id')
+    /**
+     * @swagger
+     * /first_level_project/get/third/{id}:
+     *   get:
+     *     tags:
+     *       - first level project
+     *     summary: Get Third Level Project by Id
+     *     operationId: getThirdById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of first level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/FirstLevelProject"
+     *       404:
+     *          description: FirstLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetThirdProject(req, res);
+    });
+
+router.route('/get/questions/:id')
+    /**
+     * @swagger
+     * /first_level_project/get/questions/{id}:
+     *   get:
+     *     tags:
+     *       - first level project
+     *     summary: Get Questions by Id
+     *     operationId: getQuestionsById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of first level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/FirstLevelProject"
+     *       404:
+     *          description: FirstLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetQuestions(req, res);
+    });
+
+router.route('/get/product/:id')
+    /**
+     * @swagger
+     * /first_level_project/get/product/{id}:
+     *   get:
+     *     tags:
+     *       - first level project
+     *     summary: Get Products by Id
+     *     operationId: getProductById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of first level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/FirstLevelProject"
+     *       404:
+     *          description: FirstLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetProduct(req, res);
+    });
+
 router.route('/modify')
     
     /**
@@ -97,10 +233,10 @@ router.route('/modify')
      *   put:
      *     tags:
      *       - first level project
-     *     summary: "Modify First Level Project By Id"
+     *     summary: Modify First Level Project By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
@@ -140,7 +276,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - first level project
      *     summary: Change First Level Project Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -197,11 +333,11 @@ router.route('/delete/:id')
      * /first_level_project/delete/{id}:
      *   delete:
      *     tags:
-     *       - first_level_project
+     *       - first level project
      *     summary: Delete the first level project by ID
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

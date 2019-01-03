@@ -29,7 +29,7 @@ class FirstProject extends bookshelf.Model {
     }
 
     Products() {
-        return this.hasMany(Project, "First_Project_Id");
+        return this.hasMany(Product, "First_Project_Id");
     }
 } 
 

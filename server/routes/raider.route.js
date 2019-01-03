@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new Raider"
      *     security:
      *        - Bearer: []
-     *     operationId: addRaider
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -65,8 +65,8 @@ router.route('/get_by_id/:id')
      *   get:
      *     tags:
      *       - raider
-     *     summary: Get Raider by ID
-     *     operationId: findById
+     *     summary: Get Raider by Id
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -104,17 +104,12 @@ router.route('/modify')
      *     summary: "Modify Raider By Id"
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated Raider object
@@ -144,7 +139,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - raider
      *     summary: Change Raider Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -178,7 +173,7 @@ router.route('/get')
      *     tags:
      *       - raider
      *     summary: "List all raiders"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -202,10 +197,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - raider
-     *     summary: Delete the raider by ID
+     *     summary: Delete the raider by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:
@@ -224,4 +219,27 @@ router.route('/delete/:id')
         raiderCtrl.DeleteRaider(req, res);
     });
 
+router.route('/search/:text')
+    /**
+     * @swagger
+     * /raider/search/{text}:
+     *   get:
+     *     tags:
+     *       - raider
+     *     summary: "Search Raiders"
+     *     operationId: search
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters: []
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *            type: object
+     */
+    .get(validate(schema.CheckText), (req, res) => {
+        doctorCtrl.Search(req, res);
+    });
 export default router;

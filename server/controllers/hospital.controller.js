@@ -352,7 +352,7 @@ export function DownloadPublicity(req, res) {
  */
 export function GetHospitalById(req, res) {
     Hospital.forge({id: req.params.id})
-        .fetch({withRelated: ['Services', 'Teams', 'Cases']})
+        .fetch()
         .then(hospital => {
             if (!hospital) {
                 res.status(HttpStatus.NOT_FOUND).json({
@@ -365,6 +365,108 @@ export function GetHospitalById(req, res) {
                     hospital: hospital.toJSON()
                 });
             }
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get services by hospital id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetServices(req, res) {
+    Hospital.forge({id: req.params.id})
+        .fetch({withRelated: ['Services']})
+        .then(hospital => {
+
+            hospital.Services().fetch().then(function(services) {
+                console.log(services);
+                if (!services) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, services: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error            : false,
+                        services         : services.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get teams by hospital id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetTeams(req, res) {
+    Hospital.forge({id: req.params.id})
+        .fetch({withRelated: ['Teams']})
+        .then(hospital => {
+
+            hospital.Services().fetch().then(function(teams) {
+                console.log(teams);
+                if (!teams) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, teams: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error            : false,
+                        teams            : teams.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get cases by hospital id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetCases(req, res) {
+    Hospital.forge({id: req.params.id})
+        .fetch({withRelated: ['Cases']})
+        .then(hospital => {
+
+            hospital.Cases().fetch().then(function(cases) {
+                console.log(cases);
+                if (!cases) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, cases: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error            : false,
+                        cases            : cases.toJSON()
+                    });
+                }
+            });
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
@@ -500,4 +602,23 @@ export function Count(req, res) {
                 error: err
             })
         );
+}
+
+/**
+ * Search Hospital
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export async function Search(req, res) {
+    var search = "%" + req.params.text + "%";
+    let hospitals = await Hospital.query()
+                .where("Hospital_Name", "LIKE", search)
+                .orWhere("Slogan", "LIKE", search)
+                .orWhere("Introduction", "LIKE", search);
+    res.json({
+        searched  : true,
+        hospitals : hospitals
+    });
 }

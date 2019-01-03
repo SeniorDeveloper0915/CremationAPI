@@ -177,3 +177,21 @@ export function Count(req, res) {
             })
         );
 }
+
+/**
+ * Search Question and Answer
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export async function Search(req, res) {
+    var search = "%" + req.params.text + "%";
+    let qas = await Qa.query()
+                .where("Question_Title", "LIKE", search)
+                .orWhere("Question_Content", "LIKE", search);
+    res.json({
+        searched  : true,
+        questions : qas
+    });
+}

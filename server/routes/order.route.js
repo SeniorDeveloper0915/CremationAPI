@@ -1,5 +1,5 @@
 import express                          from 'express';
-import * as categoryCtrl                from '../controllers/raider_category.controller';
+import * as orderCtrl                   from '../controllers/order.controller';
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: raider category
- *     description: Raider Category operations
+ *   - name: order
+ *     description: Order operations
  */
 
 
@@ -18,11 +18,11 @@ router.route('/add')
 
     /**
      * @swagger
-     * /raider_category/add:
+     * /order/add:
      *   put:
      *     tags:
-     *       - raider category
-     *     summary: "Create a new Raider Category"
+     *       - order
+     *     summary: "Create a new Order"
      *     security:
      *        - Bearer: []
      *     operationId: add
@@ -33,143 +33,34 @@ router.route('/add')
      *     parameters:
      *       - name: body
      *         in: body
-     *         description: Created raider category object
+     *         description: Created order object
      *         required: true
      *         schema:
-     *           $ref: "#/definitions/raider_category"
+     *           $ref: "#/definitions/order"
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/RaiderCategory"
+     *           $ref: "#/definitions/Order"
      *       403:
-     *          description: Raider Category not found
+     *          description: Order not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
-    .post(validate(schema.RaiderCategory), (req, res) => {
-        categoryCtrl.AddCategory(req, res);
+    .post((req, res) => {
+        orderCtrl.AddOrder(req, res);
     });
 
-
-router.route('/get_by_id/:id')
-
+router.route('/pay/:id')
     /**
      * @swagger
-     * /raider_category/get_by_id/{id}:
-     *   get:
-     *     tags:
-     *       - raider category
-     *     summary: Get Raider Category by Id
-     *     operationId: getById
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id of raider category that needs to be fetched
-     *         required: true
-     *         type: integer
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *           $ref: "#/definitions/RaiderCategory"
-     *       404:
-     *          description: RaiderCategory not found
-     *          schema:
-     *             $ref: '#/definitions/Error'
-     */
-
-    .get(validate(schema.CheckId), (req, res) => {
-        categoryCtrl.GetCategoryById(req, res);
-    });
-
-router.route('/get/raiders/:id')
-
-    /**
-     * @swagger
-     * /raider_category/get/raiders/{id}:
-     *   get:
-     *     tags:
-     *       - raider category
-     *     summary: Get Raiders by Id
-     *     operationId: getRaidersById
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id of raider category that needs to be fetched
-     *         required: true
-     *         type: integer
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *           $ref: "#/definitions/RaiderCategory"
-     *       404:
-     *          description: RaiderCategory not found
-     *          schema:
-     *             $ref: '#/definitions/Error'
-     */
-
-    .get(validate(schema.CheckId), (req, res) => {
-        categoryCtrl.GetRaiders(req, res);
-    });
-
-router.route('/modify')
-    
-    /**
-     * @swagger
-     * /raider_category/modify:
+     * /order/pay/{id}:
      *   put:
      *     tags:
-     *       - raider category
-     *     summary: "Modify Raider Category By Id"
-     *     security:
-     *       - Bearer: []
-     *     operationId: modify
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters:
-     *       - name: body
-     *         in: body
-     *         description: Updated Raider Category object
-     *         required: true
-     *         schema:
-     *           $ref: "#/definitions/RaiderCategory"
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *           $ref: "#/definitions/RaiderCategory"
-     *       400:
-     *         description: Invalid RaiderCategory
-     */
-
-    .put(validate(schema.ModifyRaiderCategory), (req, res) => {
-        categoryCtrl.ModifyCategory(req, res);
-    });
-
-
-router.route('/change_status/:id')
-
-    /**
-     * @swagger
-     * /raider_category/change_status/{id}:
-     *   put:
-     *     tags:
-     *       - raider category
-     *     summary: Change Raider Category Status
-     *     operationId: changeStatus
+     *       - order
+     *     summary: Pay
+     *     operationId: pay
      *     consumes:
      *       - application/json
      *     produces:
@@ -177,32 +68,166 @@ router.route('/change_status/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of raider category that needs to be fetched
+     *         description: id of order that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/RaiderCategory"
+     *           $ref: "#/definitions/Order"
      *       404:
-     *          description: RaiderCategory not found
+     *          description: Order not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
     .put(validate(schema.CheckId), (req, res) => {
-        categoryCtrl.ChangeStatus(req, res);
+        orderCtrl.Pay(req, res);
+    });
+
+router.route('/complete/:id')
+    /**
+     * @swagger
+     * /order/complete/{id}:
+     *   put:
+     *     tags:
+     *       - order
+     *     summary: Complete
+     *     operationId: complete
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of order that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Order"
+     *       404:
+     *          description: Order not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+    .put(validate(schema.CheckId), (req, res) => {
+        orderCtrl.Complete(req, res);
+    });
+
+router.route('/refund/request/:id')
+    /**
+     * @swagger
+     * /order/refund/request/{id}:
+     *   put:
+     *     tags:
+     *       - order
+     *     summary: Pending refund
+     *     operationId: refundRequest
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of order that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Order"
+     *       404:
+     *          description: Order not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+    .put(validate(schema.CheckId), (req, res) => {
+        orderCtrl.PedningRefund(req, res);
+    });
+
+router.route('/refund/success/:id')
+    /**
+     * @swagger
+     * /order/refund/success/{id}:
+     *   put:
+     *     tags:
+     *       - order
+     *     summary: Pending refund
+     *     operationId: refundSuccess
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of order that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Order"
+     *       404:
+     *          description: Order not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+    .put(validate(schema.CheckId), (req, res) => {
+        orderCtrl.RefundSuccess(req, res);
+    });
+
+router.route('/get/:userId')
+
+    /**
+     * @swagger
+     * /order/get/{userId}:
+     *   get:
+     *     tags:
+     *       - order
+     *     summary: Get Orders by userId
+     *     operationId: getByUserId
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of user that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Order"
+     *       404:
+     *          description: Order not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckUserID), (req, res) => {
+        orderCtrl.GetOrdersByUserId(req, res);
     });
 
 
 router.route('/get')
     /**
      * @swagger
-     * /raider_category/get:
+     * /order/get:
      *   get:
      *     tags:
-     *       - raider category
-     *     summary: "List all Raider Categories"
+     *       - order
+     *     summary: "List all orders"
      *     operationId: get
      *     consumes:
      *       - application/json
@@ -216,18 +241,18 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        categoryCtrl.GetCategories(req, res);
+        orderCtrl.GetOrders(req, res);
     });
 
 
 router.route('/delete/:id')
     /**
      * @swagger
-     * /raider_category/delete/{id}:
+     * /order/delete/{id}:
      *   delete:
      *     tags:
-     *       - raider category
-     *     summary: Delete the raider category by Id
+     *       - order
+     *     summary: Delete the order by Id
      *     security:
      *       - Bearer: []
      *     operationId: delete
@@ -236,7 +261,7 @@ router.route('/delete/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of raider category that needs to be deleted
+     *         description: id of order that needs to be deleted
      *         required: true
      *         type: integer
      *     responses:
@@ -246,7 +271,7 @@ router.route('/delete/:id')
      *          description: "Invalid ID"
      */
     .delete(validate(schema.CheckId), (req, res) => {
-        categoryCtrl.DeleteCategory(req, res);
+        orderCtrl.DeleteOrder(req, res);
     });
 
 export default router;

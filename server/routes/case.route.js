@@ -67,8 +67,8 @@ router.route('/get_by_id/:id')
  *   get:
  *     tags:
  *       - case
- *     summary: Get the case by ID
- *     operationId: findById
+ *     summary: Get the case by Id
+ *     operationId: getById
  *     consumes:
  *       - application/json
  *     produces:
@@ -106,17 +106,12 @@ router.route('/modify')
      *     summary: Modify Case By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated case object
@@ -145,7 +140,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - case
      *     summary: Change Case Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -181,7 +176,7 @@ router.route('/get')
      *     tags:
      *       - case
      *     summary: "List all cases"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -209,7 +204,7 @@ router.route('/delete/:id')
      *     summary: Delete the case by ID
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

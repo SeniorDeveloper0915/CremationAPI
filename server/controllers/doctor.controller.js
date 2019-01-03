@@ -240,19 +240,10 @@ export function GetDoctorById(req, res) {
                 });
             }
             else {
-                Skill.forge({Doctor_Id : doctor.get('id')})
-                    .fetch()
-                    .then(function(skill) {
-                        res.json({
-                            error : false,
-                            doctor: doctor.toJSON(),
-                            skill : skill.toJSON() 
-                        });
-                    }) 
-                    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                            error: err
-                        })
-                    );
+                res.json({
+                    error : false,
+                    doctor: doctor.toJSON()
+                });
             }
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -261,6 +252,73 @@ export function GetDoctorById(req, res) {
         );
 }
 
+/**
+ *  Get skills by doctor id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetSkills(req, res) {
+    Doctor.forge({id: req.params.id})
+        .fetch({withRelated: ['Skills']})
+        .then(doctor => {
+
+            doctor.Skills().fetch().then(function(skills) {
+                console.log(skills);
+                if (!skills) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, skills: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error           : false,
+                        skills          : skills.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get cases by doctor id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetCases(req, res) {
+    Doctor.forge({id: req.params.id})
+        .fetch({withRelated: ['Cases']})
+        .then(doctor => {
+
+            doctor.Cases().fetch().then(function(cases) {
+                console.log(cases);
+                if (!cases) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, cases: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error           : false,
+                        cases           : cases.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
 
 /**
  *  Change Doctor Status
@@ -368,4 +426,22 @@ export function Count(req, res) {
                 error: err
             })
         );
+}
+
+/**
+ * Search doctors
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export async function Search(req, res) {
+    var search = "%" + req.params.text + "%";
+    let doctors = await Doctor.query()
+                .where("Doctor_Name", "LIKE", search)
+                .orWhere("Profile", "LIKE", search);
+    res.json({
+        searched  : true,
+        doctors : doctors
+    });
 }

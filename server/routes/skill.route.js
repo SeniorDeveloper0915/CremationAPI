@@ -23,7 +23,7 @@ router.route('/get')
      *     tags:
      *       - skill
      *     summary: Get Doctor by first level project id
-     *     operationId: findById
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:

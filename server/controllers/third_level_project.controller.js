@@ -277,6 +277,72 @@ export function GetProjectById(req, res) {
         );
 }
 
+/**
+ *  Get questions by first project id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetQuestions(req, res) {
+    ThirdProject.forge({id: req.params.id})
+        .fetch({withRelated: ['Questions']})
+        .then(project => {
+
+            project.Questions().fetch().then(function(questions) {
+                console.log(questions);
+                if (!questions) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, questions: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error               : false,
+                        questions           : questions.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get products by first project id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetProduct(req, res) {
+    ThirdProject.forge({id: req.params.id})
+        .fetch({withRelated: ['Products']})
+        .then(project => {
+
+            project.Products().fetch().then(function(products) {
+                if (!products) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, products: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error               : false,
+                        products            : products.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
 
 /**
  *  Change Third Level Project Status

@@ -21,11 +21,11 @@ router.route('/add')
      * /second_level_project/add:
      *   put:
      *     tags:
-     *       - second_level_project
+     *       - second level project
      *     summary: "Create a new Second Level Project"
      *     security:
      *        - Bearer: []
-     *     operationId: addSecondLevelProject
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -55,40 +55,141 @@ router.route('/add')
 
 router.route('/get_by_id/:id')
 
-/**
- * @swagger
- * /second_level_project/get_by_id/{id}:
- *   get:
- *     tags:
- *       - second level project
- *     summary: Get Second Level Project by ID
- *     operationId: findById
- *     consumes:
- *       - application/json
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: id
- *         in: path
- *         description: id of second level project that needs to be fetched
- *         required: true
- *         type: integer
- *     responses:
- *       200:
- *         description: OK
- *         schema:
- *           $ref: "#/definitions/SecondLevelProject"
- *       404:
- *          description: SecondLevelProject not found
- *          schema:
- *             $ref: '#/definitions/Error'
- */
+    /**
+     * @swagger
+     * /second_level_project/get_by_id/{id}:
+     *   get:
+     *     tags:
+     *       - second level project
+     *     summary: Get Second Level Project by Id
+     *     operationId: getById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of second level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/SecondLevelProject"
+     *       404:
+     *          description: SecondLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
 
     .get(validate(schema.CheckId), (req, res) => {
         projectCtrl.GetProjectById(req, res);
     });
 
+router.route('/get/third/:id')
+    /**
+     * @swagger
+     * /second_level_project/get/third/{id}:
+     *   get:
+     *     tags:
+     *       - second level project
+     *     summary: Get Third Level Project by Id
+     *     operationId: getThirdById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of second level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/SecondLevelProject"
+     *       404:
+     *          description: SecondLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
 
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetThirdProject(req, res);
+    });
+
+router.route('/get/questions/:id')
+    /**
+     * @swagger
+     * /second_level_project/get/questions/{id}:
+     *   get:
+     *     tags:
+     *       - second level project
+     *     summary: Get Questions by Id
+     *     operationId: getQuestionsById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of second level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/SecondLevelProject"
+     *       404:
+     *          description: SecondLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetQuestions(req, res);
+    });
+
+router.route('/get/product/:id')
+    /**
+     * @swagger
+     * /second_level_project/get/product/{id}:
+     *   get:
+     *     tags:
+     *       - second level project
+     *     summary: Get Products by Id
+     *     operationId: getProductById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of second level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/SecondLevelProject"
+     *       404:
+     *          description: SecondLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetProduct(req, res);
+    });
+    
 router.route('/modify')
     
     /**
@@ -100,17 +201,13 @@ router.route('/modify')
      *     summary: "Modify Second Level Project By Id"
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
+
      *       - name: body
      *         in: body
      *         description: Updated Second Level Project object
@@ -140,7 +237,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - second level project
      *     summary: Change Second Level Project Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -174,7 +271,7 @@ router.route('/get')
      *     tags:
      *       - second level project
      *     summary: "List all second level projects"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -197,11 +294,11 @@ router.route('/delete/:id')
      * /second_level_project/delete/{id}:
      *   delete:
      *     tags:
-     *       - banner
-     *     summary: Delete the second level project by ID
+     *       - second level project
+     *     summary: Delete the second level project by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

@@ -21,11 +21,11 @@ router.route('/question')
      * /qa/add:
      *   post:
      *     tags:
-     *       - qa
+     *       - question and answer
      *     summary: "Create a new Question"
      *     security:
      *        - Bearer: []
-     *     operationId: addQuestion
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -59,21 +59,16 @@ router.route('/answer')
      * /qa/answer:
      *   put:
      *     tags:
-     *       - qa
+     *       - question and answer
      *     summary: Answer about Question
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: answer
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated Question & Answer object
@@ -100,9 +95,9 @@ router.route('/get_by_id/:id')
      * /qa/get_by_id/{id}:
      *   get:
      *     tags:
-     *       - qa
-     *     summary: Get Question by ID
-     *     operationId: findById
+     *       - question and answer
+     *     summary: Get Question by Id
+     *     operationId: fetById
      *     consumes:
      *       - application/json
      *     produces:
@@ -135,9 +130,9 @@ router.route('/get')
      * /qa/get:
      *   get:
      *     tags:
-     *       - qa
+     *       - question and answer
      *     summary: "List all question & answers"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -160,11 +155,11 @@ router.route('/delete/:id')
      * /qa/delete/{id}:
      *   delete:
      *     tags:
-     *       - qa
-     *     summary: Delete the qa by ID
+     *       - question and answer
+     *     summary: Delete the qa by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:
@@ -189,9 +184,9 @@ router.route('/count')
      * /qa/count:
      *   get:
      *     tags:
-     *       - question and answer count
+     *       - question and answer
      *     summary: "Question & Answers"
-     *     operationId: findAll
+     *     operationId: count
      *     consumes:
      *       - application/json
      *     produces:
@@ -205,6 +200,30 @@ router.route('/count')
      */
     .get((req, res) => {
         qaCtrl.Count(req, res);
+    });
+
+router.route('/search/:text')
+    /**
+     * @swagger
+     * /qa/search/{text}:
+     *   get:
+     *     tags:
+     *       - question and answer
+     *     summary: "Search Question"
+     *     operationId: search
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters: []
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *            type: object
+     */
+    .get(validate(schema.CheckText), (req, res) => {
+        doctorCtrl.Search(req, res);
     });
 
 export default router;

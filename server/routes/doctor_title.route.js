@@ -21,7 +21,7 @@ router.route('/add')
      * /doctor_title/add_doctor_title:
      *   put:
      *     tags:
-     *       - doctor_title
+     *       - doctor title
      *     summary: "Create a new Doctor Title"
      *     security:
      *        - Bearer: []
@@ -62,7 +62,7 @@ router.route('/get_by_id/:id')
      *     tags:
      *       - doctor title
      *     summary: Get Doctor Title by ID
-     *     operationId: findById
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -88,6 +88,40 @@ router.route('/get_by_id/:id')
         doctorTitleCtrl.GetDoctorTitleById(req, res);
     });
 
+router.route('/get/doctors/:id')
+
+    /**
+     * @swagger
+     * /doctor_title/get/doctors/{id}:
+     *   get:
+     *     tags:
+     *       - doctor title
+     *     summary: Get Doctors by Doctor Title
+     *     operationId: getDoctorsById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of doctor title that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/DoctorTitle"
+     *       404:
+     *          description: DoctorTitle not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        doctorTitleCtrl.GetDoctors(req, res);
+    });
 
 router.route('/modify')
     
@@ -100,7 +134,7 @@ router.route('/modify')
      *     summary: "Modify Doctor Title By Id"
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
@@ -139,7 +173,7 @@ router.route('/get')
      *     tags:
      *       - doctor title
      *     summary: "List all doctor titles"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -166,7 +200,7 @@ router.route('/delete/:id')
      *     summary: Delete the doctor title by ID
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:
@@ -185,37 +219,4 @@ router.route('/delete/:id')
         doctorTitleCtrl.DeleteDoctorTitle(req, res);
     });
 
-router.route('/doctors/:id')
-    /**
-     * @swagger
-     * /doctor_title/doctors/{id}:
-     *   get:
-     *     tags:
-     *       - doctor title
-     *     summary: Get Doctors by doctor title id
-     *     operationId: findById
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id of doctor title that needs to be fetched
-     *         required: true
-     *         type: integer
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *           $ref: "#/definitions/Doctors"
-     *       404:
-     *          description: Doctors not found
-     *          schema:
-     *             $ref: '#/definitions/Error'
-     */
-
-    .get(validate(schema.CheckId), (req, res) => {
-        doctorTitleCtrl.GetDoctors(req, res);
-    });
 export default router;

@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new hospital"
      *     security:
      *        - Bearer: []
-     *     operationId: addDoctor
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -80,8 +80,8 @@ router.route('/get_by_id/:id')
      *   get:
      *     tags:
      *       - hospital
-     *     summary: Get Hispital by ID
-     *     operationId: findById
+     *     summary: Get Hispital by Id
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -107,6 +107,107 @@ router.route('/get_by_id/:id')
         hospitalCtrl.GetHospitalById(req, res);
     });
 
+router.route('/get/services/:id')
+    /**
+     * @swagger
+     * /hospital/get/services/{id}:
+     *   get:
+     *     tags:
+     *       - hospital
+     *     summary: Get Services by Id
+     *     operationId: getServicesById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of hospital that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Hospital"
+     *       404:
+     *          description: Hospital not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetServices(req, res);
+    });
+
+router.route('/get/teams/:id')
+    /**
+     * @swagger
+     * /hospital/get/teams/{id}:
+     *   get:
+     *     tags:
+     *       - hospital
+     *     summary: Get Teams by Id
+     *     operationId: getTeamsById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of hospital that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Hospital"
+     *       404:
+     *          description: Hospital not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetTeams(req, res);
+    });
+
+router.route('/get/cases/:id')
+    /**
+     * @swagger
+     * /hospital/get/cases/{id}:
+     *   get:
+     *     tags:
+     *       - hospital
+     *     summary: Get Cases by Id
+     *     operationId: getCasesById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of hospital that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Hospital"
+     *       404:
+     *          description: Hospital not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetTeams(req, res);
+    });
 
 router.route('/modify')
     
@@ -119,7 +220,7 @@ router.route('/modify')
      *     summary: Modify Hispital By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
@@ -159,7 +260,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - hospital
      *     summary: Change Hispital Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -191,9 +292,9 @@ router.route('/get')
      * /hospital/get:
      *   get:
      *     tags:
-     *       - doctor
+     *       - hospital
      *     summary: "List all hospitals"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -220,7 +321,7 @@ router.route('/delete/:id')
      *     summary: Delete the hospital by ID
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:
@@ -235,7 +336,7 @@ router.route('/delete/:id')
      *       400:
      *          description: "Invalid ID"
      */
-    .delete((req, res) => {
+    .delete(validate(schema.CheckId), (req, res) => {
         hospitalCtrl.DeleteHospital(req, res);
     });
 
@@ -245,9 +346,9 @@ router.route('/count')
      * /hospital/count:
      *   get:
      *     tags:
-     *       - hospital count
-     *     summary: "Hospital Project"
-     *     operationId: findAll
+     *       - hospital
+     *     summary: "Hospital Count"
+     *     operationId: Count
      *     consumes:
      *       - application/json
      *     produces:
@@ -262,4 +363,29 @@ router.route('/count')
     .get((req, res) => {
         hospitalCtrl.Count(req, res);
     });
+
+router.route('/search/:text')
+    /**
+     * @swagger
+     * /hospital/search/{text}:
+     *   get:
+     *     tags:
+     *       - hospital
+     *     summary: "Search hospital"
+     *     operationId: search
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters: []
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *            type: object
+     */
+    .get(validate(schema.CheckText), (req, res) => {
+        hospitalCtrl.Search(req, res);
+    });
+
 export default router;

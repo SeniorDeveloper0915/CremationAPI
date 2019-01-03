@@ -25,17 +25,12 @@ router.route('/modify')
      *     summary: "Modify Contact Us By Id"
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated Contact Us object
@@ -69,7 +64,7 @@ router.route('/get')
      *     tags:
      *       - contact us
      *     summary: Get Contact Us
-     *     operationId: findById
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:

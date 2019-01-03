@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new Banner"
      *     security:
      *        - Bearer: []
-     *     operationId: addBanner
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -62,6 +62,7 @@ router.route('/download_image/:id')
     .get(validate(schema.CheckId), (req, res) => {
         bannerCtrl.DownloadBannerImage(req, res);
     });
+    
 router.route('/get_by_id/:id')
 
 /**
@@ -70,8 +71,8 @@ router.route('/get_by_id/:id')
  *   get:
  *     tags:
  *       - banner
- *     summary: Get the banner by ID
- *     operationId: findById
+ *     summary: Get the banner by id
+ *     operationId: get_by_id
  *     consumes:
  *       - application/json
  *     produces:
@@ -109,17 +110,12 @@ router.route('/modify')
      *     summary: Modify Banner By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated banner object
@@ -148,7 +144,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - banner
      *     summary: Change Banner Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -184,7 +180,7 @@ router.route('/get')
      *     tags:
      *       - banner
      *     summary: "List all banners"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -209,10 +205,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - banner
-     *     summary: Delete the banner by ID
+     *     summary: Delete the banner by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

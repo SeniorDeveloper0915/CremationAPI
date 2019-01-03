@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: third level project
- *     description: Third Level Project operations
+ *   - name: doctor
+ *     description: Doctor operations
  */
 
 
@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new Doctor"
      *     security:
      *        - Bearer: []
-     *     operationId: addDoctor
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -70,8 +70,8 @@ router.route('/get_by_id/:id')
      *   get:
      *     tags:
      *       - doctor
-     *     summary: Get Doctor by ID
-     *     operationId: findById
+     *     summary: Get Doctor by Id
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -97,6 +97,73 @@ router.route('/get_by_id/:id')
         doctorCtrl.GetDoctorById(req, res);
     });
 
+router.route('/get/skills/:id')
+    /**
+     * @swagger
+     * /doctor/get/skills/{id}:
+     *   get:
+     *     tags:
+     *       - doctor
+     *     summary: Get Skills by Id
+     *     operationId: getSkillsById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of doctor that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Doctor"
+     *       404:
+     *          description: Doctor not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        doctorCtrl.GetSkills(req, res);
+    });
+
+router.route('/get/cases/:id')
+    /**
+     * @swagger
+     * /doctor/get/cases/{id}:
+     *   get:
+     *     tags:
+     *       - doctor
+     *     summary: Get Cases by Id
+     *     operationId: getCasesById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of doctor that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Doctor"
+     *       404:
+     *          description: Doctor not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        doctorCtrl.GetCases(req, res);
+    });
 
 router.route('/modify')
     
@@ -109,17 +176,12 @@ router.route('/modify')
      *     summary: Modify Doctor By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated Doctor object
@@ -149,7 +211,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - doctor
      *     summary: Change Doctor Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -183,7 +245,7 @@ router.route('/get')
      *     tags:
      *       - doctor
      *     summary: "List all doctors"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -207,10 +269,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - doctor
-     *     summary: Delete the doctor by ID
+     *     summary: Delete the doctor by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:
@@ -235,9 +297,9 @@ router.route('/count')
      * /doctor/count:
      *   get:
      *     tags:
-     *       - doctor count
-     *     summary: "Doctor Project"
-     *     operationId: findAll
+     *       - doctor
+     *     summary: "Doctor Count"
+     *     operationId: count
      *     consumes:
      *       - application/json
      *     produces:
@@ -251,6 +313,30 @@ router.route('/count')
      */
     .get((req, res) => {
         doctorCtrl.Count(req, res);
+    });
+
+router.route('/search/:text')
+    /**
+     * @swagger
+     * /doctor/search/{text}:
+     *   get:
+     *     tags:
+     *       - doctor
+     *     summary: "Search Doctor"
+     *     operationId: search
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters: []
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *            type: object
+     */
+    .get(validate(schema.CheckText), (req, res) => {
+        doctorCtrl.Search(req, res);
     });
 
 export default router;

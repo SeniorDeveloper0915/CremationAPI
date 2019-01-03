@@ -22,11 +22,11 @@ router.route('/add')
      * /third_level_project/add:
      *   put:
      *     tags:
-     *       - third_level_project
+     *       - third level project
      *     summary: "Create a new Third Level Project"
      *     security:
      *        - Bearer: []
-     *     operationId: addThirdLevelProject
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -72,8 +72,8 @@ router.route('/get_by_id/:id')
      *   get:
      *     tags:
      *       - third level project
-     *     summary: Get Third Level Project by ID
-     *     operationId: findById
+     *     summary: Get Third Level Project by Id
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -99,7 +99,73 @@ router.route('/get_by_id/:id')
         projectCtrl.GetProjectById(req, res);
     });
 
+router.route('/get/questions/:id')
+    /**
+     * @swagger
+     * /third_level_project/get/questions/{id}:
+     *   get:
+     *     tags:
+     *       - third level project
+     *     summary: Get Questions by Id
+     *     operationId: getQuestionsById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of third level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/ThirdLevelProject"
+     *       404:
+     *          description: ThirdLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
 
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetQuestions(req, res);
+    });
+
+router.route('/get/product/:id')
+    /**
+     * @swagger
+     * /third_level_project/get/product/{id}:
+     *   get:
+     *     tags:
+     *       - third level project
+     *     summary: Get Products by Id
+     *     operationId: getProductById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of third level project that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/SecondLevelProject"
+     *       404:
+     *          description: SecondLevelProject not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
+
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.GetProduct(req, res);
+    });
 router.route('/modify')
     
     /**
@@ -111,17 +177,12 @@ router.route('/modify')
      *     summary: "Modify Third Level Project By Id"
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated Third Level Project object
@@ -151,7 +212,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - third level project
      *     summary: Change Third Level Project Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -185,7 +246,7 @@ router.route('/get')
      *     tags:
      *       - third level project
      *     summary: "List all third level projects"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -212,7 +273,7 @@ router.route('/delete/:id')
      *     summary: Delete the third level project by ID
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:
@@ -237,9 +298,9 @@ router.route('/count')
      * /third_level_project/count:
      *   get:
      *     tags:
-     *       - project count
-     *     summary: "Count Project"
-     *     operationId: findAll
+     *       - third level project
+     *     summary: "Project Count"
+     *     operationId: count
      *     consumes:
      *       - application/json
      *     produces:

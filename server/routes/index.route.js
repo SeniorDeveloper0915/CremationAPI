@@ -25,6 +25,11 @@ import productRoutes 			from './product.route';
 import skillRoutes 				from './skill.route';
 import qaRoutes 				from './qa.route';
 import notificationRoutes		from './notification.route';
+import orderStatusRoutes 		from './order_status.route';
+import refundOrderRoutes 		from './refund_order.route';
+import refundFailRoutes 		from './refund_fail.route';
+import orderRoutes 				from './order.route';
+
 const router = express.Router();
 
 // mount auth routes at /auth
@@ -104,4 +109,16 @@ router.use('/qa', qaRoutes);
 
 //mount Nitification /notification
 router.use('/notification', notificationRoutes);
+
+// mount Order /order
+router.use('/order', orderRoutes);
+
+//mount Order Status /status
+router.use('/status', orderStatusRoutes);
+
+//mount Refund Order /refund/request
+router.use('/refund/request', refundOrderRoutes);
+
+//mount Refund Fail /refund/fail
+router.use('/refund/fail', refundFailRoutes);
 export default router;

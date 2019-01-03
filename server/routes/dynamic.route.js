@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new Dynamic"
      *     security:
      *        - Bearer: []
-     *     operationId: addBanner
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -67,8 +67,8 @@ router.route('/get_by_id/:id')
      *   get:
      *     tags:
      *       - dynamic
-     *     summary: Get the dynamic by ID
-     *     operationId: findById
+     *     summary: Get the dynamic by Id
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -106,17 +106,12 @@ router.route('/modify')
      *     summary: Modify Dynamic By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated dynamic object
@@ -145,7 +140,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - dynamic
      *     summary: Change Dynamic Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -181,7 +176,7 @@ router.route('/get')
      *     tags:
      *       - dynamic
      *     summary: "List all dynamics"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -206,10 +201,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - dynamic
-     *     summary: Delete the dynamic by ID
+     *     summary: Delete the dynamic by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

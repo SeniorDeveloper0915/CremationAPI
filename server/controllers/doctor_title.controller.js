@@ -44,7 +44,7 @@ export function AddDoctorTitle(req, res) {
  */
 export function GetDoctorTitleById(req, res) {
     DoctorTitle.forge({id: req.params.id})
-        .fetch({withRelated : ['Doctors', 'Doctors.Skills']})
+        .fetch()
         .then(doctor_title => {
             if (!doctor_title) {
                 res.status(HttpStatus.NOT_FOUND).json({
@@ -57,6 +57,40 @@ export function GetDoctorTitleById(req, res) {
                     doctor_title: doctor_title.toJSON()
                 });
             }
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Get doctors by doctor title id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetDoctors(req, res) {
+    DoctorTitle.forge({id: req.params.id})
+        .fetch({withRelated: ['Doctors']})
+        .then(title => {
+
+            title.Doctors().fetch().then(function(doctors) {
+                console.log(doctors);
+                if (!doctors) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, doctors: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error           : false,
+                        doctors         : doctors.toJSON()
+                    });
+                }
+            });
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err

@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new Guide"
      *     security:
      *        - Bearer: []
-     *     operationId: addGuide
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -61,34 +61,34 @@ router.route('/upload_image')
 
 router.route('/get_by_id/:id')
 
-/**
- * @swagger
- * /guide/get_by_id/{id}:
- *   get:
- *     tags:
- *       - guide
- *     summary: Get the guide by ID
- *     operationId: findById
- *     consumes:
- *       - application/json
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: id
- *         in: path
- *         description: id of guide that needs to be fetched
- *         required: true
- *         type: integer
- *     responses:
- *       200:
- *         description: OK
- *         schema:
- *           $ref: "#/definitions/Guide"
- *       404:
- *          description: Guide not found
- *          schema:
- *             $ref: '#/definitions/Error'
- */
+    /**
+     * @swagger
+     * /guide/get_by_id/{id}:
+     *   get:
+     *     tags:
+     *       - guide
+     *     summary: Get the guide by ID
+     *     operationId: getById
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: id
+     *         in: path
+     *         description: id of guide that needs to be fetched
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *           $ref: "#/definitions/Guide"
+     *       404:
+     *          description: Guide not found
+     *          schema:
+     *             $ref: '#/definitions/Error'
+     */
 
     .get(validate(schema.CheckId), (req, res) => {
         guideCtrl.GetGuideById(req, res);
@@ -106,17 +106,12 @@ router.route('/modify')
      *     summary: Modify Guide By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated guide object
@@ -145,7 +140,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - guide
      *     summary: Change Guide Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -206,10 +201,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - guide
-     *     summary: Delete the guide by ID
+     *     summary: Delete the guide by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

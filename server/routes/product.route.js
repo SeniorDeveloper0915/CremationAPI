@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new product"
      *     security:
      *        - Bearer: []
-     *     operationId: addDoctor
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -70,8 +70,8 @@ router.route('/get_by_id/:id')
      *   get:
      *     tags:
      *       - product
-     *     summary: Get Product by ID
-     *     operationId: findById
+     *     summary: Get Product by Id
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -109,17 +109,12 @@ router.route('/modify')
      *     summary: Modify Product By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated Product object
@@ -149,7 +144,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - product
      *     summary: Change Product Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -181,9 +176,9 @@ router.route('/get')
      * /product/get:
      *   get:
      *     tags:
-     *       - doctor
+     *       - product
      *     summary: "List all products"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -207,10 +202,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - product
-     *     summary: Delete the product by ID
+     *     summary: Delete the product by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

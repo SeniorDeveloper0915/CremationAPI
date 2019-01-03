@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new Industry"
      *     security:
      *        - Bearer: []
-     *     operationId: addBanner
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -68,7 +68,7 @@ router.route('/get_by_id/:id')
      *     tags:
      *       - industry
      *     summary: Get the industry by ID
-     *     operationId: findById
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -106,17 +106,12 @@ router.route('/modify')
      *     summary: Modify Industry By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated industry object
@@ -145,7 +140,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - industry
      *     summary: Change Industry Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -181,7 +176,7 @@ router.route('/get')
      *     tags:
      *       - industry
      *     summary: "List all industries"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -206,10 +201,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - industry
-     *     summary: Delete the industry by ID
+     *     summary: Delete the industry by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

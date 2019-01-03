@@ -31,7 +31,6 @@ export function AddCategory(req, res) {
 
 }
 
-
 /**
  *  Get raider category by id
  *
@@ -41,7 +40,7 @@ export function AddCategory(req, res) {
  */
 export function GetCategoryById(req, res) {
     RaiderCategory.forge({id: req.params.id})
-        .fetch({withRelated : ['Raiders']})
+        .fetch()
         .then(category => {
             if (!category) {
                 res.status(HttpStatus.NOT_FOUND).json({
@@ -61,6 +60,39 @@ export function GetCategoryById(req, res) {
         );
 }
 
+/**
+ *  Get raiders by raider category id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetRaiders(req, res) {
+    RaiderCategory.forge({id: req.params.id})
+        .fetch({withRelated: ['Raiders']})
+        .then(category => {
+
+            category.Raiders().fetch().then(function(raiders) {
+                console.log(raiders);
+                if (!raiders) {                                                                                           
+                    res.status(HttpStatus.NOT_FOUND).json({
+                        error: true, raiders: {}
+                    });
+                }
+                else {
+                    res.json({
+                        error           : false,
+                        raiders         : raiders.toJSON()
+                    });
+                }
+            });
+        })
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
 
 /**
  *  Modify Raider Category

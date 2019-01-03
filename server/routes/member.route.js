@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new Member"
      *     security:
      *        - Bearer: []
-     *     operationId: addMember
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -68,7 +68,7 @@ router.route('/get_by_id/:id')
      *     tags:
      *       - member
      *     summary: Get the member by ID
-     *     operationId: findById
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
@@ -106,17 +106,12 @@ router.route('/modify')
      *     summary: Modify Member By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated member object
@@ -145,7 +140,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - member
      *     summary: Change Member Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -180,8 +175,8 @@ router.route('/get')
      *   get:
      *     tags:
      *       - member
-     *     summary: "List all banners"
-     *     operationId: findAll
+     *     summary: "List all members"
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -209,7 +204,7 @@ router.route('/delete/:id')
      *     summary: Delete the member by ID
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

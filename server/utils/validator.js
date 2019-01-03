@@ -305,9 +305,48 @@ export default {
         }
     },
 
+    Order : {
+        body : {
+            user_id             : Joi.string().required(),
+            user_account        : Joi.string().required(),
+            phonenumber         : Joi.string().required(),
+            product_name        : Joi.string().required(),
+            order_amount        : Joi.number().required(),
+            order_status        : Joi.number().required()  
+        }
+    },
+
+    RefundOrder : {
+        body : {
+            order_id            : Joi.number().required(),
+            user_id             : Joi.string().required(),
+            phonenumber         : Joi.string().required(),
+            order_date          : Joi.date().required(),
+            refund_reason       : Joi.string().required()
+        }
+    },
+
+    RefundFail : {
+        body : {
+            order_id            : Joi.number().required(),
+            user_id             : Joi.string().required(),
+            phonenumber         : Joi.string().required(),
+            order_date          : Joi.date().required(),
+            refund_date         : Joi.date().required(),
+            refund_reason       : Joi.string().required(),
+            fail_reason         : Joi.string().required()   
+        }
+    },
+
     CheckId : {
         params : {
             id                  : Joi.number().required()
+        }
+    },
+
+    CheckText : {
+        params : {
+            text                : Joi.string().required()
         }
     },
 
@@ -316,6 +355,12 @@ export default {
             name                : Joi.string().required()
         }
     }, 
+
+    CheckUserID : {
+        params : {
+            userId              : Joi.string().required()
+        }
+    },
 
     CheckSkill : {
         body : {

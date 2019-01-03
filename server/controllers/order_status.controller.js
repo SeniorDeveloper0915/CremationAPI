@@ -1,31 +1,31 @@
 import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
-import Nation           from '../models/nation.model';
+import OrderStatus      from '../models/order_status.model';
 import formidable       from 'formidable';
 import fs               from 'fs';
 import date             from 'date-and-time';
 
 
 /**
- *  Get nation by id
+ *  Get status by id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetNationById(req, res) {
-    Nation.forge({id: req.params.id})
+export function GetStatusById(req, res) {
+    OrderStatus.forge({id: req.params.id})
         .fetch()
-        .then(nation => {
-            if (!nation) {
+        .then(status => {
+            if (!status) {
                 res.status(HttpStatus.NOT_FOUND).json({
-                    error: true, nation: {}
+                    error: true, status: {}
                 });
             }
             else {
                 res.json({
                     error: false,
-                    nation: nation.toJSON()
+                    status: status.toJSON()
                 });
             }
         })
@@ -36,29 +36,29 @@ export function GetNationById(req, res) {
 }
 
 /**
- *  Get doctors by nation id
+ *  Get orders by order status id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function GetDoctors(req, res) {
-    Nation.forge({id: req.params.id})
-        .fetch({withRelated: ['Doctors']})
-        .then(nation => {
+export function GetOrders(req, res) {
+    OrderStatus.forge({id: req.params.id})
+        .fetch({withRelated: ['Orders']})
+        .then(status => {
 
-            nation.Doctors().fetch().then(function(doctors) {
-                console.log(doctors);
-                if (!doctors) {                                                                                           
+            status.Orders().fetch().then(function(orders) {
+                console.log(orders);
+                if (!orders) {                                                                                           
                     res.status(HttpStatus.NOT_FOUND).json({
-                        error: true, doctors: {}
+                        error: true, orders: {}
                     });
                 }
                 else {
                     res.json({
                         error           : false,
-                        doctors         : doctors.toJSON()
+                        orders          : orders.toJSON()
                     });
                 }
             });
@@ -70,18 +70,18 @@ export function GetDoctors(req, res) {
 }
 
 /**
- * Get All Nations
+ * Get All Status
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function GetNations(req, res) {
-    Nation.forge()
+export function GetStatus(req, res) {
+    OrderStatus.forge()
         .fetchAll()
-        .then(nations => res.json({
+        .then(statuses => res.json({
                 error: false,
-                nations: nations.toJSON()
+                statuses: statuses.toJSON()
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

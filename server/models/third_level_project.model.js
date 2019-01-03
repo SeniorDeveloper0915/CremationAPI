@@ -2,6 +2,7 @@ import bookshelf 			from '../config/bookshelf';
 import SecondProject 		from './second_level_project.model';
 import FirstProject 		from './first_level_project.model';
 import Qa                   from './qa.model';
+import Product              from './product.model';
 
 /**
  * Second Level Project model.
@@ -24,7 +25,11 @@ class ThirdProject extends bookshelf.Model {
     }
 
     Questions() {
-        return this.hasMan(Qa, "Third_Project_Id");
+        return this.hasMany(Qa, "Third_Project_Id");
+    }
+
+    Products() { 
+        return this.hasMany(Product, "Third_Project_Id");
     }
 }
 

@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new User"
      *     security:
      *        - Bearer: []
-     *     operationId: addUser
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -67,8 +67,8 @@ router.route('/get_by_id/:id')
  *   get:
  *     tags:
  *       - user
- *     summary: Get the user by ID
- *     operationId: findById
+ *     summary: Get the user by Id
+ *     operationId: getById
  *     consumes:
  *       - application/json
  *     produces:
@@ -106,17 +106,12 @@ router.route('/modify')
      *     summary: Modify User By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated user object
@@ -146,7 +141,7 @@ router.route('/get')
      *     tags:
      *       - user
      *     summary: "List all users"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -171,10 +166,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - user
-     *     summary: Delete the user by ID
+     *     summary: Delete the user by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

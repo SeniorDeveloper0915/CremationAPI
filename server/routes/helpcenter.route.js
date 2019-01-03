@@ -25,17 +25,12 @@ router.route('/modify')
      *     summary: "Modify Help Center By Id"
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated Help Center object
@@ -65,7 +60,7 @@ router.route('/get')
      *     tags:
      *       - help center
      *     summary: Get Help Center
-     *     operationId: findById
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:

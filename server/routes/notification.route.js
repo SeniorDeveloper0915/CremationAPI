@@ -25,7 +25,7 @@ router.route('/add')
      *     summary: "Create a new Notification"
      *     security:
      *        - Bearer: []
-     *     operationId: addBanner
+     *     operationId: add
      *     consumes:
      *       - application/json
      *     produces:
@@ -71,7 +71,7 @@ router.route('/get_by_id/:id')
  *     tags:
  *       - notification
  *     summary: Get the notification by ID
- *     operationId: findById
+ *     operationId: getById
  *     consumes:
  *       - application/json
  *     produces:
@@ -109,17 +109,12 @@ router.route('/modify')
      *     summary: Modify Notification By Id
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated notification object
@@ -148,7 +143,7 @@ router.route('/change_status/:id')
      *     tags:
      *       - notification
      *     summary: Change Notification Status
-     *     operationId: findById
+     *     operationId: changeStatus
      *     consumes:
      *       - application/json
      *     produces:
@@ -184,7 +179,7 @@ router.route('/get')
      *     tags:
      *       - notification
      *     summary: "List all banners"
-     *     operationId: findAll
+     *     operationId: get
      *     consumes:
      *       - application/json
      *     produces:
@@ -209,10 +204,10 @@ router.route('/delete/:id')
      *   delete:
      *     tags:
      *       - notification
-     *     summary: Delete the notification by ID
+     *     summary: Delete the notification by Id
      *     security:
      *       - Bearer: []
-     *     operationId: destroy
+     *     operationId: delete
      *     produces:
      *       - application/json
      *     parameters:

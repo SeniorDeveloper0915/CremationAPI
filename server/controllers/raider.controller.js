@@ -240,7 +240,6 @@ export function GetRaiders(req, res) {
         );
 }
 
-
 /**
  * Delete Raider by id
  *
@@ -267,4 +266,24 @@ export function DeleteRaider(req, res) {
                 error: err
             })
         );
+}
+
+/**
+ * Search Raiders
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export async function Search(req, res) {
+    var search = "%" + req.params.text + "%";
+    let raiders = await Raider.query()
+                .where("Raider_Title", "LIKE", search)
+                .orWhere("Raider_Sec_Title", "LIKE", search)
+                .orWhere("Content", "LIKE", search);
+    res.json({
+        searched  : true,
+        raiders   : raiders
+    });
 }

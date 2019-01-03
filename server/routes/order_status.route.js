@@ -1,5 +1,5 @@
 import express                          from 'express';
-import * as nationCtrl                  from '../controllers/nation.controller';
+import * as orderStatusCtrl             from '../controllers/order_status.controller';
 import isAuthenticated                  from '../middlewares/authenticate';
 import validate                         from '../config/joi.validate';
 import schema                           from '../utils/validator';
@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: nation
- *     description: Nation operations
+ *   - name: order status
+ *     description: Order Status operations
  */
 
 
@@ -19,11 +19,11 @@ router.route('/get_by_id/:id')
 
     /**
      * @swagger
-     * /nation/get_by_id/{id}:
+     * /status/get_by_id/{id}:
      *   get:
      *     tags:
-     *       - nation
-     *     summary: Get Nation by Id
+     *       - order status
+     *     summary: Get Order Status by Id
      *     operationId: getById
      *     consumes:
      *       - application/json
@@ -32,34 +32,34 @@ router.route('/get_by_id/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of nation that needs to be fetched
+     *         description: id of order status that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Nation"
+     *           $ref: "#/definitions/OrderStatus"
      *       404:
-     *          description: Nation not found
+     *          description: OrderStatus not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        nationCtrl.GetNationById(req, res);
+        orderStatusCtrl.GetStatusById(req, res);
     });
 
-router.route('/get/doctors/:id')
+router.route('/get/orders/:id')
 
     /**
      * @swagger
-     * /nation/get/doctors/{id}:
+     * /status/get/orders/{id}:
      *   get:
      *     tags:
-     *       - nation
-     *     summary: Get Doctors by Id
-     *     operationId: getDoctorsById
+     *       - order status
+     *     summary: Get Orders by Id
+     *     operationId: getOrdersById
      *     consumes:
      *       - application/json
      *     produces:
@@ -67,32 +67,32 @@ router.route('/get/doctors/:id')
      *     parameters:
      *       - name: id
      *         in: path
-     *         description: id of nation that needs to be fetched
+     *         description: id of order status that needs to be fetched
      *         required: true
      *         type: integer
      *     responses:
      *       200:
      *         description: OK
      *         schema:
-     *           $ref: "#/definitions/Nation"
+     *           $ref: "#/definitions/OrderStatus"
      *       404:
-     *          description: Nation not found
+     *          description: OrderStatus not found
      *          schema:
      *             $ref: '#/definitions/Error'
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        nationCtrl.GetDoctors(req, res);
+        orderStatusCtrl.GetOrders(req, res);
     });
 
 router.route('/get')
     /**
      * @swagger
-     * /nation/get:
+     * /status/get:
      *   get:
      *     tags:
-     *       - nation
-     *     summary: "List all nations"
+     *       - order status
+     *     summary: "List all order status"
      *     operationId: get
      *     consumes:
      *       - application/json
@@ -106,7 +106,7 @@ router.route('/get')
      *            type: object
      */
     .get((req, res) => {
-        nationCtrl.GetNations(req, res);
+        orderStatusCtrl.GetStatus(req, res);
     });
 
 

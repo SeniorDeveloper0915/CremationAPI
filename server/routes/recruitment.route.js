@@ -25,17 +25,12 @@ router.route('/modify')
      *     summary: "Modify Recruitment By Id"
      *     security:
      *       - Bearer: []
-     *     operationId: update
+     *     operationId: modify
      *     consumes:
      *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
      *       - name: body
      *         in: body
      *         description: Updated Recruitment object
@@ -63,9 +58,9 @@ router.route('/get')
      * /Recruitment/get:
      *   get:
      *     tags:
-     *       - Recruitment
+     *       - recruitment
      *     summary: Get Recruitment
-     *     operationId: findById
+     *     operationId: getById
      *     consumes:
      *       - application/json
      *     produces:
