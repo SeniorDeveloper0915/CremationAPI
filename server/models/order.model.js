@@ -5,7 +5,7 @@ import OrderStatus 		from './order_status.model';
  */
 class Order extends bookshelf.Model {
     get tableName() {
-        return 'nation';
+        return 'order';
     }
 
     get hasTimestamps() {

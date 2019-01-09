@@ -28,7 +28,7 @@ function UploadImage(req, res, oldpath, newpath, bef_eff) {
                 Before_Img : newpath
             }, {hasTimestamps: true}).save()
                 .then(project => res.json({
-                        success : true,
+                        error   : false,
                         message : "Image Uploading Succed!",
                         id      : project.id
                     })
@@ -42,7 +42,7 @@ function UploadImage(req, res, oldpath, newpath, bef_eff) {
                 Effect_Img : newpath
             }, {hasTimestamps: true}).save()
                 .then(project => res.json({
-                        success : true,
+                        error   : false,
                         message : "Image Uploading Succed!",
                         id      : project.id
                     })
@@ -85,7 +85,8 @@ function ChangeImage(req, res, oldpath, newpath, id, bef_eff) {
                         })
                         .then(() => res.json({
                                 error   : false,
-                                message : "IMage Upload Succed"
+                                message : "Image Uploading Succed!",
+                                id      : id
                             })
                         )
                         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -113,7 +114,8 @@ function ChangeImage(req, res, oldpath, newpath, id, bef_eff) {
                             })
                             .then(() => res.json({
                                     error   : false,
-                                    message : "IMage Upload Succed"
+                                    message : "Image Uploading Succed!",
+                                    id      : id
                                 })
                             )
                             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -169,7 +171,7 @@ export function SaveProject(req, res) {
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "Succed"
+                        message : "Save Third Level Project Succed!"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -218,6 +220,44 @@ export function UploadBeforeImage(req, res) {
 }
 
 /**
+ * Download Before Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function DownloadBeforeImage(req, res) {
+    ThirdProject.forge({id :  req.params.id})
+        .fetch()
+        .then(function(project) {
+            var path = project.toJSON().Before_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
+
+/**
  * Upload Effect Image
  *
  * @param {object} req
@@ -246,6 +286,44 @@ export function UploadEffectImage(req, res) {
             }
         }
     });
+}
+
+/**
+ * Download Effect Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function DownloadEffectImage(req, res) {
+    ThirdProject.forge({id :  req.params.id})
+        .fetch()
+        .then(function(project) {
+            var path = project.toJSON().Effect_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
 }
 
 /**
@@ -430,7 +508,7 @@ export function DeleteProject(req, res) {
         .then(project => project.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Third Level Project Succed.'}
+                    message: 'Delete Third Level Project Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

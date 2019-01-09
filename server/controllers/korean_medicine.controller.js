@@ -19,8 +19,9 @@ function AddKoreanMedicine(req, res) {
     KoreanMedicine.forge({
         Title : req.body.title, Content : req.body.content
     }, {hasTimestamps: true}).save()
-        .then(korean => res.json({
-                success: true
+        .then(() => res.json({
+                error   : false,
+                message : "Save Korean Succed"
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -39,7 +40,7 @@ function AddKoreanMedicine(req, res) {
  * @returns {*}
  */
 export function GetKoreanById(req, res) {
-    KoreanMedicine.forge({id: 1})
+    KoreanMedicine.forge()
         .fetch()
         .then(korean => {
             if (!korean) {
@@ -79,12 +80,12 @@ export function ModifyKorean(req, res) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "Modify First Level Project Succed"
+                            message : "Save Korean Succed"
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                             error: true,
-                            data: {message: err.message}
+                            message: err.message
                         })
                     )
                 else

@@ -57,11 +57,20 @@ router.route('/upload_cover/:id')
         productCtrl.UploadCover(req, res);
     });
 
+router.route('/download_cover/:id')
+    .get(validate(schema.CheckId), (req, res) => {
+        productCtrl.DownloadCover(req, res);
+    });
+
 router.route('/upload_promotion/:id')
     .post(validate(schema.CheckId), (req, res) => {
         productCtrl.UploadPromotion(req, res);
     });
 
+router.route('/download_promotion/:id')
+    .get(validate(schema.CheckId), (req, res) => {
+        productCtrl.DownloadPromotion(req, res);
+    });
 router.route('/get_by_id/:id')
 
     /**

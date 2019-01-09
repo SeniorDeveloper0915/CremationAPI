@@ -32,7 +32,8 @@ export function SaveQuestion(req, res) {
         Verification            : req.body.verification_code
     }, {hasTimestamps: true}).save()
         .then(question => res.json({
-                success: true
+                error   : false,
+                message : "Save New Question Succed!"
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -62,7 +63,7 @@ export function SaveAnswer(req, res) {
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "Save Answer Succed"
+                        message : "Save Answer Succed!"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -143,7 +144,7 @@ export function DeleteQa(req, res) {
             qa.destroy()
                 .then(() => res.json({
                                 error: false,
-                                data: {message: 'Delete Question & Answer Succed.'}
+                                message: 'Delete Question & Answer Succed.'
                             })
                         
                 )

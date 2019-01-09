@@ -1,6 +1,7 @@
 import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import RaiderCategory           from '../models/raider_category.model';
+import Raider                   from '../models/raider.model'
 import formidable               from 'formidable';
 import fs                       from 'fs';
 import date                     from 'date-and-time';
@@ -21,7 +22,8 @@ export function AddCategory(req, res) {
         Category_Name : req.body.category_name, Sort : req.body.sort, Release_Time : Release_Time
     }, {hasTimestamps: true}).save()
         .then(category => res.json({
-                success: true
+                error   : false,
+                message : "Save New Category Succed!"
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -69,10 +71,11 @@ export function GetCategoryById(req, res) {
  */
 
 export function GetRaiders(req, res) {
+    console.log(req.params.id);
     RaiderCategory.forge({id: req.params.id})
         .fetch({withRelated: ['Raiders']})
         .then(category => {
-
+            console.log(category);
             category.Raiders().fetch().then(function(raiders) {
                 console.log(raiders);
                 if (!raiders) {                                                                                           
@@ -94,6 +97,7 @@ export function GetRaiders(req, res) {
         );
 }
 
+
 /**
  *  Modify Raider Category
  *
@@ -114,7 +118,7 @@ export function ModifyCategory(req, res) {
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "Modify Raider Category Succed"
+                        message : "Modify Raider Category Succed!"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -192,10 +196,24 @@ export function GetCategories(req, res) {
 export function DeleteCategory(req, res) {
     RaiderCategory.forge({id: req.params.id})
         .fetch({require: true})
-        .then(function(category) {
-                category.destroy();
+        .then(category => {
+            Raider.forge({Category_Id : req.params.id})
+                    .fetch()
+                    .then(raider => {
+                        if (raider != null)
+                            Raider.where('Category_Id', req.params.id)
+                                            .destroy();
+                    });
+            if (category != null){
+                RaiderCategory.where('id', req.params.id)
+                            .destroy();
+                res.json({
+                    error   : false,
+                    message : "Delete Raider Category Succed!"
+                })
             }
-        )
+
+        })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
             })

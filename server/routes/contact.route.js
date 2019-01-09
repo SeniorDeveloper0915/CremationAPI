@@ -50,11 +50,15 @@ router.route('/modify')
         contactCtrl.ModifyContact(req, res);
     });
 
-    router.route('/upload_image')
-        .post(validate(schema.CheckId), (req, res) => {
-            contactCtrl.UploadContactImage(req, res);
-        });
+router.route('/upload_image/:id')
+    .post(validate(schema.CheckId), (req, res) => {
+        contactCtrl.UploadContactImage(req, res);
+    });
 
+router.route('/download_image/:id')
+    .get(validate(schema.CheckId), (req, res) => {
+        contactCtrl.UploadContactImage(req, res);
+    });
 router.route('/get')
 
     /**
@@ -86,7 +90,7 @@ router.route('/get')
      *             $ref: '#/definitions/Error'
      */
 
-    .get(validate(schema.CheckId), (req, res) => {
+    .get((req, res) => {
         contactCtrl.GetContactById(req, res);
     });
 

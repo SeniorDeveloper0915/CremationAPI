@@ -50,7 +50,7 @@ export function GetDoctors(req, res) {
 
             nation.Doctors().fetch().then(function(doctors) {
                 console.log(doctors);
-                if (!doctors) {                                                                                           
+                if (!doctors) {                                                                                        
                     res.status(HttpStatus.NOT_FOUND).json({
                         error: true, doctors: {}
                     });
@@ -64,7 +64,7 @@ export function GetDoctors(req, res) {
             });
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: err
+                error: true
             })
         );
 }

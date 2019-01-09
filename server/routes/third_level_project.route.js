@@ -58,11 +58,20 @@ router.route('/upload_before_image/:id')
         projectCtrl.UploadBeforeImage(req, res);
     });
 
+router.route('/download_before_image/:id')
+    .get(validate(schema.CheckId), (req, res) => {
+        projectCtrl.DownloadBeforeImage(req, res);
+    });
+
 router.route('/upload_effect_image/:id')
     .post(validate(schema.CheckId), (req, res) => {
         projectCtrl.UploadEffectImage(req, res);
     });
 
+router.route('/download_effect_image/:id')
+    .post(validate(schema.CheckId), (req, res) => {
+        projectCtrl.DownloadEffectImage(req, res);
+    });
 
 router.route('/get_by_id/:id')
 

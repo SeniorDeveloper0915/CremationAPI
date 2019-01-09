@@ -27,7 +27,8 @@ export function AddOrder(req, res) {
         Order_Status    : req.body.order_status
     }, {hasTimestamps: true}).save()
         .then(order => res.json({
-                success: true
+                error   : false,
+                message : "Save New Order Succed!"
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -169,7 +170,8 @@ export function RefundSuccess(req, res) {
  * @returns {*}
  */
 export function GetOrdersByUserId(req, res) {
-    Order.forge({id: req.params.userId})
+    console.log(req.body.userId);
+    Order.forge({UserID: req.body.userId})
         .fetch()
         .then(orders => {
             if (!orders) {
@@ -227,7 +229,8 @@ export function DeleteOrder(req, res) {
                 project.destroy()
                     .then(function() {
                         res.json({
-                            success :  true
+                            error   : false,
+                            message : "Delete Order Succed!"
                         });
                     })
             }

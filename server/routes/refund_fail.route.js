@@ -52,36 +52,36 @@ router.route('/add')
         refundFailCtrl.AddFailRefund(req, res);
     });
 
-router.route('/get/:userId')
+router.route('/get_by_userid')
 
-    // *
-    //  * @swagger
-    //  * /refund/fail/get/{userId}:
-    //  *   get:
-    //  *     tags:
-    //  *       - refund fila
-    //  *     summary: Get fail refund orer  by UserId
-    //  *     operationId: getByUserId
-    //  *     consumes:
-    //  *       - application/json
-    //  *     produces:
-    //  *       - application/json
-    //  *     parameters:
-    //  *       - name: id
-    //  *         in: path
-    //  *         description: id of UserId that needs to be fetched
-    //  *         required: true
-    //  *         type: integer
-    //  *     responses:
-    //  *       200:
-    //  *         description: OK
-    //  *         schema:
-    //  *           $ref: "#/definitions/RefundFail"
-    //  *       404:
-    //  *          description: RefundFail not found
-    //  *          schema:
-    //  *             $ref: '#/definitions/Error'
-     
+    /**
+      * @swagger
+      * /refund/fail/get/{userId}:
+      *   get:
+      *     tags:
+      *       - refund fila
+      *     summary: Get fail refund orer  by UserId
+      *     operationId: getByUserId
+      *     consumes:
+      *       - application/json
+      *     produces:
+      *       - application/json
+      *     parameters:
+      *       - name: id
+      *         in: path
+      *         description: id of UserId that needs to be fetched
+      *         required: true
+      *         type: integer
+      *     responses:
+      *       200:
+      *         description: OK
+      *         schema:
+      *           $ref: "#/definitions/RefundFail"
+      *       404:
+      *          description: RefundFail not found
+      *          schema:
+      *             $ref: '#/definitions/Error'
+      */
 
     .get(validate(schema.CheckUserID), (req, res) => {
         refundFailCtrl.GetFailRefund(req, res);

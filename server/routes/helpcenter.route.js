@@ -82,7 +82,7 @@ router.route('/get')
      *             $ref: '#/definitions/Error'
      */
 
-    .get(validate(schema.CheckId), (req, res) => {
+    .get((req, res) => {
         helpcenterCtrl.GetHelpCenterById(req, res);
     });
 

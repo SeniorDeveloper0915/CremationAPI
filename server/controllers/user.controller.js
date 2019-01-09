@@ -24,7 +24,7 @@ function UploadImage(req, res, oldpath, newpath) {
             Avatar : newpath
         }, {hasTimestamps: true}).save()
             .then(user => res.json({
-                    success : true,
+                    error   : false,
                     message : "Image Uploading Succed!",
                     id      : user.id
                 })
@@ -63,7 +63,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -106,7 +107,7 @@ export function SaveUser(req, res) {
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New User Succed"
+                        message : "Save User Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -152,7 +153,43 @@ export function UploadAvatarImage(req, res) {
     });
 }
 
+/**
+ * Download Avatar Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
 
+export function DownloadBannerImage(req, res) {
+    User.forge({id :  req.params.id})
+        .fetch()
+        .then(function(user) {
+            var path = user.toJSON().Avatar.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
 /**
  *  Find user by id
  *
@@ -218,7 +255,7 @@ export function DeleteUser(req, res) {
         .then(user => user.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete User Succed.'}
+                    message: 'Delete User Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

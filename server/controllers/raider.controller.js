@@ -26,7 +26,7 @@ function UploadImage(req, res, oldpath, newpath) {
             Raider_Img : newpath
         }, {hasTimestamps: true}).save()
             .then(raider => res.json({
-                    success : true,
+                    error   : false,
                     message : "Image Uploading Succed!",
                     id      : raider.id
                 })
@@ -65,12 +65,13 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                             error: true,
-                            data: {message: err.message}
+                            message: err.message
                         })
                     )
                 )
@@ -111,7 +112,7 @@ export function SaveRaider(req, res) {
                                 category.save({Article_Cnt : category.get('Article_Cnt') + 1})
                                     .then(res => res.json({
                                                     error   : false,
-                                                    message : "Succed"
+                                                    message : "Save Raider Succed!"
                                                 }))
                             })
                 })
@@ -158,6 +159,43 @@ export function UploadRaiderImage(req, res) {
     });
 }
 
+/**
+ * Download Raider Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function DownloadRaiderImage(req, res) {
+    Raider.forge({id :  req.params.id})
+        .fetch()
+        .then(function(raider) {
+            var path = raider.toJSON().Raider_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
 
 /**
  *  Get raider by id
@@ -253,7 +291,7 @@ export function DeleteRaider(req, res) {
         .then(raider => raider.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Raider Succed.'}
+                    message: 'Delete Raider Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

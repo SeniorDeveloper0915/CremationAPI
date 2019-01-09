@@ -19,9 +19,10 @@ function AddCopyRight(req, res) {
     CopyRight.forge({
         Title : req.body.title, Content : req.body.content
     }, {hasTimestamps: true}).save()
-        .then(copyright => res.json({
-                success: true
-            })
+        .then(() => res.json({
+                        error   : false,
+                        message : "Save Copyright Succed"
+                    })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
@@ -29,7 +30,6 @@ function AddCopyRight(req, res) {
         );
 
 }
-
 
 /**
  *  Get Copy Right by id
@@ -39,7 +39,7 @@ function AddCopyRight(req, res) {
  * @returns {*}
  */
 export function GetCopyRightById(req, res) {
-    CopyRight.forge({id: 1})
+    CopyRight.forge()
         .fetch()
         .then(copyright => {
             if (!copyright) {
@@ -79,7 +79,7 @@ export function ModifyCopyRight(req, res) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "Modify First Level Project Succed"
+                            message : "Save Copyright Succed"
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

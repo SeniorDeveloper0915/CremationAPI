@@ -19,9 +19,10 @@ function AddHelpCenter(req, res) {
     HelpCenter.forge({
         Title : req.body.title, Content : req.body.content
     }, {hasTimestamps: true}).save()
-        .then(helpcenter => res.json({
-                success: true
-            })
+        .then(() => res.json({
+                        error   : false,
+                        message : "Save HelpCenter Succed"
+                    })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
@@ -39,7 +40,7 @@ function AddHelpCenter(req, res) {
  * @returns {*}
  */
 export function GetHelpCenterById(req, res) {
-    HelpCenter.forge({id: 1})
+    HelpCenter.forge()
         .fetch()
         .then(helpcenter => {
             if (!helpcenter) {
@@ -79,7 +80,7 @@ export function ModifyHelpCenter(req, res) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "Modify First Level Project Succed"
+                            message : "Save HelpCenter Succed"
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

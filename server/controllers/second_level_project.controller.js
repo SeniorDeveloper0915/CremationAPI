@@ -23,7 +23,8 @@ export function AddProject(req, res) {
         First_Project_Id :  req.body.first_id, Project_Name : req.body.project_name, Sort : req.body.sort, Release_Time : Release_Time
     }, {hasTimestamps: true}).save()
         .then(project => res.json({
-                success: true
+                error       : false,
+                message     : "Save New Second Level Project Succed!"
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -264,9 +265,7 @@ export function DeleteProject(req, res) {
     SecondProject.forge({id: req.params.id})
         .fetch({require: true})
         .then(function(project) {
-                if (project != null)
-                    SecondProject.where('id', req.params.id)
-                            .destroy();
+                
                 ThirdProject.forge({Second_Project_Id :  req.params.id})
                         .fetch()
                         .then(function(project) { 
@@ -284,10 +283,14 @@ export function DeleteProject(req, res) {
                                             .destroy();
                             }
                         })
-
-                res.json({
-                    success :  true
-                });
+                if (project != null) {
+                    SecondProject.where('id', req.params.id)
+                            .destroy();
+                    res.json({
+                        error   :  false,
+                        message : "Delete Second Level Project Succed!"
+                    });
+                }
             }
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

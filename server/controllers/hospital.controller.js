@@ -28,7 +28,7 @@ function UploadImage(req, res, oldpath, newpath) {
             Logo : newpath
         }, {hasTimestamps: true}).save()
             .then(hospital => res.json({
-                    success : true,
+                    error   : false,
                     message : "Image Uploading Succed!",
                     id      : hospital.id
                 })
@@ -68,7 +68,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -113,7 +114,7 @@ export function SaveHospital(req, res) {
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "Succed"
+                        message : "Save Hospital Succed!"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -198,6 +199,7 @@ export function DownloadLogo(req, res) {
             }
         });
 }
+
 /**
  * Upload Publicity photos
  *
@@ -278,7 +280,9 @@ export function UploadPublicity(req, res) {
                                         }, {hasTimestamps: true}).save()
                                         .then(function() {
                                             res.json({
-                                                success : true
+                                                error   : false,
+                                                message : "Publicity Image Uploading Succed!",
+                                                id      : req.params.id
                                             })
                                         })
                                     });
@@ -419,7 +423,7 @@ export function GetTeams(req, res) {
         .fetch({withRelated: ['Teams']})
         .then(hospital => {
 
-            hospital.Services().fetch().then(function(teams) {
+            hospital.Teams().fetch().then(function(teams) {
                 console.log(teams);
                 if (!teams) {                                                                                           
                     res.status(HttpStatus.NOT_FOUND).json({
@@ -569,12 +573,12 @@ export function DeleteHospital(req, res) {
             hospital.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete hospital Succed.'}
+                    message: 'Delete hospital Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: true,
-                    data: {message: err.message}
+                    message: err.message
                 })
             )
         })

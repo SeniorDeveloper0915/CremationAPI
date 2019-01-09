@@ -57,6 +57,11 @@ router.route('/upload_image/:id')
         raiderCtrl.UploadRaiderImage(req, res);
     });
 
+router.route('/download_image/:id')
+    .get(validate(schema.CheckId), (req, res) => {
+        raiderCtrl.DownloadRaiderImage(req, res);
+    });
+
 router.route('/get_by_id/:id')
 
     /**

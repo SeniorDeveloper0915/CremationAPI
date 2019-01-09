@@ -23,10 +23,10 @@ function UploadImage(req, res, oldpath, newpath) {
         if (err)
             throw err;
         Product.forge({
-            Logo : newpath
+            Cover_Img : newpath
         }, {hasTimestamps: true}).save()
             .then(product => res.json({
-                    success : true,
+                    error   : false,
                     message : "Image Uploading Succed!",
                     id      : product.id
                 })
@@ -66,7 +66,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -112,7 +113,7 @@ export function SaveProduct(req, res) {
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "Succed"
+                        message : "Save Product Succed!"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -159,6 +160,45 @@ export function UploadCover(req, res) {
 }
 
 /**
+ * Download Cover Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function DownloadCover(req, res) {
+    console.log(req.params.id);
+    Product.forge({id :  req.params.id})
+        .fetch()
+        .then(function(product) {
+            var path = product.toJSON().Cover_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
+
+/**
  * Upload Promotion Images
  *
  * @param {object} req
@@ -177,22 +217,22 @@ export function UploadPromotion(req, res) {
             });
         } else {
             var oldpath1 = files.promotion_image1.path;
-            var newpath1 = 'C:/Users/royal/' + files.publicity_image1.name;
+            var newpath1 = 'C:/Users/royal/' + files.promotion_image1.name;
 
             var oldpath2 = files.promotion_image2.path;
-            var newpath2 = 'C:/Users/royal/' + files.publicity_image2.name;
+            var newpath2 = 'C:/Users/royal/' + files.promotion_image2.name;
 
             var oldpath3 = files.promotion_image3.path;
-            var newpath3 = 'C:/Users/royal/' + files.publicity_image3.name;
+            var newpath3 = 'C:/Users/royal/' + files.promotion_image3.name;
 
             var oldpath4 = files.promotion_image4.path;
-            var newpath4 = 'C:/Users/royal/' + files.publicity_image4.name;
+            var newpath4 = 'C:/Users/royal/' + files.promotion_image4.name;
 
             var oldpath5 = files.promotion_image5.path;
-            var newpath5 = 'C:/Users/royal/' + files.publicity_image4.name;
+            var newpath5 = 'C:/Users/royal/' + files.promotion_image5.name;
 
             var oldpath6 = files.promotion_image6.path;
-            var newpath6 = 'C:/Users/royal/' + files.publicity_image4.name;
+            var newpath6 = 'C:/Users/royal/' + files.promotion_image6.name;
             if (req.params.id > 0) {
                 PromotionImage.where('Product_Id' , req.params.id)
                                 .fetchAll({require : true})
@@ -254,7 +294,8 @@ export function UploadPromotion(req, res) {
                                                         }, {hasTimestamps: true}).save()
                                                         .then(function() {
                                                             res.json({
-                                                                success : true
+                                                                error   : false,
+                                                                message : "Upload Promotion Images Succed!"
                                                             })
                                                         })
                                                     });
@@ -270,6 +311,56 @@ export function UploadPromotion(req, res) {
             }); 
         }
     });
+}
+
+/**
+ * Download Promotion Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+function SendTo(req, res, path) {
+    var stat = fs.statSync(path);
+    var total  = stat.size;
+    if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                               // which has sent this request back to this server logic ... cool
+            var range = req.headers.range;
+            var parts = range.replace(/bytes=/, "").split("-");
+            var partialstart = parts[0];
+            var partialend = parts[1];
+
+            var start = parseInt(partialstart, 10);
+            var end = partialend ? parseInt(partialend, 10) : total-1;
+            var chunksize = (end-start)+1;
+
+            var file = fs.createReadStream(path, {start: start, end: end});
+            res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+            file.pipe(res);
+
+    } else {
+
+            res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+            fs.createReadStream(path).pipe(res);
+    }
+}
+
+export function DownloadPromotion(req, res) {
+    console.log(req.params);
+    PromotionImage.where('Product_Id', req.params.id)
+        .fetchAll({require : true})
+        .then(function(promotions) {
+
+            if (promotions != null) {
+                let paths = {};
+                var length = promotions.toJSON().length;
+                for (var i = 0; i < length; i ++) {
+                    paths[i] = promotions.toJSON()[i].Images.toString();
+                }
+                SendTo(req, res, paths[req.params.selection]);
+            }
+        });
 }
 
 /**
@@ -368,12 +459,12 @@ export function DeleteProduct(req, res) {
         .then(product => product.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete product Succed.'}
+                    message: 'Delete product Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: true,
-                    data: {message: err.message}
+                    message: err.message
                 })
             )
         )

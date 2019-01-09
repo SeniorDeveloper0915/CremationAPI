@@ -25,7 +25,8 @@ export function AddProject(req, res) {
         Project_Name : req.body.project_name, Sort : req.body.sort, Release_Time : Release_Time
     }, {hasTimestamps: true}).save()
         .then(project => res.json({
-                success: true
+                error   : false,
+                message : "Save New First Level Project Succed!" 
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -334,12 +335,14 @@ export function DeleteProject(req, res) {
                                     .destroy();
                         }
                     })
-            if (project != null)
-               FirstProject.where('id', req.params.id)
+            if (project != null){
+                FirstProject.where('id', req.params.id)
                             .destroy();
-            res.json({
-                success : true
-            })
+                res.json({
+                    error   : false,
+                    message : "Delete First Level Project Succed!"
+                })
+            }
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err

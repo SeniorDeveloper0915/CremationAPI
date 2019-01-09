@@ -14,13 +14,14 @@ import date                     from 'date-and-time';
  * @returns {*}
  */
 
-function AddRecruitmentMedicine(req, res) {
+function AddRecruitment(req, res) {
 
     Recruitment.forge({
         Link : req.body.link
     }, {hasTimestamps: true}).save()
         .then(recruitment => res.json({
-                success: true
+                error   : false,
+                message : "Save Recruitment Succed!"
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -38,8 +39,8 @@ function AddRecruitmentMedicine(req, res) {
  * @param {object} res
  * @returns {*}
  */
-export function GetKoreanById(req, res) {
-    Recruitment.forge({id: 1})
+export function GetRecruitmentById(req, res) {
+    Recruitment.forge()
         .fetch()
         .then(recruitment => {
             if (!recruitment) {
@@ -78,7 +79,7 @@ export function ModifyRecruitment(req, res) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "Modify Recruitment Succed"
+                            message : "Save Recruitment Succed!"
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -87,7 +88,7 @@ export function ModifyRecruitment(req, res) {
                         })
                     )
                 else
-                    AddKoreanMedicine(req, res);
+                    AddRecruitment(req, res);
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err

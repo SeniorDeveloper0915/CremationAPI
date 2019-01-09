@@ -24,7 +24,7 @@ function UploadImage(req, res, oldpath, newpath) {
             Member_Img : newpath
         }, {hasTimestamps: true}).save()
             .then(member => res.json({
-                    success : true,
+                    error   : false,
                     message : "Image Uploading Succed!",
                     id      : member.id
                 })
@@ -63,7 +63,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -96,15 +97,15 @@ export function SaveMember(req, res) {
     CoreTeam.forge({id: req.body.id})
         .fetch({require: true})
         .then(member => member.save({
-                Member_Name     : req.body.member_name      || member.get('Banner_Title'),
-                Position        : req.body.position         || member.get('URL'),
+                Member_Name     : req.body.member_name      || member.get('Member_Name'),
+                Position        : req.body.position         || member.get('Position'),
                 Profile         : req.body.profile          || member.get('Profile'),
                 Sort            : req.body.sort             || member.get('Sort'),
                 Release_Time    : Release_Time
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New Member Succed"
+                        message : "Save Member Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -132,14 +133,14 @@ export function UploadMemberImage(req, res) {
     var form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files) {
-        if (files.banner_image == null) {
+        if (files.member_image == null) {
             res.send({
                 error : true,
                 message : "Select File Correctly!"
             });
         } else {
-            var oldpath = files.banner_image.path;
-            var newpath = 'C:/Users/royal/' + files.banner_image.name;
+            var oldpath = files.member_image.path;
+            var newpath = 'C:/Users/royal/' + files.member_image.name;
 
             if (req.params.id == 0) {
                 UploadImage(req, res, oldpath, newpath);
@@ -150,6 +151,43 @@ export function UploadMemberImage(req, res) {
     });
 }
 
+/**
+ * Download Member Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function DownloadBannerImage(req, res) {
+    CoreTeam.forge({id :  req.params.id})
+        .fetch()
+        .then(function(member) {
+            var path = member.toJSON().Member_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
 
 /**
  *  Find member by id
@@ -170,7 +208,7 @@ export function GetMemberById(req, res) {
             else {
                 res.json({
                     error: false,
-                    Member: member.toJSON()
+                    member: member.toJSON()
                 });
             }
         })
@@ -224,7 +262,7 @@ export function GetMembers(req, res) {
         .fetchAll()
         .then(member => res.json({
                 error: false,
-                banners: member.toJSON()
+                members: member.toJSON()
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -247,12 +285,12 @@ export function DeleteMember(req, res) {
         .then(member => member.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Member Succed.'}
+                    message: 'Delete Member Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: true,
-                    data: {message: err.message}
+                    message: err.message
                 })
             )
         )
@@ -263,6 +301,6 @@ export function DeleteMember(req, res) {
 
     CoreTeam.forge({id: req.params.id})
         .fetch({require: true})
-        .then(member => fs.unlinkSync(member.get('Banner_Img')));
+        .then(member => fs.unlinkSync(member.get('Member_Img')));
 }
 

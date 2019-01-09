@@ -63,7 +63,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -96,13 +97,13 @@ export function SaveCase(req, res) {
     Case.forge({id: req.body.id})
         .fetch({require: true})
         .then(cas => cas.save({
-                Hospital_Id     : req.body.Hospital_Id  || cas.get('Hospital_Id'),
+                Hospital_Id     : req.body.hospital_Id  || cas.get('Hospital_Id'),
                 Title           : req.body.title        || cas.get('Title'),
                 Time            : req.body.time         || cas.get('Time'),
                 Doctor_Id       : req.body.doctor_id    || cas.get('Doctor_Id'),
                 Introduction    : req.body.introduction || cas.get('Introduction'),
                 Sort            : req.body.sort         || cas.get('Sort'),
-                Release_Time: Release_Time
+                Release_Time    : Release_Time
             })
                 .then(() => res.json({
                         error   : false,
@@ -140,7 +141,7 @@ export function UploadCaseImage(req, res) {
             });
         } else {
             var oldpath = files.case_image.path;
-            var newpath = 'C:/Users/royal/' + files.case_image.name;
+            var newpath = 'C:/Users/royal/case/' + files.case_image.name;
 
             if (req.params.id == 0) {
                 UploadImage(req, res, oldpath, newpath);
@@ -151,7 +152,43 @@ export function UploadCaseImage(req, res) {
     });
 }
 
+/**
+ * Download Case Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
 
+export function DownloadCaseImage(req, res) {
+    Case.forge({id :  req.params.id})
+        .fetch()
+        .then(function(caseimage) {
+            var path = caseimage.toJSON().Case_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
 /**
  *  Find case by id
  *
@@ -171,7 +208,7 @@ export function GetCaseById(req, res) {
             else {
                 res.json({
                     error: false,
-                    Case: cas.toJSON()
+                    case: cas.toJSON()
                 });
             }
         })

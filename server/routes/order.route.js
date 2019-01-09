@@ -48,7 +48,7 @@ router.route('/add')
      *             $ref: '#/definitions/Error'
      */
 
-    .post((req, res) => {
+    .post(validate(schema.Order), (req, res) => {
         orderCtrl.AddOrder(req, res);
     });
 
@@ -184,7 +184,7 @@ router.route('/refund/success/:id')
         orderCtrl.RefundSuccess(req, res);
     });
 
-router.route('/get/:userId')
+router.route('/get_by_userid')
 
     /**
      * @swagger

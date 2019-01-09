@@ -24,7 +24,7 @@ function UploadImage(req, res, oldpath, newpath) {
             Dynamic_Img : newpath
         }, {hasTimestamps: true}).save()
             .then(dynamic => res.json({
-                    success : true,
+                    error   : false,
                     message : "Image Uploading Succed!",
                     id      : dynamic.id
                 })
@@ -63,7 +63,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -96,14 +97,15 @@ export function SaveDynamic(req, res) {
     Dynamic.forge({id: req.body.id})
         .fetch({require: true})
         .then(dynamic => dynamic.save({
-                Banner_Title: req.body.banner_title || dynamic.get('Banner_Title'),
-                URL         : req.body.url          || dynamic.get('URL'),
-                Sort        : req.body.sort         || dynamic.get('Sort'),
-                Release_Time: Release_Time
+                Dynamic_Title               : req.body.dynamic_title                || dynamic.get('Dynamic_Title'),
+                Dynamic_Subtitle            : req.body.dynamic_subtitle             || dynamic.get('Dynamic_Subtitle'),
+                Dynamic_Content             : req.body.dynamic_content              || dynamic.get('Dynamic_Content'),
+                Sort                        : req.body.sort                         || dynamic.get('Sort'),
+                Release_Time                : Release_Time
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New Dynamic Succed"
+                        message : "Save Dynamic Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -149,7 +151,43 @@ export function UploadDynamicImage(req, res) {
     });
 }
 
+/**
+ * Download Dynamic Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
 
+export function DownloadDynamicImage(req, res) {
+    Dynamic.forge({id :  req.params.id})
+        .fetch()
+        .then(function(dynamic) {
+            var path = dynamic.toJSON().Dynamic_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
 /**
  *  Find dynamic by id
  *
@@ -160,8 +198,8 @@ export function UploadDynamicImage(req, res) {
 export function GetDynamicById(req, res) {
     Dynamic.forge({id: req.params.id})
         .fetch()
-        .then(banner => {
-            if (!banner) {
+        .then(dynamic => {
+            if (!dynamic) {
                 res.status(HttpStatus.NOT_FOUND).json({
                     error: true, Dynamic: {}
                 });
@@ -169,7 +207,7 @@ export function GetDynamicById(req, res) {
             else {
                 res.json({
                     error: false,
-                    Dynamic: dynamic.toJSON()
+                    dynamic: dynamic.toJSON()
                 });
             }
         })
@@ -223,7 +261,7 @@ export function GetDynamics(req, res) {
         .fetchAll()
         .then(dynamic => res.json({
                 error: false,
-                banners: dynamic.toJSON()
+                dynamics: dynamic.toJSON()
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -240,18 +278,18 @@ export function GetDynamics(req, res) {
  * @param {object} res
  * @returns {*}
  */
-export function DeleteBanner(req, res) {
+export function DeleteDynamic(req, res) {
     Dynamic.forge({id: req.params.id})
         .fetch({require: true})
         .then(dynamic => dynamic.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Dynamic Succed.'}
+                    message: 'Delete Dynamic Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: true,
-                    data: {message: err.message}
+                    message: err.message
                 })
             )
         )

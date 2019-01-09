@@ -24,7 +24,7 @@ function UploadImage(req, res, oldpath, newpath) {
             Banner_Img : newpath
         }, {hasTimestamps: true}).save()
             .then(banner => res.json({
-                    success : true,
+                    error   : false,
                     message : "Image Uploading Succed!",
                     id      : banner.id
                 })
@@ -63,7 +63,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -92,7 +93,7 @@ function ChangeImage(req, res, oldpath, newpath, id) {
 export function SaveBanner(req, res) {
     let Release_Time = new Date();
     date.format(Release_Time, 'YYYY-MM-DD HH:mm:ss');
-
+    console.log(req.body.banner_title);
     Banner.forge({id: req.body.id})
         .fetch({require: true})
         .then(banner => banner.save({
@@ -188,6 +189,7 @@ export function DownloadBannerImage(req, res) {
             }
         });
 }
+
 /**
  *  Find banner by id
  *
@@ -207,7 +209,7 @@ export function GetBannerById(req, res) {
             else {
                 res.json({
                     error: false,
-                    Banner: banner.toJSON()
+                    banner: banner.toJSON()
                 });
             }
         })
@@ -283,13 +285,13 @@ export function DeleteBanner(req, res) {
         .fetch({require: true})
         .then(banner => banner.destroy()
             .then(() => res.json({
-                    error: false,
-                    data: {message: 'Delete Banner Succed.'}
+                    error       : false,
+                    message     : 'Delete Banner Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                    error: true,
-                    data: {message: err.message}
+                    error   : true,
+                    message : err.message
                 })
             )
         )

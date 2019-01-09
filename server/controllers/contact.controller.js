@@ -7,30 +7,6 @@ import date                     from 'date-and-time';
 
 
 /**
- * Add New Contact Us
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-
-function AddKoreanMedicine(req, res) {
-
-    ContactUs.forge({
-        Information : req.body.information
-    }, {hasTimestamps: true}).save()
-        .then(contact => res.json({
-                success: true
-            })
-        )
-        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: err
-            })
-        );
-
-}
-
-/**
  *  Upload Image
  *
  * @param {object} req
@@ -87,7 +63,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -111,8 +88,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
  * @param {object} res
  * @returns {*}
  */
-export function GetKoreanById(req, res) {
-    ContactUs.forge({id: 1})
+export function GetContactById(req, res) {
+    ContactUs.forge()
         .fetch()
         .then(contact => {
             if (!contact) {
@@ -142,16 +119,16 @@ export function GetKoreanById(req, res) {
  */
 export function ModifyContact(req, res) {
 
-    KoreanMedicine.forge({id: req.body.id})
+    ContactUs.forge({id: req.body.id})
         .fetch({require: true})
         .then(function(contact) {
                 if (contact != null)
                     contact.save({
-                        Information       : req.body.information        || korean.get('Information')
+                        Information       : req.body.information        || contact.get('Information')
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "Modify First Level Project Succed"
+                            message : "Modify Contact Succed"
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -159,8 +136,6 @@ export function ModifyContact(req, res) {
                             data: {message: err.message}
                         })
                     )
-                else
-                    AddContactUs(req, res);
         })
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 error: err
@@ -188,7 +163,7 @@ export function UploadContactImage(req, res) {
             });
         } else {
             var oldpath = files.contact_image.path;
-            var newpath = 'C:/Users/royal/' + files.contact_image.name;
+            var newpath = 'C:/Users/royal/contact/' + files.contact_image.name;
 
             if (req.params.id == 0) {
                 UploadImage(req, res, oldpath, newpath);
@@ -197,4 +172,42 @@ export function UploadContactImage(req, res) {
             }
         }
     });
+}
+
+/**
+ * Download Contact Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function DownloadCaseImage(req, res) {
+    ContactUs.forge({id :  req.params.id})
+        .fetch()
+        .then(function(contact) {
+            var path = contact.toJSON().Contact_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
 }

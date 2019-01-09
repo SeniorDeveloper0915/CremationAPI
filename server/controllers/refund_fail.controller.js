@@ -25,7 +25,8 @@ export function AddFailRefund(req, res) {
         Fail_Reason     : req.body.fail_reason
     }, {hasTimestamps: true}).save()
         .then(order => res.json({
-                success: true
+                error   : false,
+                message : "Add Fail Refund Succed!"
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -44,7 +45,7 @@ export function AddFailRefund(req, res) {
  */
 
 export function GetFailRefund(req, res) {
-    RefundFail.forge({UserID: req.params.userId})
+    RefundFail.forge({UserID: req.body.userId})
         .fetch()
         .then(orders => {
             if (!orders) {

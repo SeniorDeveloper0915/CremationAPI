@@ -21,7 +21,7 @@ function UploadImage(req, res, oldpath, newpath) {
         if (err)
             throw err;
         Guide.forge({
-            Guide_Img : newpath
+            BootPage_Img : newpath
         }, {hasTimestamps: true}).save()
             .then(guide => res.json({
                     success : true,
@@ -51,19 +51,20 @@ function ChangeImage(req, res, oldpath, newpath, id) {
     Guide.forge({id: id})
     .fetch({require: true})
     .then(function(guide) {
-        if (guide.get('Guide_Img') != "")
-            fs.unlinkSync(guide.get('Guide_Img'));
+        if (guide.get('BootPage_Img') != "")
+            fs.unlinkSync(guide.get('BootPage_Img'));
         fs.rename(oldpath, newpath, function(err) {
             if (err)
                 throw err;
             Guide.forge({id: id})
                 .fetch()
                 .then(guide => guide.save({
-                        Guide_Img : newpath
+                        BootPage_Img : newpath
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -102,7 +103,7 @@ export function SaveGuide(req, res) {
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New Guide Succed"
+                        message : "Save Guide Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -148,6 +149,43 @@ export function UploadGuideImage(req, res) {
     });
 }
 
+/**
+ * Download Guide Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function DownloadGuideImage(req, res) {
+    Guide.forge({id :  req.params.id})
+        .fetch()
+        .then(function(guide) {
+            var path = guide.toJSON().BootPage_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
 
 /**
  *  Find guide by id
@@ -168,7 +206,7 @@ export function GetGuideById(req, res) {
             else {
                 res.json({
                     error: false,
-                    Guide: guide.toJSON()
+                    guide: guide.toJSON()
                 });
             }
         })
@@ -245,12 +283,12 @@ export function DeleteGuide(req, res) {
         .then(guide => guide.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Guide Succed.'}
+                    message: 'Delete Guide Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: true,
-                    data: {message: err.message}
+                    message: err.message
                 })
             )
         )
@@ -261,6 +299,6 @@ export function DeleteGuide(req, res) {
 
     Guide.forge({id: req.params.id})
         .fetch({require: true})
-        .then(guide => fs.unlinkSync(guide.get('Guide_Img')));
+        .then(guide => fs.unlinkSync(guide.get('BootPage_Img')));
 }
 

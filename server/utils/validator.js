@@ -131,7 +131,7 @@ export default {
             qualification       : Joi.string().required(),
             level               : Joi.number().required(),
             license             : Joi.string().required(),
-            Address             : Joi.number().required(),
+            address             : Joi.number().required(),
             introduction        : Joi.string().required(),
             sort                : Joi.number().required()
         }
@@ -171,12 +171,13 @@ export default {
             raider_title        : Joi.string().required(),
             raider_sec_title    : Joi.string().required(),
             content             : Joi.string().required(),
-            sort                : Joi.string().required()
+            sort                : Joi.number().required()
         }
     },
 
     KoreanMedicine : {
         body : {
+            id                  : Joi.number().required(),
             title               : Joi.string().required(),
             content             : Joi.string().required()
         }
@@ -201,6 +202,7 @@ export default {
     
     CopyRight : {
         body : {
+            id                  : Joi.number().required(),
             title               : Joi.string().required(),
             content             : Joi.string().required()
         }
@@ -208,6 +210,7 @@ export default {
     
     HelpCenter : {
         body : {
+            id                  : Joi.number().required(),
             title               : Joi.string().required(),
             content             : Joi.string().required()
         }
@@ -258,7 +261,7 @@ export default {
             first_project_id    : Joi.number().required(),
             second_project_id   : Joi.number().required(),
             third_project_id    : Joi.number().required(),
-            proice_description  : Joi.string().required(),
+            price_description   : Joi.string().required(),
             details             : Joi.string().required()
         }
     },
@@ -272,7 +275,7 @@ export default {
             email               : Joi.string().required(),
             password            : Joi.string().required(),
             gender              : Joi.number().required(),
-            birthday            : Joi.number().required(),
+            birthday            : Joi.date().required(),
             area                : Joi.number().required()    
         }
     },
@@ -357,7 +360,7 @@ export default {
     }, 
 
     CheckUserID : {
-        params : {
+        body : {
             userId              : Joi.string().required()
         }
     },

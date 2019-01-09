@@ -62,8 +62,9 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                         Industry_Img : newpath
                     })
                     .then(() => res.json({
-                            error   : false,
-                            message : "IMage Upload Succed"
+                            success : true,
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -96,14 +97,15 @@ export function SaveDynamic(req, res) {
     Industry.forge({id: req.body.id})
         .fetch({require: true})
         .then(industry => industry.save({
-                Banner_Title: req.body.banner_title || industry.get('Banner_Title'),
-                URL         : req.body.url          || industry.get('URL'),
-                Sort        : req.body.sort         || industry.get('Sort'),
-                Release_Time: Release_Time
+                Industry_Title          : req.body.industry_title       || industry.get('Industry_Title'),
+                Industry_Subtitle       : req.body.industry_subtitle    || industry.get('Industry_Subtitle'),
+                Industry_Content        : req.body.industry_content     || industry.get('Industry_Content'),
+                Sort                    : req.body.sort                 || industry.get('Sort'),
+                Release_Time            : Release_Time
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New industry Succed"
+                        message : "Save industry Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -149,6 +151,43 @@ export function UploadIndustryImage(req, res) {
     });
 }
 
+/**
+ * Download Industry Image
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function DownloadIndustryImage(req, res) {
+    Industry.forge({id :  req.params.id})
+        .fetch()
+        .then(function(industry) {
+            var path = industry.toJSON().Industry_Img.toString();
+            var stat = fs.statSync(path);
+            var total  = stat.size;
+            if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
+                                       // which has sent this request back to this server logic ... cool
+                    var range = req.headers.range;
+                    var parts = range.replace(/bytes=/, "").split("-");
+                    var partialstart = parts[0];
+                    var partialend = parts[1];
+
+                    var start = parseInt(partialstart, 10);
+                    var end = partialend ? parseInt(partialend, 10) : total-1;
+                    var chunksize = (end-start)+1;
+
+                    var file = fs.createReadStream(path, {start: start, end: end});
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'image/jpeg' });
+                    file.pipe(res);
+
+            } else {
+
+                    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'image/jpeg' });
+                    fs.createReadStream(path).pipe(res);
+            }
+        });
+}
 
 /**
  *  Find industry by id
@@ -169,7 +208,7 @@ export function GetIndustryById(req, res) {
             else {
                 res.json({
                     error: false,
-                    Industry: industry.toJSON()
+                    industry: industry.toJSON()
                 });
             }
         })
@@ -223,7 +262,7 @@ export function GetIndustries(req, res) {
         .fetchAll()
         .then(industry => res.json({
                 error: false,
-                banners: industry.toJSON()
+                industry : industry.toJSON()
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -240,18 +279,18 @@ export function GetIndustries(req, res) {
  * @param {object} res
  * @returns {*}
  */
-export function DeleteBanner(req, res) {
+export function DeleteIndustry(req, res) {
     Industry.forge({id: req.params.id})
         .fetch({require: true})
         .then(industry => industry.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Industry Succed.'}
+                    message: 'Delete Industry Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: true,
-                    data: {message: err.message}
+                    message: err.message
                 })
             )
         )

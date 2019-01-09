@@ -14,7 +14,7 @@ class RaiderCategory extends bookshelf.Model {
     }
 
     Raiders() {
-    	this.hasMany(Raider, "Category_Id");
+    	return this.hasMany(Raider, "Category_Id");
     }
 }
 

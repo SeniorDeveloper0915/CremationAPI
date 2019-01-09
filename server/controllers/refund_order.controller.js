@@ -27,7 +27,8 @@ export function AddRefundOrder(req, res) {
         Refund_Reason   : req.body.refund_reason
     }, {hasTimestamps: true}).save()
         .then(order => res.json({
-                success: true
+                error   : false,
+                message : "Save Refund Order Succed!"
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -45,7 +46,8 @@ export function AddRefundOrder(req, res) {
  * @returns {*}
  */
 export function GetRefundOrderByUserId(req, res) {
-    RefundOrder.forge({UserID: req.params.userId})
+    console.log(req.body.userId);
+    RefundOrder.forge({UserID: req.body.userId})
         .fetch()
         .then(orders => {
             if (!orders) {
@@ -80,7 +82,8 @@ export function DeleteRefundOrder(req, res) {
             order.destroy()
                 .then(function() {
                     res.json({
-                        success :  true
+                        error   : false,
+                        message : "Delete Refund Order Succed!"
                     });
                 })
             }

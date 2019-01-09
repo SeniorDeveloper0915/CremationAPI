@@ -26,8 +26,8 @@ function UploadImage(req, res, oldpath, newpath) {
             Photo : newpath
         }, {hasTimestamps: true}).save()
             .then(doctor => res.json({
-                    success : true,
-                    message : "Image Uploading Succed!",
+                    error   : true,
+                    message : "Photo Uploading Succed!",
                     id      : doctor.id
                 })
             )
@@ -65,7 +65,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "Image Upload Succed"
+                            message : "Photo Uploading Succed!",
+                            id      : doctor.id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -98,7 +99,6 @@ function SaveSkills(skills, doctorId) {
                 skill.destroy()
             var i;
             for (i = 0; i < skills.length; i ++) {
-                console.log(skills[i].first_project_id);
                 Skill.forge({
                     Doctor_Id           : doctorId, 
                     First_Project_Id    : skills[i].first_project_id,
@@ -137,7 +137,8 @@ export function SaveDoctor(req, res) {
             .then(function() {
                 SaveSkills(req.body.skills, req.body.id);
                 res.json({
-                        success   : true
+                        error   : false,
+                        message : "New Doctor Succed!"
                     })
             })
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -360,7 +361,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetDoctors(req, res) {
     Doctor.forge()
-        .fetchAll({withRelated : ['DoctorTitle', 'Skills']})
+        .fetchAll()
         .then(doctors => res.json({
                 error: false,
                 doctors: doctors.toJSON(),
@@ -392,7 +393,7 @@ export function DeleteDoctor(req, res) {
                             doctor.destroy()
                             .then(() => res.json({
                                     error: false,
-                                    data: {message: 'Delete Doctor Succed.'}
+                                    message: 'Delete Doctor Succed.'
                                 })
                             );
                         });

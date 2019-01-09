@@ -24,7 +24,7 @@ function UploadImage(req, res, oldpath, newpath) {
             Image : newpath
         }, {hasTimestamps: true}).save()
             .then(notification => res.json({
-                    success : true,
+                    error   : true,
                     message : "Image Uploading Succed!",
                     id      : notification.id
                 })
@@ -63,7 +63,8 @@ function ChangeImage(req, res, oldpath, newpath, id) {
                     })
                     .then(() => res.json({
                             error   : false,
-                            message : "IMage Upload Succed"
+                            message : "Image Uploading Succed!",
+                            id      : id
                         })
                     )
                     .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -96,13 +97,13 @@ export function SaveNotification(req, res) {
     Notification.forge({id: req.body.id})
         .fetch({require: true})
         .then(notification => notification.save({
-                Title           : req.body.title        || notification.get('Banner_Title'),
-                Notice          : req.body.notice       || notification.get('URL'),
+                Title           : req.body.title        || notification.get('Title'),
+                Notice          : req.body.notice       || notification.get('Notice'),
                 Release_Time    : Release_Time
             })
                 .then(() => res.json({
                         error   : false,
-                        message : "New Notification Succed"
+                        message : "Save Notification Succed!"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -119,7 +120,7 @@ export function SaveNotification(req, res) {
 }
 
 /**
- * Upload Banner Image
+ * Upload Notification Image
  *
  * @param {object} req
  * @param {object} res
@@ -158,11 +159,11 @@ export function UploadNotificationImage(req, res) {
  * @returns {*}
  */
 
-export function DownloadBannerImage(req, res) {
+export function DownloadNotificationImage(req, res) {
     Notification.forge({id :  req.params.id})
         .fetch()
         .then(function(notification) {
-            var path = notification.toJSON().Banner_Img.toString();
+            var path = notification.toJSON().Image.toString();
             var stat = fs.statSync(path);
             var total  = stat.size;
             if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
@@ -206,7 +207,7 @@ export function GetNotificationById(req, res) {
             else {
                 res.json({
                     error: false,
-                    Notification: notification.toJSON()
+                    notification: notification.toJSON()
                 });
             }
         })
@@ -283,12 +284,12 @@ export function DeleteNotification(req, res) {
         .then(notification => notification.destroy()
             .then(() => res.json({
                     error: false,
-                    data: {message: 'Delete Notification Succed.'}
+                    message: 'Delete Notification Succed.'
                 })
             )
             .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: true,
-                    data: {message: err.message}
+                    message: err.message
                 })
             )
         )

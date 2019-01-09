@@ -53,11 +53,15 @@ router.route('/add')
     });
 
 
-router.route('/upload_avatar')
+router.route('/upload_avatar/:id')
     .post(validate(schema.CheckId), (req, res) => {
         userCtrl.UploadAvatarImage(req, res);
     });
 
+router.route('/download_avatar/:id')
+    .get(validate(schema.CheckId), (req, res) => {
+        userCtrl.DownloadAvatarImage(req, res);
+    });
 
 router.route('/get_by_id/:id')
 

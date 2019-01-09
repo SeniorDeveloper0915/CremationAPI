@@ -24,7 +24,8 @@ export function AddDoctorTitle(req, res) {
         Doctor_Title : req.body.doctor_title, Sort : req.body.sort, Release_Time : Release_Time
     }, {hasTimestamps: true}).save()
         .then(doctor_title => res.json({
-                success: true
+                error   : false,
+                message : "Save New Doctor Title Succed!" 
             })
         )
         .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -191,7 +192,8 @@ export function DeleteDoctorTitle(req, res) {
                                                 Skill.where('Doctor_Id', skills.toJSON()[0].Doctor_Id)
                                                     .destroy();
                                                 res.send({
-                                                    success : true
+                                                    error   : false,
+                                                    message : "Delete Doctor Title Succed!"
                                                 })
                                             }
                                         })

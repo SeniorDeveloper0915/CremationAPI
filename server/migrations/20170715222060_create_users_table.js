@@ -15,7 +15,7 @@ exports.up = function(knex) {
         table.string('Password').notNullable();
         table.boolean('Gender');
         table.timestamp('Birthday');
-        table.string('Area').notNullable();
+        table.integer('Area').notNullable();
         table.string('Avatar').notNullable();
         table.timestamp('created_at');
         table.timestamp('updated_at');

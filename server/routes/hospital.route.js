@@ -138,7 +138,7 @@ router.route('/get/services/:id')
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        projectCtrl.GetServices(req, res);
+        hospitalCtrl.GetServices(req, res);
     });
 
 router.route('/get/teams/:id')
@@ -172,7 +172,7 @@ router.route('/get/teams/:id')
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        projectCtrl.GetTeams(req, res);
+        hospitalCtrl.GetTeams(req, res);
     });
 
 router.route('/get/cases/:id')
@@ -206,7 +206,7 @@ router.route('/get/cases/:id')
      */
 
     .get(validate(schema.CheckId), (req, res) => {
-        projectCtrl.GetTeams(req, res);
+        hospitalCtrl.GetCases(req, res);
     });
 
 router.route('/modify')
