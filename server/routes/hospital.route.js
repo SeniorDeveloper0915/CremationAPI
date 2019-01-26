@@ -113,7 +113,7 @@ router.route('/get/featured')
     });
 
 router.route('/get/loadmore')
-    .get((req, res) => {
+    .get(validate(schema.CheckLoadMore), (req, res) => {
         hospitalCtrl.LoadMore(req, res);
     });
     

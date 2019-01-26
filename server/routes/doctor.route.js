@@ -102,12 +102,12 @@ router.route('/get/featured')
     });
 
 router.route('/get/filter')
-    .get((req, res) => {
+    .get(validate(schema.CheckFilter), (req, res) => {
         doctorCtrl.GetFilter(req, res);
     });
     
 router.route('/get/loadmore')
-    .get((req, res) => {
+    .get(validate(schema.CheckLoadMore), (req, res) => {
         doctorCtrl.LoadMore(req, res);
     });
     

@@ -129,7 +129,7 @@ router.route('/get_by_id/:id')
     });
 
 router.route('/get/loadmore')
-    .get((req, res) => {
+    .get(validate(schema.CheckLoadMore), (req, res) => {
         qaCtrl.LoadMore(req, res);
     });
     

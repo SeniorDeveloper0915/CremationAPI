@@ -174,7 +174,7 @@ router.route('/change_status/:id')
     });
 
 router.route('/get/loadmore')
-    .get((req, res) => {
+    .get(validate(schema.CheckLoadMore), (req, res) => {
         raiderCtrl.LoadMore(req, res);
     });
     

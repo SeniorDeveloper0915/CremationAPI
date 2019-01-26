@@ -377,5 +377,21 @@ export default {
             selection           : Joi.number().required(),
             id                  : Joi.number().required()
         }
-    }
+    },
+
+    CheckLoadMore : {
+        body : {
+            start               : Joi.number().required(),
+            cnt                 : Joi.number().required()
+        }
+    },
+    
+    CheckFilter : {
+        body : {
+            first               : Joi.number().required(),
+            second              : Joi.number().required(),
+            third               : Joi.number().required(),
+            title               : Joi.number().required()
+        }
+    }  
 };
