@@ -246,7 +246,11 @@ router.route('/change_status/:id')
         projectCtrl.ChangeStatus(req, res);
     });
 
-
+router.route('/get/loadmore')
+    .get((req, res) => {
+        projectCtrl.LoadMore(req, res);
+    });
+    
 router.route('/get')
     /**
      * @swagger

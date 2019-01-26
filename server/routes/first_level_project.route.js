@@ -326,6 +326,29 @@ router.route('/get')
         projectCtrl.GetProjects(req, res);
     });
 
+router.route('/getmenu')
+    /**
+     * @swagger
+     * /first_level_project/getmenu:
+     *   get:
+     *     tags:
+     *       - first level project
+     *     summary: "List all first level projects"
+     *     operationId: findAll
+     *     consumes:
+     *       - application/json
+     *     produces:
+     *       - application/json
+     *     parameters: []
+     *     responses:
+     *       200:
+     *         description: OK
+     *         schema:
+     *            type: object
+     */
+    .get((req, res) => {
+        projectCtrl.GetMenu(req, res);
+    });
 
 router.route('/delete/:id')
     /**

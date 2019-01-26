@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Qa               from '../models/qa.model';
 import Skill            from '../models/skill.model';
@@ -79,6 +78,37 @@ export function SaveAnswer(req, res) {
 }
 
 /**
+ *  Increase Qa Volume
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function Increase(req, res) {
+
+    Qa.forge({id: req.params.id})
+        .fetch({require: true})
+        .then(qa => qa.save({
+                Reading_Volume : qa.get('Reading_Volume') + 1
+            })
+                .then(() => res.json({
+                        error   : false,
+                        message : "Increase Succed"
+                    })
+                )
+                .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                        error: true,
+                        data: {message: err.message}
+                    })
+                )
+        )
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
  *  Get Question by id
  *
  * @param {object} req
@@ -127,6 +157,28 @@ export function GetQas(req, res) {
         );
 }
 
+/**
+ *  Get Load More
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function LoadMore(req, res) {
+    Qa.query(function(qb){
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start);
+    }).fetchAll({
+
+    }).then(function(qa){
+        // process results
+        res.json( {
+            error :  false,
+            qa :  qa.toJSON()
+        })
+    });
+}
 
 /**
  * Delete Qa by id

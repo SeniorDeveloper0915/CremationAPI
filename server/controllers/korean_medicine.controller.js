@@ -1,4 +1,3 @@
-import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import KoreanMedicine           from '../models/korean_medicine.model';
 import formidable               from 'formidable';

@@ -1,4 +1,4 @@
-import bcrypt           from 'bcrypt';
+import bcrypt           from 'bcrypt-nodejs';
 import HttpStatus       from 'http-status-codes';
 import User             from '../models/user.model';
 import formidable       from 'formidable';

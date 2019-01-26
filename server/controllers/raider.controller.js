@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Raider           from '../models/raider.model';
 import RaiderCategory   from '../models/raider_category.model';
@@ -258,6 +257,37 @@ export function ChangeStatus(req, res) {
 }
 
 /**
+ *  Increase Raider Volume
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function Increase(req, res) {
+
+    Raider.forge({id: req.params.id})
+        .fetch({require: true})
+        .then(raider => raider.save({
+                Reading_Volume : raider.get('Reading_Volume') + 1
+            })
+                .then(() => res.json({
+                        error   : false,
+                        message : "Increase Succed"
+                    })
+                )
+                .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                        error: true,
+                        data: {message: err.message}
+                    })
+                )
+        )
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
  * Get All Raiders
  *
  * @param {object} req
@@ -276,6 +306,29 @@ export function GetRaiders(req, res) {
                 error: err
             })
         );
+}
+
+/**
+ *  Get Load More
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function LoadMore(req, res) {
+    Raider.query(function(qb){
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start);
+    }).fetchAll({
+
+    }).then(function(raider){
+        // process results
+        res.json( {
+            error :  false,
+            raider :  raider.toJSON()
+        })
+    });
 }
 
 /**

@@ -1,4 +1,3 @@
-import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import FirstProject             from '../models/first_level_project.model';
 import SecondProject            from '../models/second_level_project.model';
@@ -288,6 +287,26 @@ export function GetProjects(req, res) {
         );
 }
 
+/**
+ * Get All First Level Projects
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function GetMenu(req, res) {
+    FirstProject.forge()
+        .fetchAll({withRelated: ['SecondProjects', 'SecondProjects.ThirdProjects']})
+        .then(project => res.json({
+                error: false,
+                projects: project.toJSON()
+            })
+        )
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
 
 /**
  * Delete First Level Project by id

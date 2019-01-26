@@ -1,4 +1,3 @@
-import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import Recruitment              from '../models/recruitment.model';
 import formidable               from 'formidable';

@@ -13,6 +13,7 @@ exports.up = function(knex) {
         table.string('Profile').notNullable();
         table.string('Member_Img').notNullable();
         table.integer('Sort').notNullable();
+        table.bool('Status').default(false);
         table.timestamp('Release_Time');
         table.timestamp('created_at');
         table.timestamp('updated_at');

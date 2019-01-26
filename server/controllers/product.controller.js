@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Product          from '../models/product.model';
 import PromotionImage   from '../models/promotion_image.model';

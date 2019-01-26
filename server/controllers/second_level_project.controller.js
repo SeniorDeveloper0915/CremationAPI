@@ -1,4 +1,3 @@
-import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import SecondProject            from '../models/second_level_project.model';
 import ThirdProject             from '../models/third_level_project.model';

@@ -7,7 +7,7 @@ import Doctor 			from './doctor.model';
  */
 class Case extends bookshelf.Model {
     get tableName() {
-        return 'case';
+        return 'hospital_case';
     }
 
     get hasTimestamps() {

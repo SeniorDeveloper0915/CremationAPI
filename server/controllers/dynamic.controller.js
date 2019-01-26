@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Dynamic           from '../models/dynamic.model';
 import formidable       from 'formidable';
@@ -235,6 +234,38 @@ export function ChangeStatus(req, res) {
                 .then(() => res.json({
                         error   : false,
                         message : "Change Status Succed"
+                    })
+                )
+                .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                        error: true,
+                        data: {message: err.message}
+                    })
+                )
+        )
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Increase Dynamic Volume
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function Increase(req, res) {
+
+    console.log(req.params.id);
+    Dynamic.forge({id: req.params.id})
+        .fetch({require: true})
+        .then(dynamic => dynamic.save({
+                Reading_Volume : dynamic.get('Reading_Volume') + 1
+            })
+                .then(() => res.json({
+                        error   : false,
+                        message : "Increase Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

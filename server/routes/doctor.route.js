@@ -96,7 +96,21 @@ router.route('/get_by_id/:id')
     .get(validate(schema.CheckId), (req, res) => {
         doctorCtrl.GetDoctorById(req, res);
     });
+router.route('/get/featured')
+    .get((req, res) => {
+        doctorCtrl.GetFeatured(req, res);
+    });
 
+router.route('/get/filter')
+    .get((req, res) => {
+        doctorCtrl.GetFilter(req, res);
+    });
+    
+router.route('/get/loadmore')
+    .get((req, res) => {
+        doctorCtrl.LoadMore(req, res);
+    });
+    
 router.route('/get/skills/:id')
     /**
      * @swagger

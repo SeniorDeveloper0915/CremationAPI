@@ -1,4 +1,3 @@
-import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import RaiderCategory           from '../models/raider_category.model';
 import Raider                   from '../models/raider.model'

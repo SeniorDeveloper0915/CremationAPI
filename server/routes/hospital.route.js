@@ -107,6 +107,16 @@ router.route('/get_by_id/:id')
         hospitalCtrl.GetHospitalById(req, res);
     });
 
+router.route('/get/featured')
+    .get((req, res) => {
+        hospitalCtrl.GetFeatured(req, res);
+    });
+
+router.route('/get/loadmore')
+    .get((req, res) => {
+        hospitalCtrl.LoadMore(req, res);
+    });
+    
 router.route('/get/services/:id')
     /**
      * @swagger

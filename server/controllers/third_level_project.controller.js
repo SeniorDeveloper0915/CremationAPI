@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import ThirdProject     from '../models/third_level_project.model';
 import formidable       from 'formidable';
@@ -472,6 +471,29 @@ export function GetProjects(req, res) {
                 error: err
             })
         );
+}
+
+/**
+ *  Get Load More
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function LoadMore(req, res) {
+    ThirdProject.query(function(qb){
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start);
+    }).fetchAll({
+
+    }).then(function(project){
+        // process results
+        res.json( {
+            error :  false,
+            project :  project.toJSON()
+        })
+    });
 }
 
 /**

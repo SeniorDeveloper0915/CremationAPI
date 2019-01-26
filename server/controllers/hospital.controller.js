@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Hospital         from '../models/hospital.model';
 import PublicityPhoto   from '../models/publicity_photo.model';
@@ -374,6 +373,52 @@ export function GetHospitalById(req, res) {
                 error: err
             })
         );
+}
+
+/**
+ *  Get Featured Hospitals
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetFeatured(req, res) {
+    Hospital.query(function(qb){
+        qb.orderBy('Sort', 'DESC');
+        qb.limit(10);
+    }).fetchAll({
+
+    }).then(function(hospital){
+        // process results
+        res.json( {
+            error :  false,
+            hospital :  hospital.toJSON()
+        })
+    });
+}
+
+/**
+ *  Get Load More
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function LoadMore(req, res) {
+    Hospital.query(function(qb){
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start);
+    }).fetchAll({
+        withRelated: ['Services', 'Teams', 'Cases']
+    }).then(function(hospital){
+        // process results
+        res.json( {
+            error :  false,
+            hospital :  hospital.toJSON()
+        })
+    });
 }
 
 /**

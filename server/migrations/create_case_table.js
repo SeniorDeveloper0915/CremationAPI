@@ -6,7 +6,7 @@
  */
 exports.up = function(knex) {
     console.log('generating case table');
-    return knex.schema.createTable('case', table => {
+    return knex.schema.createTable('hospital_case', table => {
         table.increments('id').primary().unsigned();
         table.integer('Hospital_Id').notNullable();
         table.string('Case_Img').notNullable();
@@ -30,5 +30,5 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
     console.log('dropping case table');
-    return knex.schema.dropTable('case');
+    return knex.schema.dropTable('hospital_case');
 };

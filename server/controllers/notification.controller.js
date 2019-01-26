@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Notification     from '../models/notification.model';
 import formidable       from 'formidable';

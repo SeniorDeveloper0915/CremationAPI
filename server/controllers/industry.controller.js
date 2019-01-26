@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Industry         from '../models/industry.model';
 import formidable       from 'formidable';
@@ -236,6 +235,37 @@ export function ChangeStatus(req, res) {
                 .then(() => res.json({
                         error   : false,
                         message : "Change Status Succed"
+                    })
+                )
+                .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                        error: true,
+                        data: {message: err.message}
+                    })
+                )
+        )
+        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err
+            })
+        );
+}
+
+/**
+ *  Increase Industry Volume
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function Increase(req, res) {
+
+    Industry.forge({id: req.params.id})
+        .fetch({require: true})
+        .then(industry => industry.save({
+                Reading_Volume : industry.get('Reading_Volume') + 1
+            })
+                .then(() => res.json({
+                        error   : false,
+                        message : "Increase Succed"
                     })
                 )
                 .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

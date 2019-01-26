@@ -135,6 +135,11 @@ router.route('/modify')
         dynamicCtrl.SaveDynamic(req, res);
     });
 
+router.route('/increase/:id')
+    .put(validate(schema.CheckId), (req, res) => {
+        dynamicCtrl.Increase(req, res);
+    });
+
 router.route('/change_status/:id')
 
     /**

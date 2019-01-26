@@ -14,6 +14,7 @@ On the command prompt run the following commands:
 ``` 
  $ git clone https://github.com/DLivestock/Direct_Livestock_Backend.git
  $ cd Direct_Livestock_Backend
+ Create MySQL Database(dbName : direct_livestock)
  $ npm install
  $ npm run migrate
  ```

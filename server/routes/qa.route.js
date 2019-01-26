@@ -88,6 +88,11 @@ router.route('/answer')
         qaCtrl.SaveAnswer(req, res);
     });
 
+router.router('/increase/:id')
+    .put(validate(schema.CheckId), (req, res) => {
+        qaCtrl.Increase(req, res);
+    });
+
 router.route('/get_by_id/:id')
 
     /**
@@ -123,7 +128,11 @@ router.route('/get_by_id/:id')
         qaCtrl.GetQuestionById(req, res);
     });
 
-
+router.route('/get/loadmore')
+    .get((req, res) => {
+        qaCtrl.LoadMore(req, res);
+    });
+    
 router.route('/get')
     /**
      * @swagger

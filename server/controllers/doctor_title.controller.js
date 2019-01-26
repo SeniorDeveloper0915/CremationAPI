@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import DoctorTitle      from '../models/doctor_title.model';
 import Doctor           from '../models/doctor.model';

@@ -170,6 +170,10 @@ router.route('/change_status/:id')
         industryCtrl.ChangeStatus(req, res);
     });
 
+router.route('/increase/:id')
+    .put(validate(schema.CheckId), (req, res) => {
+        industryCtrl.Increase(req, res);
+    });
 
 router.route('/get')
     

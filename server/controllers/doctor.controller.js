@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Doctor           from '../models/doctor.model';
 import Skill            from '../models/skill.model';
@@ -251,6 +250,139 @@ export function GetDoctorById(req, res) {
                 error: err
             })
         );
+}
+
+/**
+ *  Get Featured Doctors
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetFeatured(req, res) {
+    Doctor.query(function(qb){
+        qb.orderBy('Sort', 'DESC');
+        qb.limit(10);
+    }).fetchAll({
+
+    }).then(function(doctor){
+        // process results
+        res.json( {
+            error :  false,
+            doctor :  doctor.toJSON()
+        })
+    });
+}
+
+/**
+ *  Get Filtered Doctors
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetFilter(req, res) {
+    if (req.body.title != 0) {
+        console.log("Total");
+        Doctor.query(function(qb) {
+            qb.leftJoin(
+                'skill',
+                'doctor.id',
+                'skill.Doctor_Id'
+            );
+            qb.where('skill.First_Project_Id', '=', req.body.first);
+            qb.where('skill.Second_Project_Id', '=', req.body.second);
+            qb.where('skill.Third_Project_Id', '=', req.body.third);
+            qb.where('doctor.Title_Id', '=', req.body.title);
+            qb.groupBy('skill.Doctor_Id');
+        }).fetchAll().then(doctor => {
+            res.json({
+                error : false,
+                doctor : doctor.toJSON()
+            })
+        });
+    }
+    else if (req.body.title == 0 && req.body.first != 0 && req.body.second != 0 && req.body.third != 0) {
+        console.log("Title");
+        Doctor.query(function(qb) {
+            qb.leftJoin(
+                'skill',
+                'doctor.id',
+                'skill.Doctor_Id'
+            );
+            qb.where('skill.First_Project_Id', '=', req.body.first);
+            qb.where('skill.Second_Project_Id', '=', req.body.second);
+            qb.where('skill.Third_Project_Id', '=', req.body.third);
+            qb.groupBy('skill.Doctor_Id');
+        }).fetchAll().then(doctor => {
+            res.json({
+                error : false,
+                doctor : doctor.toJSON()
+            })
+        });
+    }
+    else if (req.body.third == 0 && req.body.title == 0 && req.body.first != 0 && req.body.second != 0) {
+        console.log("Third");
+        Doctor.query(function(qb) {
+            qb.leftJoin(
+                'skill',
+                'doctor.id',
+                'skill.Doctor_Id'
+            );
+            qb.where('skill.First_Project_Id', '=', req.body.first);
+            qb.where('skill.Second_Project_Id', '=', req.body.second);
+            qb.groupBy('skill.Doctor_Id');
+        }).fetchAll().then(doctor => {
+            res.json({
+                error : false,
+                doctor : doctor.toJSON()
+            })
+        });
+    }
+    else if (req.body.second == 0 && req.body.third == 0 && req.body.title == 0 && req.body.first != 0) {
+        console.log("Second");
+        Doctor.query(function(qb) {
+            qb.leftJoin(
+                'skill',
+                'doctor.id',
+                'skill.Doctor_Id'
+            );
+            qb.where('skill.First_Project_Id', '=', req.body.first);
+            qb.groupBy('skill.Doctor_Id');
+        }).fetchAll().then(doctor => {
+            res.json({
+                error : false,
+                doctor : doctor.toJSON()
+            })
+        });
+    }
+    
+}
+
+/**
+ *  Get Load More
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+
+export function LoadMore(req, res) {
+    Doctor.query(function(qb){
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start);
+    }).fetchAll({
+        withRelated : ['Skills']
+    }).then(function(doctor){
+        // process results
+        res.json( {
+            error :  false,
+            doctor :  doctor.toJSON()
+        })
+    });
 }
 
 /**

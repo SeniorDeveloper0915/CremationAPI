@@ -1,4 +1,3 @@
-import bcrypt                   from 'bcrypt';
 import HttpStatus               from 'http-status-codes';
 import RefundFail               from '../models/refund_fail.model';
 import formidable               from 'formidable';

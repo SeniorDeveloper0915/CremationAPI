@@ -12,7 +12,7 @@ exports.up = function(knex) {
         table.integer('Title_Id').notNullable();
         table.string('Photo').notNullable();
         table.integer('Length').notNullable();
-        table.string('Number').notNullable();
+        table.string('Certi_Number').notNullable();
         table.integer('Address').notNullable();
         table.string('Profile').notNullable();
         table.integer('Sort').notNullable();

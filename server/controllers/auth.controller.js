@@ -1,6 +1,6 @@
 import HttpStatus from 'http-status-codes';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt-nodejs';
 import User from '../models/user.model';
 import logger from '../config/winston';
 
@@ -12,6 +12,7 @@ import logger from '../config/winston';
  * @returns {*}
  */
 export function login(req, res) {
+
     const {email, password} = req.body;
     User.query({
         where: {email: email},

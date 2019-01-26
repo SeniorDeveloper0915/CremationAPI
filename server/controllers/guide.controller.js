@@ -1,4 +1,3 @@
-import bcrypt           from 'bcrypt';
 import HttpStatus       from 'http-status-codes';
 import Guide            from '../models/guide.model';
 import formidable       from 'formidable';

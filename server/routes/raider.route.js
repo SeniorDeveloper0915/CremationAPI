@@ -134,7 +134,11 @@ router.route('/modify')
         raiderCtrl.SaveRaider(req, res);
     });
 
-
+router.route('/increase/:id')
+    .put(validate(schema.CheckId), (req, res) => {
+        raiderCtrl.Increase(req, res);
+    });
+    
 router.route('/change_status/:id')
 
     /**
@@ -169,7 +173,11 @@ router.route('/change_status/:id')
         raiderCtrl.ChangeStatus(req, res);
     });
 
-
+router.route('/get/loadmore')
+    .get((req, res) => {
+        raiderCtrl.LoadMore(req, res);
+    });
+    
 router.route('/get')
     /**
      * @swagger
