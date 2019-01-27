@@ -309,6 +309,29 @@ export function GetRaiders(req, res) {
 }
 
 /**
+ *  Get Featured Raiders
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetFeatured(req, res) {
+    Raider.query(function(qb){
+        qb.orderBy('Sort', 'DESC');
+        qb.limit(10);
+    }).fetchAll({
+
+    }).then(function(raider){
+        // process results
+        res.json( {
+            error :  false,
+            raider :  raider.toJSON()
+        })
+    });
+}
+
+/**
  *  Get Load More
  *
  * @param {object} req
@@ -319,7 +342,7 @@ export function GetRaiders(req, res) {
 export function LoadMore(req, res) {
     Raider.query(function(qb){
         qb.limit(req.body.cnt);
-        qb.offset(req.body.start);
+        qb.offset(req.body.start * req.body.cnt);
     }).fetchAll({
 
     }).then(function(raider){
@@ -368,13 +391,17 @@ export function DeleteRaider(req, res) {
  */
 
 export async function Search(req, res) {
-    var search = "%" + req.params.text + "%";
-    let raiders = await Raider.query()
-                .where("Raider_Title", "LIKE", search)
-                .orWhere("Raider_Sec_Title", "LIKE", search)
-                .orWhere("Content", "LIKE", search);
-    res.json({
-        searched  : true,
-        raiders   : raiders
+    var search = "%" + req.body.text + "%";
+    Raider.query(function(qb) {
+        qb.where('Raider_Title', 'LIKE', search);
+        qb.orWhere('Raider_Sec_Title', 'LIKE', search);
+        qb.orWhere('Content', 'LIKE', search);
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start * req.body.cnt);
+    }).fetchAll().then(questions => {
+        res.json({
+            error : false,
+            questions : questions.toJSON()
+        })
     });
 }

@@ -251,6 +251,11 @@ router.route('/get/loadmore')
         projectCtrl.LoadMore(req, res);
     });
     
+router.route('/get/related')
+    .get(validate(schema.CheckRelated), (req, res) => {
+        projectCtrl.GetRelated(req, res);
+    });
+
 router.route('/get')
     /**
      * @swagger

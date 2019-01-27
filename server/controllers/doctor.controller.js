@@ -232,7 +232,7 @@ export function DownloadPhoto(req, res) {
  */
 export function GetDoctorById(req, res) {
     Doctor.forge({id: req.params.id})
-        .fetch()
+        .fetch({withRelated: ['Skills']})
         .then(doctor => {
             if (!doctor) {
                 res.status(HttpStatus.NOT_FOUND).json({
@@ -285,7 +285,6 @@ export function GetFeatured(req, res) {
 
 export function GetFilter(req, res) {
     if (req.body.title != 0) {
-        console.log("Total");
         Doctor.query(function(qb) {
             qb.leftJoin(
                 'skill',
@@ -297,6 +296,8 @@ export function GetFilter(req, res) {
             qb.where('skill.Third_Project_Id', '=', req.body.third);
             qb.where('doctor.Title_Id', '=', req.body.title);
             qb.groupBy('skill.Doctor_Id');
+            qb.limit(req.body.cnt);
+            qb.offset(req.body.start * req.body.cnt);
         }).fetchAll().then(doctor => {
             res.json({
                 error : false,
@@ -305,7 +306,6 @@ export function GetFilter(req, res) {
         });
     }
     else if (req.body.title == 0 && req.body.first != 0 && req.body.second != 0 && req.body.third != 0) {
-        console.log("Title");
         Doctor.query(function(qb) {
             qb.leftJoin(
                 'skill',
@@ -316,6 +316,8 @@ export function GetFilter(req, res) {
             qb.where('skill.Second_Project_Id', '=', req.body.second);
             qb.where('skill.Third_Project_Id', '=', req.body.third);
             qb.groupBy('skill.Doctor_Id');
+            qb.limit(req.body.cnt);
+            qb.offset(req.body.start * req.body.cnt);
         }).fetchAll().then(doctor => {
             res.json({
                 error : false,
@@ -324,7 +326,6 @@ export function GetFilter(req, res) {
         });
     }
     else if (req.body.third == 0 && req.body.title == 0 && req.body.first != 0 && req.body.second != 0) {
-        console.log("Third");
         Doctor.query(function(qb) {
             qb.leftJoin(
                 'skill',
@@ -334,6 +335,8 @@ export function GetFilter(req, res) {
             qb.where('skill.First_Project_Id', '=', req.body.first);
             qb.where('skill.Second_Project_Id', '=', req.body.second);
             qb.groupBy('skill.Doctor_Id');
+            qb.limit(req.body.cnt);
+            qb.offset(req.body.start * req.body.cnt);
         }).fetchAll().then(doctor => {
             res.json({
                 error : false,
@@ -342,7 +345,6 @@ export function GetFilter(req, res) {
         });
     }
     else if (req.body.second == 0 && req.body.third == 0 && req.body.title == 0 && req.body.first != 0) {
-        console.log("Second");
         Doctor.query(function(qb) {
             qb.leftJoin(
                 'skill',
@@ -351,6 +353,8 @@ export function GetFilter(req, res) {
             );
             qb.where('skill.First_Project_Id', '=', req.body.first);
             qb.groupBy('skill.Doctor_Id');
+            qb.limit(req.body.cnt);
+            qb.offset(req.body.start * req.body.cnt);
         }).fetchAll().then(doctor => {
             res.json({
                 error : false,
@@ -373,7 +377,7 @@ export function GetFilter(req, res) {
 export function LoadMore(req, res) {
     Doctor.query(function(qb){
         qb.limit(req.body.cnt);
-        qb.offset(req.body.start);
+        qb.offset(req.body.start * req.body.cnt);
     }).fetchAll({
         withRelated : ['Skills']
     }).then(function(doctor){
@@ -492,8 +496,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetDoctors(req, res) {
+    console.log("GetDoctors");
     Doctor.forge()
-        .fetchAll()
+        .fetchAll({withRelated: ['Skills']})
         .then(doctors => res.json({
                 error: false,
                 doctors: doctors.toJSON(),
@@ -569,12 +574,16 @@ export function Count(req, res) {
  * @returns {*}
  */
 export async function Search(req, res) {
-    var search = "%" + req.params.text + "%";
-    let doctors = await Doctor.query()
-                .where("Doctor_Name", "LIKE", search)
-                .orWhere("Profile", "LIKE", search);
-    res.json({
-        searched  : true,
-        doctors : doctors
+    var search = "%" + req.body.text + "%";
+    Doctor.query(function(qb) {
+        qb.where('Doctor_Name', 'LIKE', search);
+        qb.orWhere('Profile', 'LIKE', search);
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start * req.body.cnt);
+    }).fetchAll().then(doctor => {
+        res.json({
+            error : false,
+            doctor : doctor.toJSON()
+        })
     });
 }

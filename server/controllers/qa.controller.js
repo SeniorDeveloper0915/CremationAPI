@@ -168,7 +168,7 @@ export function GetQas(req, res) {
 export function LoadMore(req, res) {
     Qa.query(function(qb){
         qb.limit(req.body.cnt);
-        qb.offset(req.body.start);
+        qb.offset(req.body.start * req.body.cnt);
     }).fetchAll({
 
     }).then(function(qa){
@@ -239,12 +239,16 @@ export function Count(req, res) {
  * @returns {*}
  */
 export async function Search(req, res) {
-    var search = "%" + req.params.text + "%";
-    let qas = await Qa.query()
-                .where("Question_Title", "LIKE", search)
-                .orWhere("Question_Content", "LIKE", search);
-    res.json({
-        searched  : true,
-        questions : qas
+    var search = "%" + req.body.text + "%";
+    Qa.query(function(qb) {
+        qb.where('Question_Title', 'LIKE', search);
+        qb.orWhere('Question_Content', 'LIKE', search);
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start * req.body.cnt);
+    }).fetchAll().then(questions => {
+        res.json({
+            error : false,
+            questions : questions.toJSON()
+        })
     });
 }

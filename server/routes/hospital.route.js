@@ -374,7 +374,7 @@ router.route('/count')
         hospitalCtrl.Count(req, res);
     });
 
-router.route('/search/:text')
+router.route('/search/')
     /**
      * @swagger
      * /hospital/search/{text}:
