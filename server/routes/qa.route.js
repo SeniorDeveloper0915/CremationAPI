@@ -211,7 +211,7 @@ router.route('/count')
         qaCtrl.Count(req, res);
     });
 
-router.route('/search/:text')
+router.route('/search/')
     /**
      * @swagger
      * /qa/search/{text}:

@@ -329,7 +329,7 @@ router.route('/count')
         doctorCtrl.Count(req, res);
     });
 
-router.route('/search/:text')
+router.route('/search/')
     /**
      * @swagger
      * /doctor/search/{text}:

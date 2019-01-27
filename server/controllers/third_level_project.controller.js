@@ -484,7 +484,31 @@ export function GetProjects(req, res) {
 export function LoadMore(req, res) {
     ThirdProject.query(function(qb){
         qb.limit(req.body.cnt);
-        qb.offset(req.body.start);
+        qb.offset(req.body.start * req.body.cnt);
+    }).fetchAll({
+
+    }).then(function(project){
+        // process results
+        res.json( {
+            error :  false,
+            project :  project.toJSON()
+        })
+    });
+}
+
+/**
+ *  Get 5 Related Projects
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetRelated(req, res) {
+    ThirdProject.query(function(qb){
+        qb.where('First_Project_Id', '=', req.body.first);
+        qb.where('Second_Project_Id', '=', req.body.second);
+        qb.limit(5);
     }).fetchAll({
 
     }).then(function(project){

@@ -348,8 +348,10 @@ export default {
     },
 
     CheckText : {
-        params : {
-            text                : Joi.string().required()
+        body : {
+            text                : Joi.string().required(),
+            start               : Joi.number().required(),
+            cnt                 : Joi.number().required()
         }
     },
 
@@ -391,7 +393,16 @@ export default {
             first               : Joi.number().required(),
             second              : Joi.number().required(),
             third               : Joi.number().required(),
-            title               : Joi.number().required()
+            title               : Joi.number().required(),
+            start               : Joi.number().required(),
+            cnt                 : Joi.number().required()
         }
-    }  
+    },
+
+    CheckRelated : {
+        body : {
+            first               : Joi.number().required(),
+            second              : Joi.number().required()
+        }
+    }
 };

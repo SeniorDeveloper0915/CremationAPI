@@ -138,7 +138,12 @@ router.route('/increase/:id')
     .put(validate(schema.CheckId), (req, res) => {
         raiderCtrl.Increase(req, res);
     });
-    
+
+router.route('/get/featured')
+    .get((req, res) => {
+        raiderCtrl.GetFeatured(req, res);
+    });
+
 router.route('/change_status/:id')
 
     /**
@@ -232,7 +237,7 @@ router.route('/delete/:id')
         raiderCtrl.DeleteRaider(req, res);
     });
 
-router.route('/search/:text')
+router.route('/search/')
     /**
      * @swagger
      * /raider/search/{text}:

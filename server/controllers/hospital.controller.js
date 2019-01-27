@@ -355,7 +355,7 @@ export function DownloadPublicity(req, res) {
  */
 export function GetHospitalById(req, res) {
     Hospital.forge({id: req.params.id})
-        .fetch()
+        .fetch({withRelated: ['Services', 'Teams', 'Cases', 'PublicityPhotos']})
         .then(hospital => {
             if (!hospital) {
                 res.status(HttpStatus.NOT_FOUND).json({
@@ -409,7 +409,7 @@ export function GetFeatured(req, res) {
 export function LoadMore(req, res) {
     Hospital.query(function(qb){
         qb.limit(req.body.cnt);
-        qb.offset(req.body.start);
+        qb.offset(req.body.start * req.body.cnt);
     }).fetchAll({
         withRelated: ['Services', 'Teams', 'Cases']
     }).then(function(hospital){
@@ -563,7 +563,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetHospitals(req, res) {
     Hospital.forge()
-        .fetchAll({withRelated: ['Services', 'Teams', 'Cases']})
+        .fetchAll({withRelated: ['Services', 'Teams', 'Cases', 'PublicityPhotos']})
         .then(hospital => res.json({
                 error: false,
                 hospitals: hospital.toJSON()
@@ -661,13 +661,17 @@ export function Count(req, res) {
  * @returns {*}
  */
 export async function Search(req, res) {
-    var search = "%" + req.params.text + "%";
-    let hospitals = await Hospital.query()
-                .where("Hospital_Name", "LIKE", search)
-                .orWhere("Slogan", "LIKE", search)
-                .orWhere("Introduction", "LIKE", search);
-    res.json({
-        searched  : true,
-        hospitals : hospitals
+    var search = "%" + req.body.text + "%";
+    Hospital.query(function(qb) {
+        qb.where('Hospital_Name', 'LIKE', search);
+        qb.orWhere('Slogan', 'LIKE', search);
+        qb.orWhere('Introduction', 'LIKE', search);
+        qb.limit(req.body.cnt);
+        qb.offset(req.body.start * req.body.cnt);
+    }).fetchAll().then(hospitals => {
+        res.json({
+            error : false,
+            hospitals : hospitals.toJSON()
+        })
     });
 }
