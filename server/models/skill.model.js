@@ -19,6 +19,18 @@ class Skill extends bookshelf.Model {
     Doctor() {
     	return this.belongsTo(Doctor, 'Doctor_Id');
     }
+
+    FirstProject() {
+    	return this.belongsTo(FirstProject, 'First_Project_Id');
+    }
+
+    SecondProject() {
+        return this.belongsTo(SecondProject, 'Second_Project_Id');
+    }
+
+    ThirdProject() {
+        return this.belongsTo(ThirdProject, 'Third_Project_Id');
+    }
 }
 
 export default Skill;

@@ -12,7 +12,7 @@ exports.up = function(knex) {
         table.string('Logo').notNullable();
         table.string('Slogan').notNullable();
         table.string('Qualification').notNullable();
-        table.integer('Level').notNullable();
+        table.string('Level').notNullable();
         table.integer('License').notNullable();
         table.integer('Address').notNullable();
         table.string('Introduction').notNullable();

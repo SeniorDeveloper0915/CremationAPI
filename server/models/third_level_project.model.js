@@ -3,7 +3,8 @@ import SecondProject 		from './second_level_project.model';
 import FirstProject 		from './first_level_project.model';
 import Qa                   from './qa.model';
 import Product              from './product.model';
-
+import Skill                from './skill.model';
+import Service              from './service.model';
 /**
  * Second Level Project model.
  */
@@ -30,6 +31,14 @@ class ThirdProject extends bookshelf.Model {
 
     Products() { 
         return this.hasMany(Product, "Third_Project_Id");
+    }
+
+    Skill() {
+        return this.hasMany(Skill, "Third_Project_Id");
+    }
+
+    Service() {
+        return this.hasMany(Service, "Third_Project_Id");
     }
 }
 

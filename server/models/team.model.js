@@ -1,5 +1,6 @@
 import bookshelf 		from '../config/bookshelf';
 import Hospital 		from './hospital.model';
+import Doctor			from './doctor.model';
 
 /**
  * Team model.
@@ -15,6 +16,10 @@ class Team extends bookshelf.Model {
 
     Hospital() {
     	return this.belongsTo(Hospital, "Hospital_Id");
+    }
+
+    Doctor() {
+    	return this.belongsTo(Doctor, "Doctor_Id");
     }
 }
 
