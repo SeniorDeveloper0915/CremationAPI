@@ -355,7 +355,7 @@ export function DownloadPublicity(req, res) {
  */
 export function GetHospitalById(req, res) {
     Hospital.forge({id: req.params.id})
-        .fetch({withRelated: ['Services', 'Teams', 'Cases', 'PublicityPhotos']})
+        .fetch({withRelated: ['Services', 'Services.FirstProject', 'Services.SecondProject', 'Services.ThirdProject', 'Teams', 'Teams.Doctor', 'Cases', 'PublicityPhotos']})
         .then(hospital => {
             if (!hospital) {
                 res.status(HttpStatus.NOT_FOUND).json({
@@ -411,7 +411,7 @@ export function LoadMore(req, res) {
         qb.limit(req.body.cnt);
         qb.offset(req.body.start * req.body.cnt);
     }).fetchAll({
-        withRelated: ['Services', 'Teams', 'Cases']
+        withRelated: ['Services', 'Services.FirstProject', 'Services.SecondProject', 'Services.ThirdProject', 'Teams', 'Teams.Doctor', 'Cases', 'PublicityPhotos']
     }).then(function(hospital){
         // process results
         res.json( {
@@ -431,7 +431,7 @@ export function LoadMore(req, res) {
 
 export function GetServices(req, res) {
     Hospital.forge({id: req.params.id})
-        .fetch({withRelated: ['Services']})
+        .fetch({withRelated: ['Services', 'Services.FirstProject', 'Services.SecondProject', 'Services.ThirdProject']})
         .then(hospital => {
 
             hospital.Services().fetch().then(function(services) {
@@ -465,7 +465,7 @@ export function GetServices(req, res) {
 
 export function GetTeams(req, res) {
     Hospital.forge({id: req.params.id})
-        .fetch({withRelated: ['Teams']})
+        .fetch({withRelated: ['Teams', 'Teams.Doctor']})
         .then(hospital => {
 
             hospital.Teams().fetch().then(function(teams) {
@@ -563,7 +563,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetHospitals(req, res) {
     Hospital.forge()
-        .fetchAll({withRelated: ['Services', 'Teams', 'Cases', 'PublicityPhotos']})
+        .fetchAll({withRelated: ['Services', 'Services.FirstProject', 'Services.SecondProject', 'Services.ThirdProject', 'Teams', 'Teams.Doctor', 'Cases', 'PublicityPhotos']})
         .then(hospital => res.json({
                 error: false,
                 hospitals: hospital.toJSON()
