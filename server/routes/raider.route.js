@@ -253,6 +253,6 @@ router.route('/search/:text')
      *            type: object
      */
     .get(validate(schema.CheckText), (req, res) => {
-        doctorCtrl.Search(req, res);
+        raiderCtrl.Search(req, res);
     });
 export default router;
