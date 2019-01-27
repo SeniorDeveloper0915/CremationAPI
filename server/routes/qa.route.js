@@ -88,7 +88,7 @@ router.route('/answer')
         qaCtrl.SaveAnswer(req, res);
     });
 
-router.router('/increase/:id')
+router.route('/increase/:id')
     .put(validate(schema.CheckId), (req, res) => {
         qaCtrl.Increase(req, res);
     });
