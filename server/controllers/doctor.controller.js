@@ -284,89 +284,40 @@ export function GetFeatured(req, res) {
  */
 
 export function GetFilter(req, res) {
-    if (req.body.title != 0) {
-        Doctor.query(function(qb) {
-            qb.leftJoin(
+     
+    Doctor.query(function(qb) {
+        qb.leftJoin(
                 'skill',
                 'doctor.id',
                 'skill.Doctor_Id'
-            );
+        );
+
+	if (req.body.first != 0)
             qb.where('skill.First_Project_Id', '=', req.body.first);
+
+	if (req.body.second != 0)
             qb.where('skill.Second_Project_Id', '=', req.body.second);
+
+	if (req.body.third != 0)
             qb.where('skill.Third_Project_Id', '=', req.body.third);
+
+	if (req.body.title != 0)
             qb.where('doctor.Title_Id', '=', req.body.title);
-            qb.orderBy('doctor.Sort', 'ASC');
+
+	    qb.orderBy('doctor.Sort', 'ASC');
             qb.groupBy('skill.Doctor_Id');
-            qb.limit(req.body.cnt);
-            qb.offset(req.body.start * req.body.cnt);
-        }).fetchAll().then(doctor => {
+        if (req.body.cnt != 0)
+	    qb.limit(req.body.cnt);
+        if (req.body.start != 0)
+	    qb.offset(req.body.start * req.body.cnt);
+    }).fetchAll({
+	    withRelated: ['DoctorTitle', 'Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']
+    }).then(doctor => {
             res.json({
                 error : false,
                 doctor : doctor.toJSON()
             })
         });
-    }
-    else if (req.body.title == 0 && req.body.first != 0 && req.body.second != 0 && req.body.third != 0) {
-        Doctor.query(function(qb) {
-            qb.leftJoin(
-                'skill',
-                'doctor.id',
-                'skill.Doctor_Id'
-            );
-            qb.where('skill.First_Project_Id', '=', req.body.first);
-            qb.where('skill.Second_Project_Id', '=', req.body.second);
-            qb.where('skill.Third_Project_Id', '=', req.body.third);
-            qb.orderBy('doctor.Sort', 'ASC');
-            qb.groupBy('skill.Doctor_Id');
-            qb.limit(req.body.cnt);
-            qb.offset(req.body.start * req.body.cnt);
-        }).fetchAll().then(doctor => {
-            res.json({
-                error : false,
-                doctor : doctor.toJSON()
-            })
-        });
-    }
-    else if (req.body.third == 0 && req.body.title == 0 && req.body.first != 0 && req.body.second != 0) {
-        Doctor.query(function(qb) {
-            qb.leftJoin(
-                'skill',
-                'doctor.id',
-                'skill.Doctor_Id'
-            );
-            qb.where('skill.First_Project_Id', '=', req.body.first);
-            qb.where('skill.Second_Project_Id', '=', req.body.second);
-            qb.orderBy('doctor.Sort', 'ASC');
-            qb.groupBy('skill.Doctor_Id');
-            qb.limit(req.body.cnt);
-            qb.offset(req.body.start * req.body.cnt);
-        }).fetchAll().then(doctor => {
-            res.json({
-                error : false,
-                doctor : doctor.toJSON()
-            })
-        });
-    }
-    else if (req.body.second == 0 && req.body.third == 0 && req.body.title == 0 && req.body.first != 0) {
-        Doctor.query(function(qb) {
-            qb.leftJoin(
-                'skill',
-                'doctor.id',
-                'skill.Doctor_Id'
-            );
-            qb.where('skill.First_Project_Id', '=', req.body.first);
-            qb.orderBy('doctor.Sort', 'ASC');
-            qb.groupBy('skill.Doctor_Id');
-            qb.limit(req.body.cnt);
-            qb.offset(req.body.start * req.body.cnt);
-        }).fetchAll().then(doctor => {
-            res.json({
-                error : false,
-                doctor : doctor.toJSON()
-            })
-        });
-    }
-    
 }
 
 /**
