@@ -296,7 +296,7 @@ export function Increase(req, res) {
  */
 export function GetRaiders(req, res) {
     Raider.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll()
         .then(raider => res.json({
                 error: false,
@@ -319,7 +319,7 @@ export function GetRaiders(req, res) {
 
 export function GetFeatured(req, res) {
     Raider.query(function(qb){
-        qb.orderBy('Sort', 'DESC');
+        qb.orderBy('Sort', 'ASC');
         qb.limit(10);
     }).fetchAll({
 
@@ -344,7 +344,7 @@ export function LoadMore(req, res) {
     Raider.query(function(qb){
         qb.limit(req.body.cnt);
         qb.offset(req.body.start * req.body.cnt);
-        qb.orderBy('Sort', 'DESC');
+        qb.orderBy('Sort', 'ASC');
     }).fetchAll({
 
     }).then(function(raider){

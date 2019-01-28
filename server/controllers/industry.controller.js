@@ -289,7 +289,7 @@ export function Increase(req, res) {
  */
 export function GetIndustries(req, res) {
     Industry.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll()
         .then(industry => res.json({
                 error: false,

@@ -275,7 +275,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetProjects(req, res) {
     FirstProject.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll({withRelated: ['SecondProjects', 'ThirdProjects', 'Products']})
         .then(project => res.json({
                 error: false,
@@ -297,7 +297,7 @@ export function GetProjects(req, res) {
  */
 export function GetMenu(req, res) {
     FirstProject.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll({withRelated: ['SecondProjects', 'SecondProjects.ThirdProjects']})
         .then(project => res.json({
                 error: false,

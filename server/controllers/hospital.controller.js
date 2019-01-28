@@ -385,7 +385,7 @@ export function GetHospitalById(req, res) {
 
 export function GetFeatured(req, res) {
     Hospital.query(function(qb){
-        qb.orderBy('Sort', 'DESC');
+        qb.orderBy('Sort', 'ASC');
         qb.limit(10);
     }).fetchAll({
 
@@ -410,7 +410,7 @@ export function LoadMore(req, res) {
     Hospital.query(function(qb){
         qb.limit(req.body.cnt);
         qb.offset(req.body.start * req.body.cnt);
-        qb.orderBy('Sort', 'DESC')
+        qb.orderBy('Sort', 'ASC')
     }).fetchAll({
         withRelated: ['Services', 'Services.FirstProject', 'Services.SecondProject', 'Services.ThirdProject', 'Teams', 'Teams.Doctor', 'Cases', 'PublicityPhotos']
     }).then(function(hospital){

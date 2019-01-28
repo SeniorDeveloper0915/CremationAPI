@@ -172,7 +172,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetCategories(req, res) {
     RaiderCategory.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll()
         .then(category => res.json({
                 error: false,

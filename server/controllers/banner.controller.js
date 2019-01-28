@@ -259,7 +259,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetBanners(req, res) {
     Banner.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll()
         .then(banner => res.json({
                 error: false,

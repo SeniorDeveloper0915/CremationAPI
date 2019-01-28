@@ -143,7 +143,7 @@ export function ModifyDoctorTitle(req, res) {
  */
 export function GetDoctorTitles(req, res) {
     DoctorTitle.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll({withRelated : ['Doctors', 'Doctors.Skills']})
         .then(doctor_titles => res.json({
                 error: false,

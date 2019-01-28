@@ -262,7 +262,7 @@ export function GetDoctorById(req, res) {
 
 export function GetFeatured(req, res) {
     Doctor.query(function(qb){
-        qb.orderBy('Sort', 'DESC');
+        qb.orderBy('Sort', 'ASC');
         qb.limit(10);
     }).fetchAll({
 
@@ -295,7 +295,7 @@ export function GetFilter(req, res) {
             qb.where('skill.Second_Project_Id', '=', req.body.second);
             qb.where('skill.Third_Project_Id', '=', req.body.third);
             qb.where('doctor.Title_Id', '=', req.body.title);
-            qb.orderBy('doctor.Sort', 'DESC');
+            qb.orderBy('doctor.Sort', 'ASC');
             qb.groupBy('skill.Doctor_Id');
             qb.limit(req.body.cnt);
             qb.offset(req.body.start * req.body.cnt);
@@ -316,7 +316,7 @@ export function GetFilter(req, res) {
             qb.where('skill.First_Project_Id', '=', req.body.first);
             qb.where('skill.Second_Project_Id', '=', req.body.second);
             qb.where('skill.Third_Project_Id', '=', req.body.third);
-            qb.orderBy('doctor.Sort', 'DESC');
+            qb.orderBy('doctor.Sort', 'ASC');
             qb.groupBy('skill.Doctor_Id');
             qb.limit(req.body.cnt);
             qb.offset(req.body.start * req.body.cnt);
@@ -336,7 +336,7 @@ export function GetFilter(req, res) {
             );
             qb.where('skill.First_Project_Id', '=', req.body.first);
             qb.where('skill.Second_Project_Id', '=', req.body.second);
-            qb.orderBy('doctor.Sort', 'DESC');
+            qb.orderBy('doctor.Sort', 'ASC');
             qb.groupBy('skill.Doctor_Id');
             qb.limit(req.body.cnt);
             qb.offset(req.body.start * req.body.cnt);
@@ -355,7 +355,7 @@ export function GetFilter(req, res) {
                 'skill.Doctor_Id'
             );
             qb.where('skill.First_Project_Id', '=', req.body.first);
-            qb.orderBy('doctor.Sort', 'DESC');
+            qb.orderBy('doctor.Sort', 'ASC');
             qb.groupBy('skill.Doctor_Id');
             qb.limit(req.body.cnt);
             qb.offset(req.body.start * req.body.cnt);

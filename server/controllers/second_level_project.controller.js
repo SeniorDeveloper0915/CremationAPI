@@ -240,7 +240,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetProjects(req, res) {
     SecondProject.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll({withRelated : 'ThirdProjects'})
         .then(project => res.json({
                 error: false,

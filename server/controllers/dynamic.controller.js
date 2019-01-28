@@ -289,7 +289,7 @@ export function Increase(req, res) {
  */
 export function GetDynamics(req, res) {
     Dynamic.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll()
         .then(dynamic => res.json({
                 error: false,

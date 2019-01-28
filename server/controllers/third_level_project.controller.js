@@ -461,7 +461,7 @@ export function ChangeStatus(req, res) {
  */
 export function GetProjects(req, res) {
     ThirdProject.query(function(qb){
-            qb.orderBy('Sort', 'DESC'); 
+            qb.orderBy('Sort', 'ASC'); 
         }).fetchAll()
         .then(project => res.json({
                 error: false,
