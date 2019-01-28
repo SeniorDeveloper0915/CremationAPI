@@ -288,8 +288,9 @@ export function Increase(req, res) {
  * @returns {*}
  */
 export function GetDynamics(req, res) {
-    Dynamic.forge()
-        .fetchAll()
+    Dynamic.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll()
         .then(dynamic => res.json({
                 error: false,
                 dynamics: dynamic.toJSON()

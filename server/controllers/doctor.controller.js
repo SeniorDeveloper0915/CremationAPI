@@ -295,6 +295,7 @@ export function GetFilter(req, res) {
             qb.where('skill.Second_Project_Id', '=', req.body.second);
             qb.where('skill.Third_Project_Id', '=', req.body.third);
             qb.where('doctor.Title_Id', '=', req.body.title);
+            qb.orderBy('doctor.Sort', 'DESC');
             qb.groupBy('skill.Doctor_Id');
             qb.limit(req.body.cnt);
             qb.offset(req.body.start * req.body.cnt);
@@ -315,6 +316,7 @@ export function GetFilter(req, res) {
             qb.where('skill.First_Project_Id', '=', req.body.first);
             qb.where('skill.Second_Project_Id', '=', req.body.second);
             qb.where('skill.Third_Project_Id', '=', req.body.third);
+            qb.orderBy('doctor.Sort', 'DESC');
             qb.groupBy('skill.Doctor_Id');
             qb.limit(req.body.cnt);
             qb.offset(req.body.start * req.body.cnt);
@@ -334,6 +336,7 @@ export function GetFilter(req, res) {
             );
             qb.where('skill.First_Project_Id', '=', req.body.first);
             qb.where('skill.Second_Project_Id', '=', req.body.second);
+            qb.orderBy('doctor.Sort', 'DESC');
             qb.groupBy('skill.Doctor_Id');
             qb.limit(req.body.cnt);
             qb.offset(req.body.start * req.body.cnt);
@@ -352,6 +355,7 @@ export function GetFilter(req, res) {
                 'skill.Doctor_Id'
             );
             qb.where('skill.First_Project_Id', '=', req.body.first);
+            qb.orderBy('doctor.Sort', 'DESC');
             qb.groupBy('skill.Doctor_Id');
             qb.limit(req.body.cnt);
             qb.offset(req.body.start * req.body.cnt);
@@ -378,6 +382,7 @@ export function LoadMore(req, res) {
     Doctor.query(function(qb){
         qb.limit(req.body.cnt);
         qb.offset(req.body.start * req.body.cnt);
+        qb.orderBy('Sort', 'DESC')
     }).fetchAll({
         withRelated: ['DoctorTitle', 'Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']
     }).then(function(doctor){
@@ -496,9 +501,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetDoctors(req, res) {
-    console.log("GetDoctors");
-    Doctor.forge()
-        .fetchAll({withRelated: ['DoctorTitle', 'Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']})
+    Doctor.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll({withRelated: ['DoctorTitle', 'Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']})
         .then(doctors => res.json({
                 error: false,
                 doctors: doctors.toJSON(),

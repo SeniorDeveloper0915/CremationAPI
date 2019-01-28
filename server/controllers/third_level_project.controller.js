@@ -460,8 +460,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetProjects(req, res) {
-    ThirdProject.forge()
-        .fetchAll()
+    ThirdProject.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll()
         .then(project => res.json({
                 error: false,
                 projects: project.toJSON()

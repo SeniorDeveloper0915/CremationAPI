@@ -288,8 +288,9 @@ export function Increase(req, res) {
  * @returns {*}
  */
 export function GetIndustries(req, res) {
-    Industry.forge()
-        .fetchAll()
+    Industry.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll()
         .then(industry => res.json({
                 error: false,
                 industry : industry.toJSON()

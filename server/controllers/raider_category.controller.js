@@ -171,8 +171,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetCategories(req, res) {
-    RaiderCategory.forge()
-        .fetchAll()
+    RaiderCategory.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll()
         .then(category => res.json({
                 error: false,
                 categorys: category.toJSON()
