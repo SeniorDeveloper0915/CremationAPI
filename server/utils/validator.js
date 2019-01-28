@@ -399,6 +399,16 @@ export default {
         }
     },
 
+    CheckQaFilter : {
+        body : {
+            first               : Joi.number().required(),
+            second              : Joi.number().required(),
+            third               : Joi.number().required(),
+            start               : Joi.number().required(),
+            cnt                 : Joi.number().required()
+        }
+    },
+    
     CheckRelated : {
         body : {
             first               : Joi.number().required(),

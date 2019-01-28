@@ -11,7 +11,7 @@ exports.up = function(knex) {
         table.string('Dynamic_Title').notNullable();
         table.string('Dynamic_Subtitle').notNullable();
         table.string('Dynamic_Img').notNullable();
-        table.string('Dynamic_Content').notNullable();
+        table.string('Dynamic_Content', 5000).notNullable();
         table.integer('Reading_Volume').notNullable().default(0);
         table.integer('Sort').notNullable();
         table.bool('Status').default(false);

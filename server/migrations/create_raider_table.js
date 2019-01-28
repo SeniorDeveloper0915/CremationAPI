@@ -12,7 +12,7 @@ exports.up = function(knex) {
         table.string('Raider_Title').notNullable();
         table.string('Raider_Sec_Title').notNullable();
         table.string('Raider_Img').notNullable();
-        table.string('Content').notNullable();
+        table.string('Content', 5000).notNullable();
         table.integer('Reading_Volume').notNullable().default(0);
         table.integer('Sort').notNullable();
         table.bool('Status').default(false);

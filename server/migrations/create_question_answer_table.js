@@ -13,7 +13,7 @@ exports.up = function(knex) {
         table.string('Question_Content').notNullable();
         table.timestamp('Question_Time');
         table.integer('Doctor_Id').notNullable();
-        table.string('Answer_Content').notNullable();
+        table.string('Answer_Content', 5000).notNullable();
         table.timestamp('Answer_Time');
         table.bool('Status').default(false);
         table.integer('Reading_Volume').notNullable().default(0);

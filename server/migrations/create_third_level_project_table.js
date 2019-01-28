@@ -14,9 +14,9 @@ exports.up = function(knex) {
         table.string('Project_Alias').notNullable();
         table.string('Before_Img').notNullable();
         table.string('Effect_Img').notNullable();
-        table.string('Description').notNullable();
-        table.string('Features').notNullable();
-        table.string('Efficiency').notNullable();
+        table.string('Description', 5000).notNullable();
+        table.string('Features', 5000).notNullable();
+        table.string('Efficiency', 5000).notNullable();
         table.string('Price_From').notNullable();
         table.string('Price_To').notNullable();
         table.string('Time_Period').notNullable();
