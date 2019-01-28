@@ -355,7 +355,7 @@ export function DownloadPublicity(req, res) {
  */
 export function GetHospitalById(req, res) {
     Hospital.forge({id: req.params.id})
-        .fetch({withRelated: ['Services', 'Services.FirstProject', 'Services.SecondProject', 'Services.ThirdProject', 'Teams', 'Teams.Doctor', 'Cases', 'PublicityPhotos']})
+        .fetch({withRelated: ['Services', 'Services.FirstProject', 'Services.SecondProject', 'Services.ThirdProject', 'Teams', 'Teams.Doctor', 'Cases', 'PublicityPhotos', 'Teams.Doctor.DoctorTitle', 'Teams.Doctor.Skills', 'Teams.Doctor.Skills.ThirdProject']})
         .then(hospital => {
             if (!hospital) {
                 res.status(HttpStatus.NOT_FOUND).json({
