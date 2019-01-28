@@ -232,7 +232,7 @@ export function DownloadPhoto(req, res) {
  */
 export function GetDoctorById(req, res) {
     Doctor.forge({id: req.params.id})
-        .fetch({withRelated: ['Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']})
+        .fetch({withRelated: ['DoctorTitle', 'Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']})
         .then(doctor => {
             if (!doctor) {
                 res.status(HttpStatus.NOT_FOUND).json({
@@ -379,7 +379,7 @@ export function LoadMore(req, res) {
         qb.limit(req.body.cnt);
         qb.offset(req.body.start * req.body.cnt);
     }).fetchAll({
-        withRelated: ['Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']
+        withRelated: ['DoctorTitle', 'Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']
     }).then(function(doctor){
         // process results
         res.json( {
@@ -399,7 +399,7 @@ export function LoadMore(req, res) {
 
 export function GetSkills(req, res) {
     Doctor.forge({id: req.params.id})
-        .fetch({withRelated: ['Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']})
+        .fetch({withRelated: ['DoctorTitle', 'Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']})
         .then(doctor => {
 
             doctor.Skills().fetch().then(function(skills) {
@@ -498,7 +498,7 @@ export function ChangeStatus(req, res) {
 export function GetDoctors(req, res) {
     console.log("GetDoctors");
     Doctor.forge()
-        .fetchAll({withRelated: ['Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']})
+        .fetchAll({withRelated: ['DoctorTitle', 'Skills', 'Skills.FirstProject', 'Skills.SecondProject', 'Skills.ThirdProject']})
         .then(doctors => res.json({
                 error: false,
                 doctors: doctors.toJSON(),
