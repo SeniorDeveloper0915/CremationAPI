@@ -258,8 +258,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetBanners(req, res) {
-    Banner.forge()
-        .fetchAll()
+    Banner.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll()
         .then(banner => res.json({
                 error: false,
                 banners: banner.toJSON()

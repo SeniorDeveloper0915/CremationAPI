@@ -274,8 +274,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetProjects(req, res) {
-    FirstProject.forge()
-        .fetchAll({withRelated: ['SecondProjects', 'ThirdProjects', 'Products']})
+    FirstProject.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll({withRelated: ['SecondProjects', 'ThirdProjects', 'Products']})
         .then(project => res.json({
                 error: false,
                 projects: project.toJSON()
@@ -295,8 +296,9 @@ export function GetProjects(req, res) {
  * @returns {*}
  */
 export function GetMenu(req, res) {
-    FirstProject.forge()
-        .fetchAll({withRelated: ['SecondProjects', 'SecondProjects.ThirdProjects']})
+    FirstProject.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll({withRelated: ['SecondProjects', 'SecondProjects.ThirdProjects']})
         .then(project => res.json({
                 error: false,
                 projects: project.toJSON()

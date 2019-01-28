@@ -257,8 +257,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetMembers(req, res) {
-    CoreTeam.forge()
-        .fetchAll()
+    CoreTeam.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll()
         .then(member => res.json({
                 error: false,
                 members: member.toJSON()

@@ -257,8 +257,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetCases(req, res) {
-    Case.forge()
-        .fetchAll()
+    Case.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll()
         .then(cas => res.json({
                 error: false,
                 cases: cas.toJSON()

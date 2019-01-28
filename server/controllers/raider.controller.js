@@ -295,8 +295,9 @@ export function Increase(req, res) {
  * @returns {*}
  */
 export function GetRaiders(req, res) {
-    Raider.forge()
-        .fetchAll()
+    Raider.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll()
         .then(raider => res.json({
                 error: false,
                 raiders: raider.toJSON()
@@ -343,6 +344,7 @@ export function LoadMore(req, res) {
     Raider.query(function(qb){
         qb.limit(req.body.cnt);
         qb.offset(req.body.start * req.body.cnt);
+        qb.orderBy('Sort', 'DESC');
     }).fetchAll({
 
     }).then(function(raider){

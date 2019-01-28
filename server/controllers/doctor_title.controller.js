@@ -142,8 +142,9 @@ export function ModifyDoctorTitle(req, res) {
  * @returns {*}
  */
 export function GetDoctorTitles(req, res) {
-    DoctorTitle.forge()
-        .fetchAll({withRelated : ['Doctors', 'Doctors.Skills']})
+    DoctorTitle.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll({withRelated : ['Doctors', 'Doctors.Skills']})
         .then(doctor_titles => res.json({
                 error: false,
                 doctor_titles: doctor_titles.toJSON()

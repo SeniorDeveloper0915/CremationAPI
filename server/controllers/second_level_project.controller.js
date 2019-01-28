@@ -239,8 +239,9 @@ export function ChangeStatus(req, res) {
  * @returns {*}
  */
 export function GetProjects(req, res) {
-    SecondProject.forge()
-        .fetchAll({withRelated : 'ThirdProjects'})
+    SecondProject.query(function(qb){
+            qb.orderBy('Sort', 'DESC'); 
+        }).fetchAll({withRelated : 'ThirdProjects'})
         .then(project => res.json({
                 error: false,
                 projects: project.toJSON()
