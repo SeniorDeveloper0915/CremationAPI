@@ -14,7 +14,7 @@ exports.up = function(knex) {
         table.integer('Length').notNullable();
         table.string('Certi_Number').notNullable();
         table.integer('Address').notNullable();
-        table.string('Profile').notNullable();
+        table.string('Profile', 5000).notNullable();
         table.integer('Sort').notNullable();
         table.bool('Status').default(false);
         table.timestamp('Release_Time');

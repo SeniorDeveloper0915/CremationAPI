@@ -181,6 +181,56 @@ export function LoadMore(req, res) {
 }
 
 /**
+ *  Get Filtered Question & Answer
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function GetFilter(req, res) {
+    if (req.body.third != 0) {
+        Doctor.query(function(qb) {
+            qb.where('First_Project_Id', '=', req.body.first);
+            qb.where('Second_Project_Id', '=', req.body.second);
+            qb.where('Third_Project_Id', '=', req.body.third);
+            qb.limit(req.body.cnt);
+            qb.offset(req.body.start * req.body.cnt);
+        }).fetchAll().then(doctor => {
+            res.json({
+                error : false,
+                doctor : doctor.toJSON()
+            })
+        });
+    }
+    else if (req.body.third == 0 && req.body.first != 0 && req.body.second != 0) {
+        Doctor.query(function(qb) {
+            qb.where('First_Project_Id', '=', req.body.first);
+            qb.where('Second_Project_Id', '=', req.body.second);
+            qb.limit(req.body.cnt);
+            qb.offset(req.body.start * req.body.cnt);
+        }).fetchAll().then(doctor => {
+            res.json({
+                error : false,
+                doctor : doctor.toJSON()
+            })
+        });
+    }
+    else if (req.body.third == 0 && req.body.first == second && req.body.first != 0) {
+        Doctor.query(function(qb) {
+            qb.where('First_Project_Id', '=', req.body.first);
+            qb.limit(req.body.cnt);
+            qb.offset(req.body.start * req.body.cnt);
+        }).fetchAll().then(doctor => {
+            res.json({
+                error : false,
+                doctor : doctor.toJSON()
+            })
+        });
+    }    
+}
+
+/**
  * Delete Qa by id
  *
  * @param {object} req

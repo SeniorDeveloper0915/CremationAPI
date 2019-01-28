@@ -102,7 +102,7 @@ router.route('/get/featured')
     });
 
 router.route('/get/filter')
-    .get(validate(schema.CheckFilter), (req, res) => {
+    .post(validate(schema.CheckFilter), (req, res) => {
         doctorCtrl.GetFilter(req, res);
     });
     

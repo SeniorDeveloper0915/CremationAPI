@@ -132,7 +132,12 @@ router.route('/get/loadmore')
     .get(validate(schema.CheckLoadMore), (req, res) => {
         qaCtrl.LoadMore(req, res);
     });
-    
+
+router.route('/get/filter')
+    .post(validate(schema.CheckQaFilter), (req, res) => {
+        qaCtrl.GetFilter(req, res);
+    });
+
 router.route('/get')
     /**
      * @swagger
